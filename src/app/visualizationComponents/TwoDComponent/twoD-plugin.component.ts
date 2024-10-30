@@ -3547,17 +3547,7 @@ export class TwoDComponent extends BaseComponentDirective implements OnInit, Mic
         //         .scale(scale));
     };
 
-    /**
-     * XXXXX Function is never called; Review if necessary XXXXX
-     * @param nodeData 
-     * @returns 
-     */
-    isFiltered(nodeData: any): boolean{
-        if(nodeData){
-            return this.visuals.twoD.commonService.session.data.nodeFilteredValues.find(x=>x.index === nodeData.index) !== undefined;
-        }
-        return true
-    }
+
 
     /**
      * On click of settings button, show/hide settings dialog

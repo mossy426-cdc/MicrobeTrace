@@ -31,9 +31,9 @@ export abstract class AppComponentBase {
     setting: any;
     message: any;
     multiTenancy: any;
-    appSession: AppSessionService;
+    // appSession: AppSessionService;
     primengTableHelper: PrimengTableHelper;
-    ui: AppUiCustomizationService;
+    // ui: AppUiCustomizationService;
     appUrlService: AppUrlService;
 
     constructor(injector: Injector
@@ -45,8 +45,8 @@ export abstract class AppComponentBase {
         // this.setting = injector.get(SettingService);
         // this.message = injector.get(MessageService);
         // this.multiTenancy = injector.get(AbpMultiTenancyService);
-        this.appSession = injector.get(AppSessionService);
-        this.ui = injector.get(AppUiCustomizationService);
+        // this.appSession = injector.get(AppSessionService);
+        // this.ui = injector.get(AppUiCustomizationService);
         this.appUrlService = injector.get(AppUrlService);
         this.primengTableHelper = new PrimengTableHelper();
     }

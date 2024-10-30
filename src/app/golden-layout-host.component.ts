@@ -35,7 +35,7 @@ import { BubbleComponent } from './visualizationComponents/BubbleComponent/bubbl
   ],
 })
 export class GoldenLayoutHostComponent implements OnDestroy {
-  private _goldenLayout: GoldenLayout;
+  public _goldenLayout: GoldenLayout;
   private _goldenLayoutElement: HTMLElement;
   private _virtualActive = true;
   private _viewContainerRefActive = true;

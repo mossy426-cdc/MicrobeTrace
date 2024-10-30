@@ -10,7 +10,6 @@ import { Button } from 'primeng/button';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { SelectItem, TreeNode } from 'primeng/api';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { AppSessionService } from '@shared/common/session/app-session.service';
 import { DialogSettings } from './helperClasses/dialogSettings';
 import * as saveAs from 'file-saver';
 import { StashObjects, HomePageTabItem } from './helperClasses/interfaces';
@@ -44,7 +43,7 @@ export class MicrobeTraceNextHomeComponent extends AppComponentBase implements A
     // recommit original code
     @ViewChild('stashes') stashes: ElementRef;
 
-    @ViewChild('goldenLayoutHost') _goldenLayoutHostComponent: GoldenLayoutHostComponent;
+    @ViewChild('goldenLayoutHost') public _goldenLayoutHostComponent: GoldenLayoutHostComponent;
 
     @ViewChild('linkThresholdSparkline') linkThresholdSparkline: ElementRef;
 
@@ -249,9 +248,6 @@ export class MicrobeTraceNextHomeComponent extends AppComponentBase implements A
         this.visuals = commonService.visuals;
         this.visuals.microbeTrace = this;
         this.widgets = this.commonService.session.style.widgets
-
-        this.appSession = injector.get(AppSessionService);
-
         this.activeTabIndex = 0;
 
         this.dataSetView = [];
@@ -2112,7 +2108,7 @@ export class MicrobeTraceNextHomeComponent extends AppComponentBase implements A
         });
     }
 
-    private _removeGlView(view : string) {
+    public _removeGlView(view : string) {
         console.log(`Removing ${view}`);
         this._goldenLayoutHostComponent.removeComponent(view);
         this.removeComponent(view);
@@ -2370,7 +2366,6 @@ export class MicrobeTraceNextHomeComponent extends AppComponentBase implements A
                         tabTitle: x.tabTitle,
                         isActive: x.isActive,
                         componentRef: undefined,
-                        templateRef: undefined
                     }
                 });
 
@@ -3058,7 +3053,6 @@ export class MicrobeTraceNextHomeComponent extends AppComponentBase implements A
         this.activeTabIndex = tabPosition;
         this.homepageTabs.splice(tabPosition, 0, {
             label: tabLabel,
-            templateRef: null,
             tabTitle: tabTitle,
             isActive: activate,
             componentRef: componentRef

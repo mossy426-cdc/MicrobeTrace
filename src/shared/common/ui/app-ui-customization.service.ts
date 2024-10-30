@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { UiCustomizationSettingsDto } from '@shared/service-proxies/service-proxies';
 
-@Injectable()
+// @Injectable()
 export class AppUiCustomizationService {
 
     // private _theme: UiCustomizationSettingsDto;

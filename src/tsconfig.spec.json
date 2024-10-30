@@ -4,7 +4,8 @@
     "outDir": "../out-tsc/spec",
     "types": [
       "jasmine",
-      "node"
+      "node",
+       "jquery"
     ]
   },
   "files": [
@@ -13,6 +14,7 @@
   ],
   "include": [
     "**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "src/app/typings.d.ts"
   ]
 }

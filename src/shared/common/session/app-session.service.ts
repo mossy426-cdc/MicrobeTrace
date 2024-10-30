@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 // import { ApplicationInfoDto, GetCurrentLoginInformationsOutput, SessionServiceProxy, TenantLoginInfoDto, UserLoginInfoDto, UiCustomizationSettingsDto } from '@shared/service-proxies/service-proxies';
 
-@Injectable()
+// @Injectable()
 export class AppSessionService {
 
     // private _user: UserLoginInfoDto;

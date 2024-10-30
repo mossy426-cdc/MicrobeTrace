@@ -33,7 +33,6 @@ export interface StashObject  {
 
 export interface HomePageTabItem {
     label: string,
-    templateRef: any,
     tabTitle: string,
     isActive: boolean,
     componentRef: any

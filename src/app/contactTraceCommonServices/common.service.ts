@@ -1105,7 +1105,6 @@ export class CommonService extends AppComponentBase implements OnInit {
             stashObject = {
                 tabs : [{
                     label: 'Files',
-                    templateRef: null,
                     tabTitle: 'Files',
                     isActive: true,
                     componentRef: null

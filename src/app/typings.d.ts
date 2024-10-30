@@ -17,6 +17,8 @@ declare var mUtil: any; // Related to Metronic
 declare var mHeader: any; // Related to Metronic
 declare var StripeCheckout: any;
 
+declare var $: any;
+
 declare namespace abp {
     namespace ui {
         function setBusy(elm?: any, text?: any, optionsOrPromise?: any): void;

@@ -181,9 +181,9 @@ export class TestedComponent {
     SelectButtonModule
   ],
   providers: [
-    AppSessionService,
-    AppUiCustomizationService,
-    AppUrlService,
+    // AppSessionService,
+    // AppUiCustomizationService,
+    // AppUrlService,
     GanttChartService,
     GoldenLayoutComponentService,
   ],
