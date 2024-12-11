@@ -2670,13 +2670,6 @@ p-dialog {
   width: 100%;
 }
 
-:root {
-  --vis-graph-brush-selection-opacity: 0.5;
-  --vis-graph-brushed-node-stroke-color: #ff0000;
-  --vis-graph-brushed-node-label-text-color: #00ff00;
-  --vis-graph-brushed-node-icon-fill-color: #0000ff;
-}
-
 .margin-left-5 {
   margin-left: 5px !important;
 }
@@ -3148,10 +3141,6 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active, body .ui-tab
   top: 15px;
   left: 15px;
   position: absolute;
-}
-
-.nodes path {
-  cursor: grab;
 }
 
 .transparency-symbol {
