@@ -770,9 +770,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
      * @returns {Object} where keys are the values to group (ie. subtype B,C,D...) and values are counts of the number of node for each key
      */
     this.createPolygonColorMap = () => {
-      console.log('createPolygonColorMap1: ', this.temp.polygonGroups, !this.session.style.widgets['polygons-color-show']);
       if (!this.temp.polygonGroups || !this.session.style.widgets['polygons-color-show']) {
-        console.log('createPolygonColorMap2: ', this.session.style.widgets['polygon-color']);
         this.temp.style.polygonColorMap = () => this.session.style.widgets['polygon-color'];
         return [];
       }
@@ -3976,24 +3974,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
     };
     // this.title = this.container.title;
     this.id = this.container.parent.id;
-    // sets container.stateRequestEvent to a function that returns "state is here"
-    this.container.stateRequestEvent = () => this.handleContainerStateRequestEvent();
-    const state = this.container.initialState;
-    // let color: string;
-    // if (state === undefined) {
-    //     color = ColorComponent.undefinedColor;
-    // } else {
-    //     if (typeof state !== 'string') {
-    //         color = 'IndianRed';
-    //     } else {
-    //         color = state;
-    //     }
-    // }
-    console.log('commonService: ', commonService);
-    // this.visuals = commonService.visuals;
-    // this.visuals.filesPlugin = this;
   }
-
   ngOnInit() {
     this.RefSeqIDTypes.push({
       label: 'Pol',
@@ -7291,7 +7272,6 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
    * then hides the node color table or calls onColorNodesByChanged
    */
   onNodeColorTableChanged() {
-    console.log('node color table changed: ', this.SelectedNodeColorTableTypesVariable);
     if (this.commonService.debugMode) {
       console.log('node color changed: ', this.SelectedNodeColorTableTypesVariable);
     }
@@ -7731,10 +7711,8 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   onColorNodesByChanged() {
     this.commonService.GlobalSettingsModel.SelectedColorNodesByVariable = this.SelectedColorNodesByVariable;
     if (!this.GlobalSettingsNodeColorDialogSettings.isVisible) {
-      console.log('currently hjidden');
       // TODO::David you added  "&& this.checkActiveView('node')" below which makes it not dispaly in twoD network
       if (this.SelectedColorNodesByVariable != "None") {
-        console.log('note none and showing');
         this.SelectedNodeColorTableTypesVariable = 'Show';
         this.GlobalSettingsNodeColorDialogSettings.setVisibility(true);
         this.cachedGlobalSettingsNodeColorVisibility = this.GlobalSettingsNodeColorDialogSettings.isVisible;
@@ -7748,21 +7726,17 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     if (this.SelectedColorNodesByVariable !== "None") {
       this.generateNodeColorTable("#node-color-table");
       $('#node-color-value-row').slideUp();
-      console.log('currently ndoes is: ', this.SelectedColorNodesByVariable);
       //If hidden by default, unhide to perform slide up and down
       if (!this.ShowGlobalSettingsNodeColorTable) {
-        console.log('currently if');
         const element = this.el.nativeElement.querySelector('#node-color-table');
         this.commonService.setNodeTableElement(element);
         this.ShowGlobalSettingsNodeColorTable = true;
       } else {
-        console.log('currently else');
         $('#node-color-table-row').slideDown();
       }
       this.publishUpdateNodeColors();
       // if color nodes by equals None, then hide node color table
     } else {
-      console.log('currently ndoes is none');
       $('#node-color-table').empty();
       $('#node-color-value-row').slideDown();
       $('#node-color-table-row').slideUp();
@@ -18209,25 +18183,10 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.selectedNodeShape = this.widgets['node-symbol'] || 'circle';
   }
   ngOnInit() {
-    const windowProps = Object.getOwnPropertyNames(window);
-    console.log('Window Properties:', windowProps);
-    // Alternatively, list all own keys, including symbols
-    const windowKeys = Reflect.ownKeys(window);
-    console.log('Window Keys:', windowKeys);
+    // Console log this out to see what the window objetc has like temp
+    // const windowKeys = Reflect.ownKeys(window);
     this.commonService.updateNetwork();
-    // List all own property names, including non-enumerable ones
-    const windowProps2 = Object.getOwnPropertyNames(window);
-    console.log('Window Properties2:', windowProps2);
-    // Alternatively, list all own keys, including symbols
-    const windowKeys2 = Reflect.ownKeys(window);
-    console.log('Window Keys2:', windowKeys2);
     this.InitView();
-    // List all own property names, including non-enumerable ones
-    const windowProps3 = Object.getOwnPropertyNames(window);
-    console.log('Window Properties3:', windowProps3);
-    // Alternatively, list all own keys, including symbols
-    const windowKeys3 = Reflect.ownKeys(window);
-    console.log('Window Keys3:', windowKeys3);
   }
   ngAfterViewInit() {}
   mapDataToCytoscapeElements(data) {
@@ -18238,6 +18197,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         id: `${link.source}-${link.target}`,
         source: link.source,
         target: link.target,
+        lineSelectedColor: this.widgets['selected-color'],
         label: this.getLinkLabel(link).text,
         lineColor: this.getLinkColor(link).color,
         lineOpacity: this.getLinkColor(link).opacity,
@@ -18351,6 +18311,13 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         // 'target-arrow-color': '#f00',
         'width': 3
       }
+    }, {
+      selector: 'edge.highlighted',
+      style: {
+        'line-color': 'data(lineSelectedColor)',
+        'width': '3px',
+        'opacity': 1
+      }
     },
     // ... other styles ...
     {
@@ -18360,17 +18327,13 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         'width': 1,
         'z-index': -1,
         'events': 'no',
-        'curve-style': 'straight',
-        // @ts-ignore
-        'pointer-events': 'none'
+        'curve-style': 'straight'
       }
     }, {
       selector: '.gridnode',
       style: {
         'opacity': 0,
-        'events': 'no',
-        // @ts-ignore
-        'pointer-events': 'none'
+        'events': 'no'
       }
     }];
   }
@@ -18389,9 +18352,21 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.cy.on('mouseover', 'node', evt => {
       const node = evt.target;
       this.showNodeTooltip(node.data(), evt.originalEvent);
+      // Set cursor to grab
+      $('html,body').css('cursor', 'grab');
+      if (this.widgets['node-highlight']) {
+        // Highlight connected edges
+        node.connectedEdges().addClass('highlighted');
+      }
     });
-    this.cy.on('mouseout', 'node', () => {
+    this.cy.on('mouseout', 'node', evt => {
+      const node = evt.target;
       this.hideTooltip();
+      $('html,body').css('cursor', 'default');
+      if (this.widgets['node-highlight']) {
+        // Remove highlight from connected edges
+        node.connectedEdges().removeClass('highlighted');
+      }
     });
     // Edge events
     this.cy.on('mouseover', 'edge', evt => {
@@ -18641,32 +18616,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       return []; // No value, return an empty array
     }
   }
-  /**
-   * Toggle the pointer events of the brush and overlay element
-   *
-   * @param {boolean} enable - If true, pointer events are enabled; otherwise, they are disabled
-   */
-  toggleBrush(enable) {
-    // PRE D3
-    // d3.select('svg#network g.brush')
-    //   .attr('pointer-events', enable ? 'all' : 'none')
-    //   .select('rect.overlay')
-    //   .attr('pointer-events', enable ? 'all' : 'none');
-  }
-  /**
-   * XXXXX empty function XXXXX
-   */
-  onDataChange(event) {}
-  // loadDefaultVisualization(e: String) {
-  //     setTimeout(() => {
-  //         this.commonService.session.messages = [];
-  //         // this.messages = [];
-  //         $('#loading-information').html('');
-  //         $('#launch').prop('disabled', false).focus();
-  //         // this.displayloadingInformationModal = false;
-  //     }, 1000);
-  //     this.LoadDefaultVisualizationEvent.emit(e);
-  // }
   /**
    * @returns an array [X, Y] of the position of mouse relative to twodcomponent. Global position (i.e. d3.event.pageX) doesn't work for a dashboard
    */
@@ -19049,9 +18998,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         that.commonService.session.style['polygonColors'].splice(i, 1, $(this).val());
         that.commonService.temp.style.polygonColorMap = d3__WEBPACK_IMPORTED_MODULE_4__.scaleOrdinal(that.commonService.session.style['polygonColors']).domain(values);
         that.updateGroupNodeColors();
-        // that._rerender();
       });
-
       let alphainput = $("<a>⇳</a>").on("click", e => {
         $("#color-transparency-wrapper").css({
           top: e.clientY + 129,
@@ -19155,11 +19102,10 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * @param flag boolean indicating whether to show polygons/groups
    */
   updateNodeGrouping(flag) {
-    const cy = this.cy; // Reference to Cytoscape instance
-    if (!cy) {
-      console.error('Cytoscape instance is not initialized.');
+    if (!this.cy) {
       return;
     }
+    const cy = this.cy; // Reference to Cytoscape instance
     cy.batch(() => {
       if (flag) {
         this.addParentNodesAndGroupChildren(cy);
@@ -19313,7 +19259,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       setTimeout(() => {
         this.updatePolygonColors();
         this.updateGroupNodeColors();
-        // this.debouncedRerender();
       }, 200);
     } else {
       this.widgets['polygons-color-show'] = false;
@@ -19323,7 +19268,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       this.PolygonColorTableWrapperDialogSettings.setVisibility(false);
       setTimeout(() => {
         this.updateNodeGrouping(false);
-        // this.debouncedRerender();
       }, 200);
     }
   }
@@ -19354,7 +19298,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     } else {
       this.onPolygonColorTableChange(e);
     }
-    // this.debouncedRerender();
   }
   /**
    * Gets a list of all visible links objects; Similar to getLlinks(), and commonService.getVisibleLinks()
@@ -19611,9 +19554,12 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * @param d a node
    */
   showNodeTooltip(d, event) {
+    // Only show tooltip for nodes, not parent/group nodes
+    if (d.isParent) {
+      return;
+    }
     if (this.widgets['node-highlight']) {
       this.selectedNodeId = d.id;
-      this.cdref.detectChanges();
     }
     let tt_var_len = this.widgets['node-tooltip-variable'].length;
     let tooltipHtml;
@@ -20001,7 +19947,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         }).update();
       }
     }
-    // this.debouncedRerender();
   }
   /**
    * XXXXX reevaluate if need to be combined with polygonColorsTableToggle; when called from polygonColorsTableToggle e is 'Show'/'Hide' when called
@@ -20037,7 +19982,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       $('.node-label-row').css('display', 'flex');
     }
     this.updateNodeLabels();
-    // this.debouncedRerender();
   }
   /**
    * Gets the label for a node based on node label variable
@@ -20179,11 +20123,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     // }
     // this.cdref.detectChanges();
     this.generateNodeSymbolSelectionTable("#node-symbol-table", e);
-    console.log('symbol node');
     this.updateNodeShapes();
-    // this.debouncedRerender();
   }
-
   generateNodeSymbolSelectionTable(tableId, variable, isEditable = true) {
     this.commonService.onTableCleared(tableId);
     this.commonService.session.style.nodeSymbols = ['ellipse', 'triangle', 'rectangle', 'barrel', 'rhomboid', 'diamond', 'pentagon', 'hexagon', 'heptagon', 'octagon', 'star', 'tag', 'vee'];
@@ -20332,7 +20273,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       $('#node-radius-row').slideUp();
     }
     this.updateNodeSizes();
-    // this.debouncedRerender();
   }
   /**
    * Updates node-radius-max widget and redraws nodes
@@ -20342,7 +20282,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.widgets['node-radius-max'] = e;
     this.updateMinMaxNode();
     this.updateNodeSizes();
-    // this.debouncedRerender();
   }
   /**
    * Updates node-radius-min widget and redraws nodes
@@ -20351,7 +20290,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.widgets['node-radius-min'] = e;
     this.updateMinMaxNode();
     this.updateNodeSizes();
-    // this.debouncedRerender();
   }
   /**
    * Updates node-border-width widget and redraws nodes
@@ -20375,10 +20313,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.data === undefined) {
       return;
     }
-    console.log('rerendering');
-    // Fetch visible nodes and links
-    // const originalNodes = this.commonService.getVisibleNodes();
-    // const originalLinks = this.commonService.getVisibleLinks();
     const networkData = {
       nodes: this.commonService.getVisibleNodes(),
       links: this.commonService.getVisibleLinks()
@@ -20393,15 +20327,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       console.log('link vis rerender: ', this.commonService.getVisibleLinks());
     }
     this.data = this.commonService.convertToGraphDataArray(networkData);
-    // document.documentElement.style.setProperty('--vis-graph-panel-fill-color', `${this.SelectedNodeLabelSizeVariable}pt`);
-    setTimeout(() => {
-      this.cdref.detectChanges();
-      this.cdref.markForCheck();
-    }, 0);
-    console.log('rerendering 2');
     // Update Cytoscape visualization if it exists
     if (this.cy) {
-      console.log('updating cytoscape in rerender');
       this.cy.batch(() => {
         // Remove existing elements
         this.cy.elements().remove();
@@ -20454,29 +20381,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       });
       this.attachCytoscapeEvents();
     }
-    // Update the panels
-    // this.updatePanels();
   }
-  // public updatePanels(): void {
-  //     if (this.layoutType2 === GraphLayoutType.Parallel && this.showParallel) {
-  //         // Update nodes and generate new panels
-  //         const { updatedNodes, panels, groups } = this.commonService.updateNodesAndGeneratePanels(this.data);
-  //         // Update data with updated nodes
-  //         this.data = {
-  //             ...this.data,
-  //             nodes: updatedNodes
-  //         };
-  //         // Ensure panels are deep cloned
-  //         this.panels = JSON.parse(JSON.stringify(panels));
-  //         // Update polygonGroups
-  //         this.commonService.temp.polygonGroups = groups;
-  //         // Use setTimeout to trigger change detection in the next tick
-  //         setTimeout(() => {
-  //             this.cdref.detectChanges();
-  //             this.cdref.markForCheck();
-  //         }, 0);
-  //     }
-  // }
   getNodeShape(node) {
     //* Shapes:
     let symbolVariable = this.widgets['node-symbol-variable'];
@@ -20577,7 +20482,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   onNodeSymbolChange(e) {
     this.widgets['node-symbol'] = e;
-    // this.debouncedRerender();
   }
   /**
    * Sets whether node symbol table is visible or not
@@ -20609,6 +20513,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   onLinkLabelVariableChange(e) {
     let label = e;
     this.widgets['link-label-variable'] = label;
+    if (!this.cy) return;
     this.cy.edges().forEach(edge => {
       const newLabel = this.getLinkLabel(edge.data()).text;
       edge.data('label', newLabel);
@@ -20619,11 +20524,11 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   onLinkDecimalVariableChange(e) {
     this.widgets['link-label-decimal-length'] = e;
+    if (!this.cy) return;
     this.cy.edges().forEach(edge => {
       const newLabel = this.getLinkLabel(edge.data()).text;
       edge.data('label', newLabel);
     });
-    // this.debouncedRerender();
   }
   /**
    * Updates link-opacity widget and the opacity for all links
@@ -20633,9 +20538,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.overideTransparency = true;
     this.updateLinkColor();
     this.overideTransparency = false;
-    // this.debouncedRerender();
   }
-
   updateLinkWidthRows(e) {
     if (e == 'None') {
       setTimeout(() => {
@@ -20661,9 +20564,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.widgets['link-width-variable'] = e;
     this.updateMinMaxLink();
     this.scaleLinkWidth();
-    // this.debouncedRerender();
   }
-
   updateMinMaxNode() {
     this.visNodes = this.commonService.getVisibleNodes();
     let n = this.visNodes.length;
@@ -20744,7 +20645,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     //     .domain(this.widgets['link-width-reciprocal'] ? [max, min] : [min, max])
     //     .range([minWidth, maxWidth]);
     // this.scaleLinkWidth();
-    // this.debouncedRerender();
   }
   /**
    * Updates link-width-max widget and link width
@@ -20753,7 +20653,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.widgets['link-width-max'] = e;
     this.updateMinMaxLink();
     this.scaleLinkWidth();
-    // this.debouncedRerender();
   }
   /**
    * Updates link-width-min widget and link width
@@ -20762,7 +20661,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.widgets['link-width-min'] = e;
     this.updateMinMaxLink();
     this.scaleLinkWidth();
-    // this.debouncedRerender();
   }
   /**
    * Updates link-length widget and link force distance
@@ -20963,14 +20861,10 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         'width': 1,
         'z-index': -1,
         'events': 'no',
-        'curve-style': 'straight',
-        // @ts-ignore
-        'pointer-events': 'none'
+        'curve-style': 'straight'
       }).selector('.gridnode').style({
         'opacity': 0,
-        'events': 'no',
-        // @ts-ignore
-        'pointer-events': 'none'
+        'events': 'no'
       }).update();
     }
   }
@@ -21125,6 +21019,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   */
   scaleLinkWidth() {
     const variable = this.widgets['link-width-variable'];
+    if (!this.cy) return;
     if (variable === 'None') {
       // Apply a default width to all links
       this.cy.style().selector('edge').style({
@@ -21310,7 +21205,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.debugMode) {
       console.log('render new data');
     }
-    this.debouncedRerender();
+    console.log('onLoadNewData');
+    // this.debouncedRerender();
   }
   /**
    * renders the network; sets this.showStatistics to false
@@ -21319,6 +21215,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.debugMode) {
       console.log('render filter change');
     }
+    console.log('onFilterDataChange');
     // render doesn't do anything unless this.isLoading == true; so need to ensure that before call render
     this.debouncedRerender();
   }
@@ -21433,7 +21330,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * Updates the sizes of all nodes based on the current widget settings.
    */
   updateLinkColor() {
-    // console.log('updating link color');
+    if (!this.cy) return;
     this.cy.edges().forEach(link => {
       const colorObject = this.getLinkColor(link.data());
       link.data('lineColor', colorObject.color);
@@ -21445,6 +21342,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * Updates the sizes of all nodes based on the current widget settings.
    */
   updateNodeSizes() {
+    if (!this.cy) return;
     this.cy.nodes().forEach(node => {
       const newSize = this.getNodeSize(node.data());
       node.data('nodeSize', newSize);
@@ -21455,6 +21353,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   * Updates the border widths of all nodes based on the current widget settings.
   */
   updateNodeBorders() {
+    if (!this.cy) return;
     this.cy.nodes().forEach(node => {
       const newBorderWidth = this.getNodeBorderWidth(node.data());
       node.data('borderWidth', newBorderWidth);
@@ -21465,6 +21364,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * Updates the labels of all nodes based on the current widget settings.
    */
   updateNodeLabels() {
+    if (!this.cy) return;
     this.cy.nodes().forEach(node => {
       const newLabel = this.getNodeLabel(node.data());
       node.data('label', newLabel);
@@ -21485,6 +21385,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * Updates the font sizes of all node labels based on the current widget settings.
    */
   updateNodeLabelSizes() {
+    if (!this.cy) return;
     this.cy.nodes().forEach(node => {
       const newFontSize = this.getNodeFontSize(node.data());
       node.data('fontSize', newFontSize);
@@ -21493,6 +21394,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   }
 
   updateNodeShapes() {
+    if (!this.cy) return;
     this.cy.nodes().forEach(node => {
       const newShape = this.getNodeShape(node.data());
       console.log('newShape: ', newShape);
@@ -21823,7 +21725,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-console.log('worker imports');
 let WorkerModule = class WorkerModule {
   constructor() {
     this.compute_consensusWorker = new _helperClasses_inlineWorker__WEBPACK_IMPORTED_MODULE_0__.InlineWorker(() => {
@@ -22353,12 +22254,9 @@ let WorkerModule = class WorkerModule {
         compute_align_sw(evt.data);
       };
     });
-    console.log('worker imports 2');
     this.compute_parse_csv_matrixWorker = new Worker('assets/parse-csv-matrix.js');
   }
-  ngOnInit() {
-    console.log('worker imports 3');
-  }
+  ngOnInit() {}
   static {
     this.ctorParameters = () => [];
   }
