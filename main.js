@@ -6978,11 +6978,11 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
           }
           if (typeof node[field] == "string") {
             node.selected = vre.test(node[field]);
-            firstSelected = true;
+            firstSelected = node.selected;
           }
           if (typeof node[field] == "number") {
             node.selected = node[field] + "" == val;
-            firstSelected = true;
+            firstSelected = node.selected;
           }
         } else {
           break;
@@ -17677,69 +17677,6 @@ TimelineComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_11__.__decorate)([(0,_angu
 
 /***/ }),
 
-/***/ 13845:
-/*!****************************************************************!*\
-  !*** ./src/app/visualizationComponents/TwoDComponent/data2.ts ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   links: () => (/* binding */ links),
-/* harmony export */   nodes: () => (/* binding */ nodes),
-/* harmony export */   panels: () => (/* binding */ panels)
-/* harmony export */ });
-// import { GraphNodeShape } from '@unovis/ts';
-const nodes = [
-  // { id: 'node1', group: 'group1', label: 'Node 1', shape: GraphNodeShape.Circle },
-  // { id: 'node2', group: 'group1', label: 'Node 2', shape: GraphNodeShape.Circle },
-  // { id: 'node3', group: 'group2', label: 'Node 3', shape: GraphNodeShape.Square },
-  // { id: 'node4', group: 'group2', label: 'Node 4', shape: GraphNodeShape.Square },
-];
-const links = [{
-  source: 'node1',
-  target: 'node2'
-}, {
-  source: 'node3',
-  target: 'node4'
-}, {
-  source: 'node1',
-  target: 'node3'
-}, {
-  source: 'node2',
-  target: 'node4'
-}];
-const panels = [{
-  nodes: ['node1', 'node2'],
-  label: 'Group 1',
-  borderColor: '#E3116C',
-  borderWidth: 2,
-  padding: 10,
-  dashedOutline: true,
-  sideIconSymbol: '⚽',
-  // sideIconShape: GraphNodeShape.Circle,
-  sideIconShapeStroke: '#777',
-  sideIconCursor: 'pointer',
-  sideIconFontSize: '24px',
-  sideIconShapeSize: 50
-}, {
-  nodes: ['node3', 'node4'],
-  label: 'Group 2',
-  borderColor: '#00A1E4',
-  borderWidth: 2,
-  padding: 10,
-  dashedOutline: true,
-  sideIconSymbol: '🏀',
-  // sideIconShape: GraphNodeShape.Square,
-  sideIconShapeStroke: '#777',
-  sideIconCursor: 'pointer',
-  sideIconFontSize: '24px',
-  sideIconShapeSize: 50
-}];
-
-/***/ }),
-
 /***/ 27316:
 /*!********************************************************************************!*\
   !*** ./src/app/visualizationComponents/TwoDComponent/twoD-plugin.component.ts ***!
@@ -17751,28 +17688,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TwoDComponent: () => (/* binding */ TwoDComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./twoD-plugin.component.html?ngResource */ 13336);
-/* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./twoD-plugin.component.scss?ngResource */ 68550);
-/* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/core */ 37580);
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
-/* harmony import */ var _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../contactTraceCommonServices/common.service */ 42107);
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3 */ 86164);
-/* harmony import */ var _angular_cdk_clipboard__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/cdk/clipboard */ 52352);
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! file-saver */ 85841);
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../helperClasses/dialogSettings */ 63412);
-/* harmony import */ var _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/helperClasses/customShapes */ 13564);
-/* harmony import */ var _app_base_component_directive__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/base-component.directive */ 18784);
-/* harmony import */ var save_svg_as_png__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! save-svg-as-png */ 494);
-/* harmony import */ var save_svg_as_png__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(save_svg_as_png__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! golden-layout */ 41735);
-/* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
-/* harmony import */ var _data2__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./data2 */ 13845);
-/* harmony import */ var cytoscape__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! cytoscape */ 15363);
-
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! tslib */ 24398);
+/* harmony import */ var _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./twoD-plugin.component.html?ngResource */ 13336);
+/* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./twoD-plugin.component.scss?ngResource */ 68550);
+/* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/core */ 37580);
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
+/* harmony import */ var _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../contactTraceCommonServices/common.service */ 42107);
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3 */ 86164);
+/* harmony import */ var _angular_cdk_clipboard__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/cdk/clipboard */ 52352);
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! file-saver */ 85841);
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../helperClasses/dialogSettings */ 63412);
+/* harmony import */ var _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/helperClasses/customShapes */ 13564);
+/* harmony import */ var _app_base_component_directive__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/base-component.directive */ 18784);
+/* harmony import */ var save_svg_as_png__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! save-svg-as-png */ 494);
+/* harmony import */ var save_svg_as_png__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(save_svg_as_png__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! golden-layout */ 41735);
+/* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
+/* harmony import */ var cytoscape__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! cytoscape */ 15363);
 
 
 
@@ -17789,96 +17723,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import { GraphCircleLabel, Graph, GraphForceLayoutSettings, GraphLayoutType, GraphNode, GraphLink, GraphPanelConfig, GraphLinkStyle } from '@unovis/ts';
 
-
-let TwoDComponent = class TwoDComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_8__.BaseComponentDirective {
-  getNodeSize(node) {
-    let defaultSize = this.widgets['node-radius'];
-    let size = defaultSize,
-      med = defaultSize,
-      oldrng,
-      min,
-      max;
-    let sizeVariable = this.widgets['node-radius-variable'];
-    if (this.widgets['node-radius-variable'] == 'None') {
-      return this.widgets['node-radius'];
-    } else {
-      let v = node[sizeVariable];
-      if (!this.isNumber(v)) v = this.nodeMid;
-      // Check the type of v before calling linkScale
-      // Ensure v is a number before using linkScale
-      if (typeof v === 'number') {
-        let scaleValue = this.nodeScale(v);
-        if (this.debugMode) {
-          console.log('link scale', scaleValue);
-        }
-        return scaleValue;
-      } else {
-        if (this.debugMode) {
-          console.error('v is not a number:', v);
-        }
-        return this.nodeScale; // Default to scalar if v is not a number
-      }
-      // return this.commonService.temp.style.nodeColorMap(this.commonService.session.data.nodes[index][variable]);
-    }
-  }
-
-  getNodeColor(node) {
-    let variable = this.widgets['node-color-variable'];
-    let color = this.widgets['node-color'];
-    // Set cluster to group if showing paralell grouping
-    if (variable == "cluster" && this.showParallel) {
-      variable = "group";
-    }
-    return variable == 'None' ? color : this.commonService.temp.style.nodeColorMap(node[variable]);
-  }
-  getLinkWidth(link) {
-    let scalar = this.widgets['link-width'];
-    let variable = this.widgets['link-width-variable'];
-    if (variable == 'None') return scalar;else {
-      let mid = (this.linkMax - this.linkMin) / 2 + this.linkMin;
-      let v = link[variable];
-      if (!this.isNumber(v)) v = mid;
-      // Ensure v is a number before using linkScale
-      if (typeof v === 'number') {
-        let scaleValue = this.linkScale(v);
-        return scaleValue;
-      } else {
-        return scalar; // Default to scalar if v is not a number
-      }
-    }
-  }
-  // Method to handle shape change from the dropdown
-  onNodeShapeChange(newShape) {
-    this.selectedNodeShape = newShape;
-    this.updateNodeShapes();
-  }
-  getLinkColor(link) {
-    let variable = this.widgets['link-color-variable'];
-    let color = this.widgets['link-color'];
-    if (link.source.id === "KF773429" && link.target.id === "KF773430" || link.source.id === "KF773430" && link.target.id === "KF773429") {
-      console.log('link variable: ', link[variable]);
-    }
-    let finalColor;
-    let alphaValue;
-    if ((variable == 'Origin' || variable == 'origin') && link.origin.length > 1) {
-      finalColor = this.commonService.temp.style.linkColorMap("Duo-Link");
-      alphaValue = this.commonService.temp.style.linkAlphaMap("Duo-Link");
-      // this.commonService.temp.style.linkColorMap("Multi-Link"), alphaValue;
-    } else {
-      finalColor = variable == 'None' ? color : this.commonService.temp.style.linkColorMap(link[variable]);
-      alphaValue = this.commonService.temp.style.linkAlphaMap(link[variable]);
-    }
-    if (this.overideTransparency) {
-      alphaValue = this.widgets['link-opacity'];
-    }
-    // console.log('color: ', finalColor);
-    return {
-      color: finalColor,
-      opacity: alphaValue
-    };
-  }
+let TwoDComponent = class TwoDComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_7__.BaseComponentDirective {
   constructor(injector, eventManager, commonService, container, elRef, cdref, clipboard, gtmService) {
     super(elRef.nativeElement);
     this.eventManager = eventManager;
@@ -17887,64 +17733,26 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.cdref = cdref;
     this.clipboard = clipboard;
     this.gtmService = gtmService;
-    this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_12__.EventEmitter();
-    // TODO::David Please delete or update the below accordingly if still needed as we no longer are using unovis here
-    // @ViewChild('twoDGraph') twoDGraph: Graph<GraphNode, GraphLink>;
-    this.svgStyle = {
-      'height': '0px',
-      'width': '1000px'
-    };
+    this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_10__.EventEmitter();
     this.vizLoaded = true;
-    this.data2 = {
-      nodes: _data2__WEBPACK_IMPORTED_MODULE_10__.nodes,
-      links: _data2__WEBPACK_IMPORTED_MODULE_10__.links
-    };
     this.layoutParallelNodesPerColumn = 4;
     this.debugMode = false;
     this.overideTransparency = false;
-    // layoutType2 = GraphLayoutType.Parallel;
-    // layoutNodeGroup = (d: NodeDatum2): string => d.group;
-    // layoutParallelNodeSubGroup = (d: NodeDatum2): string => d.id;
-    // panels: GraphPanelConfig[] = panels;
-    // layoutType = GraphLayoutType.Force;
     this.containerHeight = 800; // or any other number you want
     this.graphData = {
       nodes: [],
       links: []
     };
-    this.showParallel = false;
     this.selectedNodeId = undefined;
-    this.forceLayoutSettings = {
-      fixNodePositionAfterSimulation: true
-    };
-    this.selectedNodeShape = 'circle'; // Default shapeDF
-    this.getNodeStroke = n => {
-      if (n.id == this.selectedNodeId) {
-        return this.widgets['selected-node-stroke-color'];
-      } else {
-        return '#000';
-      }
-    };
-    this.nodeStrokeWidth = n => {
-      return this.nodeBorderWidth;
-    };
-    this.getLinkArrow = link => {
-      if (this.widgets['link-directed'] && this.widgets['link-bidirectional']) {
-        return "double";
-      }
-      return this.widgets['link-directed'];
-    };
-    this.customShapes = new _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_7__.CustomShapes();
-    this.symbolTableWrapper = null;
-    this.linkColorTableWrapper = null;
-    this.nodeColorTableWrapper = null;
+    this.selectedNodeShape = 'ellipse'; // Default shapeDF
     this.linkMin = 3;
     this.linkMax = 27;
     this.linkMid = 1;
     this.nodeMin = 3;
     this.nodeMax = 27;
-    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_4__.scaleLinear().domain([0, 1]).range([0, 1]);
+    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_3__.scaleLinear().domain([0, 1]).range([0, 1]);
     this.nodeMid = 1;
+    // TODO determine if this is needed anymore after transition to cytoscape
     this.autoFit = true;
     this.ShowNetworkAttributes = false;
     this.ShowStatistics = true;
@@ -17957,10 +17765,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.force = null;
     this.radToDeg = 180 / Math.PI;
     this.selected = null;
-    this.multidrag = false;
-    // clipboard = new ClipboardJS('#copyID, #copySeq');
     this.zoom = null;
-    this.brush = null;
     this.FieldList = [];
     this.ToolTipFieldList = [];
     this.LinkToolTipList = [];
@@ -17995,11 +17800,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       value: 'Hide'
     }];
     this.SelectedNetworkTableTypeVariable = "Hide";
-    this.isExportClosed = false;
-    /* XXXXXnot sure if this boolean is necessary; Related to exportWork, and bottom-table s (ie. node-symbol-table-bottom)
-     currently exportWork2 is used which don't make use of isExporting and bottom-table s XXXXX */
-    this.isExporting = false;
-    this.isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
     // Link Tab
     this.SelectedLinkTooltipVariable = "None";
     this.SelectedLinkLabelVariable = "None";
@@ -18058,9 +17858,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       value: 'Show'
     }];
     this.SelectedNetworkGridLineTypeVariable = "Hide";
-    this.SelectedNetworkChargeVariable = 200;
-    this.SelectedNetworkGravityVariable = .05;
-    this.SelectedNetworkFrictionVariable = .4;
     this.SelecetedNetworkLinkStrengthVariable = 0.123;
     this.SelectedNetworkExportFilenameVariable = "";
     this.NetworkExportFileTypeList = [{
@@ -18085,12 +17882,21 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.ShowNodeSymbolTable = false;
     this.ShowPolygonColorTable = false;
     this.ShowAdvancedExport = true;
-    this.NodeSymbolTableWrapperDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__.DialogSettings('#node-symbol-table-wrapper', false);
-    this.PolygonColorTableWrapperDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__.DialogSettings('#polygon-color-table-wrapper', false);
-    this.Node2DNetworkExportDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__.DialogSettings('#network-settings-pane', false);
+    this.NodeSymbolTableWrapperDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_5__.DialogSettings('#node-symbol-table-wrapper', false);
+    this.PolygonColorTableWrapperDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_5__.DialogSettings('#polygon-color-table-wrapper', false);
+    this.Node2DNetworkExportDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_5__.DialogSettings('#network-settings-pane', false);
     this.ContextSelectedNodeAttributes = [];
-    // Set the zoom scale extent
-    this.zoomScaleExtent = [0.005, 5]; // Minimum zoom of 0.1 and maximum zoom of 2
+    // TODO see if needed after transition to cytoscape
+    // zoomScaleExtent: [number, number] = [0.005, 5]; // Minimum zoom of 0.1 and maximum zoom of 2
+    this.customShapes = new _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_6__.CustomShapes();
+    this.symbolTableWrapper = null;
+    this.linkColorTableWrapper = null;
+    this.nodeColorTableWrapper = null;
+    this.isExportClosed = false;
+    /* XXXXXnot sure if this boolean is necessary; Related to exportWork, and bottom-table s (ie. node-symbol-table-bottom)
+     currently exportWork2 is used which don't make use of isExporting and bottom-table s XXXXX */
+    this.isExporting = false;
+    this.isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
     /**
      * Converts table such as node color table, link color table or node symbol table from dialog window into element on twoD network svg when
      * getting ready to export.
@@ -18338,7 +18144,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     }];
   }
   attachCytoscapeEvents() {
-    // Example: Node click
     this.cy.on('tap', 'node', evt => {
       const node = evt.target;
       console.log('Selected node:', node.data());
@@ -18348,7 +18153,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       node.data('selectedBorderColor', this.widgets['selected-color']);
       this.cy.style().update();
     });
-    // Example: Hover events
     this.cy.on('mouseover', 'node', evt => {
       const node = evt.target;
       this.showNodeTooltip(node.data(), evt.originalEvent);
@@ -18438,7 +18242,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    *
    */
   InitView() {
-    var _this = this;
     this.gtmService.pushTag({
       event: "page_view",
       page_location: "/2d_network",
@@ -18459,8 +18262,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     let that = this;
     if (this.IsDataAvailable === true && this.zoom === null) {
       // PRE D3
-      d3__WEBPACK_IMPORTED_MODULE_4__.select('svg#viz-force').append('g').attr('class', 'horizontal-gridlines');
-      d3__WEBPACK_IMPORTED_MODULE_4__.select('svg#viz-force').append('g').attr('class', 'vertical-gridlines');
+      d3__WEBPACK_IMPORTED_MODULE_3__.select('svg#viz-force').append('g').attr('class', 'horizontal-gridlines');
+      d3__WEBPACK_IMPORTED_MODULE_3__.select('svg#viz-force').append('g').attr('class', 'vertical-gridlines');
       // d3.select('svg#network').exit().remove();
       // this.svg = d3.select('svg#network').append('g');
       // populate this.twoD.FieldList with [None, ...nodeFields]
@@ -18516,94 +18319,58 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
           });
         }
       });
-      this.svgStyle = {
-        'height': '100%',
-        'min-width.%': 100
-      };
       this.halfWidth = $('#network').parent().width() / 2;
       this.halfHeight = $('#network').parent().parent().parent().height() / 2;
-      this.containerHeight = this.halfHeight * 2 - 40;
       let networkData = {
         nodes: this.commonService.getVisibleNodes(),
         links: this.commonService.getVisibleLinks()
       };
       this.data = this.commonService.convertToGraphDataArray(networkData);
-      // Now update panels
-      // this.updatePanels();
       if (this.debugMode) {
         console.log('data: ', this.data);
       }
-      $(document).on("node-visibility", function () {
-        // if (!that.isLoading) {
-        //     console.log('render node-vis');
-        //     that.isLoading = true;
-        //     that.render(false);
-        //     setTimeout(() => {
-        //         that.isLoading = false;
-        //       }, 1000);
-        // }
-        // let networkData = { 
-        //     nodes : that.commonService.getVisibleNodes(), 
-        //     links : that.commonService.getVisibleLinks()
-        // }
-        // that.data = that.commonService.convertToGraphDataArray(networkData);
-      });
-      $(document).on("link-visibility", /*#__PURE__*/(0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
-        if (!that.isLoading) {
-          that.isLoading = true;
-          // that.debouncedRerender();
-          that.isLoading = false;
-        }
-      }));
-      $(document).on("cluster-visibility", function () {
-        // if (!that.isLoading) {
-        //     // console.log('render clus-vis');
-        //     that.isLoading = true;
-        //     that.render(true);
-        //     setTimeout(() => {
-        //         that.isLoading = false;
-        //       }, 1000);
-        // }     
-        // let networkData = { 
-        //     nodes : that.commonService.getVisibleNodes(), 
-        //     links : that.commonService.getVisibleLinks()
-        // }
-        // that.data = that.commonService.convertToGraphDataArray(networkData);
-      });
-      $(document).on("node-selected", function () {
-        if (!that.isLoading) {
-          let mtSelectedNode = that.commonService.getSelectedNode(that.commonService.getVisibleNodes());
-          if (mtSelectedNode && mtSelectedNode.id) {
-            that.selectedNodeId = mtSelectedNode.id;
-          } else if (mtSelectedNode && !mtSelectedNode.id) {
-            that.selectedNodeId = mtSelectedNode._id;
-          }
-          // that.debouncedRerender();
-          if (that.debugMode) {
-            console.log('node-selected in 2d: ', that.selectedNodeId);
-            console.log('node-selected in data: ', that.data.nodes.find(node => node.id == that.selectedNodeId));
-          }
-        }
-      });
-      // this.eventManager.addGlobalEventListener('window', "node-selected", () => {
-      //     console.log('render node-sel2');
-      //     this.render(false);
+      // TODO when done with view, remove this since we are sure we wont need it
+      // $(document).on("node-visibility", function () {
+      //     let networkData = { 
+      //         nodes : that.commonService.getVisibleNodes(), 
+      //         links : that.commonService.getVisibleLinks()
+      //     }
+      //     that.data = that.commonService.convertToGraphDataArray(networkData);
       // });
+      // $(document).on("link-visibility", async function () {
+      // });
+      // $(document).on("cluster-visibility", function () {
+      // });
+      // TODO move this to a subscribed event than use document jquery
+      $(document).on("node-selected", function () {
+        let mtSelectedNode = that.commonService.getSelectedNode(that.commonService.getVisibleNodes());
+        if (mtSelectedNode && mtSelectedNode.id) {
+          that.selectedNodeId = mtSelectedNode.id;
+        } else if (mtSelectedNode && !mtSelectedNode.id) {
+          that.selectedNodeId = mtSelectedNode._id;
+        }
+        // Deselect all nodes first
+        that.cy.elements().unselect();
+        // Select the newly selected node
+        if (that.selectedNodeId) {
+          const node = that.cy.getElementById(that.selectedNodeId);
+          if (node) {
+            node.select();
+          }
+        }
+        // that.debouncedRerender();
+        if (that.debugMode) {
+          console.log('node-selected in 2d: ', that.selectedNodeId);
+          console.log('node-selected in data: ', that.data.nodes.find(node => node.id == that.selectedNodeId));
+        }
+      });
       if (this.commonService.session.files.length > 1) $('#link-color-variable').val('origin').change();
       if (this.widgets['background-color']) $('#cy').css('background-color', this.widgets['background-color']);
       this.commonService.onStatisticsChanged();
       this.loadSettings();
-      //For some mysterious reason, this really needed a delay...
-      setTimeout( /*#__PURE__*/(0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
-        if (_this.widgets['node-symbol-variable'] !== 'None') {
-          $('#node-symbol-variable').change(); //.trigger('change');
-        }
-
-        if (_this.debugMode) {
-          console.log('data: ', _this.data);
-        }
-        _this.isLoading = false;
-      }), 1);
+      if (this.widgets['node-symbol-variable'] !== 'None') {
+        $('#node-symbol-variable').change(); //.trigger('change');
+      }
     }
   }
   // Method to ensure the value is an array
@@ -18902,7 +18669,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       let blob = new Blob([content], {
         type: 'image/svg+xml;charset=utf-8'
       });
-      file_saver__WEBPACK_IMPORTED_MODULE_5__(blob, filename + '.' + filetype);
+      file_saver__WEBPACK_IMPORTED_MODULE_4__(blob, filename + '.' + filetype);
       // PRE D3
       // if (watermark){
       //     watermark.remove();
@@ -18924,7 +18691,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         console.log('network: ', network);
         console.log('network: ', network.getBoundingClientRect());
       }
-      (0,save_svg_as_png__WEBPACK_IMPORTED_MODULE_9__.saveSvgAsPng)(network, filename + '.' + filetype, {
+      (0,save_svg_as_png__WEBPACK_IMPORTED_MODULE_8__.saveSvgAsPng)(network, filename + '.' + filetype, {
         scale: this.SelectedNetworkExportScaleVariable,
         backgroundColor: this.widgets['background-color'],
         encoderType: 'image/' + filetype,
@@ -18996,7 +18763,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       that.commonService.session.style['polygonAlphas'].splice(i, 1, that.commonService.temp.style.polygonAlphaMap(value));
       let colorinput = $('<input type="color" value="' + that.commonService.temp.style.polygonColorMap(value) + '">').on("change", function () {
         that.commonService.session.style['polygonColors'].splice(i, 1, $(this).val());
-        that.commonService.temp.style.polygonColorMap = d3__WEBPACK_IMPORTED_MODULE_4__.scaleOrdinal(that.commonService.session.style['polygonColors']).domain(values);
+        that.commonService.temp.style.polygonColorMap = d3__WEBPACK_IMPORTED_MODULE_3__.scaleOrdinal(that.commonService.session.style['polygonColors']).domain(values);
         that.updateGroupNodeColors();
       });
       let alphainput = $("<a>⇳</a>").on("click", e => {
@@ -19007,7 +18774,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         });
         $("#color-transparency").val(that.commonService.session.style['polygonAlphas'][i]).on("change", function () {
           that.commonService.session.style['polygonAlphas'].splice(i, 1, parseFloat($(this).val()));
-          that.commonService.temp.style.polygonAlphaMap = d3__WEBPACK_IMPORTED_MODULE_4__.scaleOrdinal(that.commonService.session.style['polygonAlphas']).domain(values);
+          that.commonService.temp.style.polygonAlphaMap = d3__WEBPACK_IMPORTED_MODULE_3__.scaleOrdinal(that.commonService.session.style['polygonAlphas']).domain(values);
           $("#color-transparency-wrapper").fadeOut();
           that.updateGroupNodeColors();
         });
@@ -19514,42 +19281,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     return tableHtml;
   }
   /**
-   * Highlights the node and all of its neighbor (shares a link with) and the links that the node is
-   * a source or target
-   * @param node node that is mouseover by user
-   */
-  highlightNeighbors(node) {
-    let links = this.getVLinks();
-    let lindices = [],
-      neighbors = [node._id];
-    let n = links.length;
-    for (let i = 0; i < n; i++) {
-      let l = links[i];
-      if (l.source._id !== node._id && l.target._id !== node._id) {
-        lindices.push(l.index);
-      } else {
-        if (l.source._id == node._id) {
-          neighbors.push(l.target._id);
-        } else {
-          neighbors.push(l.source._id);
-        }
-      }
-    }
-    // highlights current node and its neighbors
-    // this.svg
-    //     .select('g.nodes')
-    //     .selectAll('g')
-    //     .selectAll('path')
-    //     .attr('opacity', d => this.commonService.includes(neighbors, d._id) ? 1 : .1);
-    // hightlights all of current node's links
-    // this.svg
-    //     .select('g.links')
-    //     .selectAll('line')
-    //     .data(links)
-    //     .attr('opacity', l => this.commonService.includes(lindices, l.index) ? .1 : 1);
-  }
-
-  /**
    * Gets data from current node needed for tooltip and displays it in the tooltip also hightlights neighbors if that option is selected
    * @param d a node
    */
@@ -19571,7 +19302,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       tooltipHtml = this.tabulate(this.widgets['node-tooltip-variable'].map(variable => [this.titleize(variable), d[variable]]));
     }
     let [X, Y] = this.getRelativeMousePosition(event);
-    d3__WEBPACK_IMPORTED_MODULE_4__.select('#tooltip').html(tooltipHtml).style('position', 'absolute').style('left', X + 10 + 'px').style('top', Y - 10 + 'px').style('z-index', 1000).transition().duration(100).style('opacity', 1);
+    d3__WEBPACK_IMPORTED_MODULE_3__.select('#tooltip').html(tooltipHtml).style('position', 'absolute').style('left', X + 10 + 'px').style('top', Y - 10 + 'px').style('z-index', 1000).transition().duration(100).style('opacity', 1);
     // TODO::David The below incoming so and was refactored with the prev implementation, if your implemenation above is best and can ignore the below.  Delete this if not needed
     // if (this.widgets['node-tooltip-variable'].length > 0 && this.widgets['node-tooltip-variable'][0] == 'None') {
     //     if (this.widgets['node-highlight']) {
@@ -19628,7 +19359,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       tooltipHtml = getData(d, tooltipVariables[0]);
     }
     let [X, Y] = this.getRelativeMousePosition(event);
-    d3__WEBPACK_IMPORTED_MODULE_4__.select('#tooltip').html(tooltipHtml).style('position', 'absolute').style('left', X + 10 + 'px').style('top', Y - 10 + 'px').style('z-index', 1000).transition().duration(100).style('opacity', 1);
+    d3__WEBPACK_IMPORTED_MODULE_3__.select('#tooltip').html(tooltipHtml).style('position', 'absolute').style('left', X + 10 + 'px').style('top', Y - 10 + 'px').style('z-index', 1000).transition().duration(100).style('opacity', 1);
   }
   /**
    * Hides the Tooltip
@@ -19637,7 +19368,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.widgets['node-highlight']) {
       this.selectedNodeId = undefined;
     }
-    let tooltip = d3__WEBPACK_IMPORTED_MODULE_4__.select('#tooltip');
+    let tooltip = d3__WEBPACK_IMPORTED_MODULE_3__.select('#tooltip');
     tooltip.transition().duration(100).style('opacity', 0).on('end', () => tooltip.style('z-index', -1));
   }
   /**
@@ -19822,8 +19553,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         // }
         const rawGroup = node.data(foci); // Assuming foci corresponds to a data attribute
         const group = Array.isArray(rawGroup) ? rawGroup[0] : rawGroup; // Use first element if array
-        if (group && group !== 'None') {
-          // Exclude nodes without a group
+        if (group !== undefined && group !== null && group !== 'None') {
           if (!groupMap.has(group)) {
             groupMap.set(group, []);
           }
@@ -19982,6 +19712,88 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       $('.node-label-row').css('display', 'flex');
     }
     this.updateNodeLabels();
+  }
+  // Method to handle shape change from the dropdown
+  onNodeShapeChange(newShape) {
+    this.selectedNodeShape = newShape;
+    this.updateNodeShapes();
+  }
+  getNodeSize(node) {
+    let defaultSize = this.widgets['node-radius'];
+    let size = defaultSize,
+      med = defaultSize,
+      oldrng,
+      min,
+      max;
+    let sizeVariable = this.widgets['node-radius-variable'];
+    if (this.widgets['node-radius-variable'] == 'None') {
+      return this.widgets['node-radius'];
+    } else {
+      let v = node[sizeVariable];
+      if (!this.isNumber(v)) v = this.nodeMid;
+      // Check the type of v before calling linkScale
+      // Ensure v is a number before using linkScale
+      if (typeof v === 'number') {
+        let scaleValue = this.nodeScale(v);
+        if (this.debugMode) {
+          console.log('link scale', scaleValue);
+        }
+        return scaleValue;
+      } else {
+        if (this.debugMode) {
+          console.error('v is not a number:', v);
+        }
+        return this.nodeScale; // Default to scalar if v is not a number
+      }
+    }
+  }
+
+  getNodeColor(node) {
+    let variable = this.widgets['node-color-variable'];
+    let color = this.widgets['node-color'];
+    return variable == 'None' ? color : this.commonService.temp.style.nodeColorMap(node[variable]);
+  }
+  getLinkWidth(link) {
+    let scalar = this.widgets['link-width'];
+    let variable = this.widgets['link-width-variable'];
+    if (variable == 'None') return scalar;else {
+      let mid = (this.linkMax - this.linkMin) / 2 + this.linkMin;
+      let v = link[variable];
+      if (!this.isNumber(v)) v = mid;
+      // Ensure v is a number before using linkScale
+      if (typeof v === 'number') {
+        let scaleValue = this.linkScale(v);
+        return scaleValue;
+      } else {
+        return scalar; // Default to scalar if v is not a number
+      }
+    }
+  }
+
+  getLinkColor(link) {
+    let variable = this.widgets['link-color-variable'];
+    let color = this.widgets['link-color'];
+    if (link.source.id === "KF773429" && link.target.id === "KF773430" || link.source.id === "KF773430" && link.target.id === "KF773429") {
+      console.log('link variable: ', link[variable]);
+    }
+    let finalColor;
+    let alphaValue;
+    if ((variable == 'Origin' || variable == 'origin') && link.origin.length > 1) {
+      finalColor = this.commonService.temp.style.linkColorMap("Duo-Link");
+      alphaValue = this.commonService.temp.style.linkAlphaMap("Duo-Link");
+      // this.commonService.temp.style.linkColorMap("Multi-Link"), alphaValue;
+    } else {
+      finalColor = variable == 'None' ? color : this.commonService.temp.style.linkColorMap(link[variable]);
+      alphaValue = this.commonService.temp.style.linkAlphaMap(link[variable]);
+    }
+    if (this.overideTransparency) {
+      alphaValue = this.widgets['link-opacity'];
+    }
+    // console.log('color: ', finalColor);
+    return {
+      color: finalColor,
+      opacity: alphaValue
+    };
   }
   /**
    * Gets the label for a node based on node label variable
@@ -20203,7 +20015,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       values.sort((a, b) => {
         return aggregates[b] - aggregates[a];
       });
-      this.commonService.temp.style.nodeSymbolMap = d3__WEBPACK_IMPORTED_MODULE_4__.scaleOrdinal(this.commonService.session.style.nodeSymbols).domain(values);
+      this.commonService.temp.style.nodeSymbolMap = d3__WEBPACK_IMPORTED_MODULE_3__.scaleOrdinal(this.commonService.session.style.nodeSymbols).domain(values);
       values.forEach((v, i) => {
         // PRE D3
         // Manually create options instead of using the existing select
@@ -20224,7 +20036,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         // console.log('symbol each value: ', v, this.commonService.temp.style.nodeSymbolMap(v));
         let selector = $(`<select ${disabled}></select>`).append(optionsHtml).val(this.commonService.temp.style.nodeSymbolMap(v)).on('change', e => {
           this.commonService.session.style.nodeSymbols.splice(i, 1, e.target.value);
-          this.commonService.temp.style.nodeSymbolMap = d3__WEBPACK_IMPORTED_MODULE_4__.scaleOrdinal(this.commonService.session.style.nodeSymbols).domain(values);
+          this.commonService.temp.style.nodeSymbolMap = d3__WEBPACK_IMPORTED_MODULE_3__.scaleOrdinal(this.commonService.session.style.nodeSymbols).domain(values);
           this.updateNodeShapes();
         });
         let symbolText = symbolMapping.find(x => x.key === this.commonService.temp.style.nodeSymbolMap(v));
@@ -20354,7 +20166,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         layout.run();
       });
     } else {
-      this.cy = (0,cytoscape__WEBPACK_IMPORTED_MODULE_11__["default"])({
+      this.cy = (0,cytoscape__WEBPACK_IMPORTED_MODULE_9__["default"])({
         container: this.cyContainer.nativeElement,
         elements: this.mapDataToCytoscapeElements(this.data),
         style: this.getCytoscapeStyles(),
@@ -20580,7 +20392,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       if (size > this.nodeMax) this.nodeMax = size;
     }
     this.nodeMid = (this.nodeMax - this.nodeMin) / 2;
-    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_4__.scaleLinear().domain([this.nodeMin, this.nodeMax]).range([minWidth, maxWidth]);
+    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_3__.scaleLinear().domain([this.nodeMin, this.nodeMax]).range([minWidth, maxWidth]);
   }
   updateMinMaxLink() {
     let maxWidth = this.widgets['link-width-max'];
@@ -20604,7 +20416,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       if (l > this.linkMax) this.linkMax = l;
       if (l < this.linkMin) this.linkMin = l;
     }
-    this.linkScale = d3__WEBPACK_IMPORTED_MODULE_4__.scaleLinear().domain([this.linkMin, this.linkMax]).range([minWidth, maxWidth]);
+    this.linkScale = d3__WEBPACK_IMPORTED_MODULE_3__.scaleLinear().domain([this.linkMin, this.linkMax]).range([minWidth, maxWidth]);
   }
   /**
    * Updates link-width-reciprocal widget and updates link width
@@ -21307,19 +21119,11 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     //Network|Gridlines
     this.SelectedNetworkGridLineTypeVariable = this.widgets['network-gridlines-show'] ? "Show" : "Hide";
     this.onNetworkGridlinesShowHideChange(this.SelectedNetworkGridLineTypeVariable);
-    //Network|Charge
-    this.SelectedNetworkChargeVariable = this.widgets['node-charge'];
-    this.onNodeChargeChange(this.SelectedNetworkChargeVariable);
-    //Network|Gravity
-    this.SelectedNetworkGravityVariable = this.widgets['network-gravity'];
-    this.onNetworkGravityChange(this.SelectedNetworkGravityVariable);
-    //Network|Friction
-    this.SelectedNetworkFrictionVariable = this.widgets['network-friction'];
-    this.onNetworkFrictionChange(this.SelectedNetworkFrictionVariable);
     //Network|Link Strength
     this.SelecetedNetworkLinkStrengthVariable = this.widgets['network-link-strength'];
     this.onNetworkFrictionChange(this.SelecetedNetworkLinkStrengthVariable);
-    if (this.widgets['polygon-label-orientation'] !== 'top' || this.widgets['polygon-label-orientation'] !== 'bottom') {
+    // Ensure proper orientation is set
+    if (this.widgets['polygon-label-orientation'] !== 'top' || this.widgets['polygon-label-orientation'] !== 'bottom' || this.widgets['polygon-label-orientation'] !== 'middle') {
       this.widgets['polygon-label-orientation'] = 'top';
     }
     //Network|Polygon Orientation
@@ -21438,34 +21242,34 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
 
   static {
     this.ctorParameters = () => [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.Injector
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Injector
     }, {
-      type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_13__.EventManager
+      type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__.EventManager
     }, {
-      type: _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService
+      type: _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__.CommonService
     }, {
-      type: golden_layout__WEBPACK_IMPORTED_MODULE_14__.ComponentContainer,
+      type: golden_layout__WEBPACK_IMPORTED_MODULE_12__.ComponentContainer,
       decorators: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.Inject,
-        args: [_app_base_component_directive__WEBPACK_IMPORTED_MODULE_8__.BaseComponentDirective.GoldenLayoutContainerInjectionToken]
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Inject,
+        args: [_app_base_component_directive__WEBPACK_IMPORTED_MODULE_7__.BaseComponentDirective.GoldenLayoutContainerInjectionToken]
       }]
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.ElementRef
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ElementRef
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.ChangeDetectorRef
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ChangeDetectorRef
     }, {
-      type: _angular_cdk_clipboard__WEBPACK_IMPORTED_MODULE_15__.Clipboard
+      type: _angular_cdk_clipboard__WEBPACK_IMPORTED_MODULE_13__.Clipboard
     }, {
-      type: angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_16__.GoogleTagManagerService
+      type: angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_14__.GoogleTagManagerService
     }];
   }
   static {
     this.propDecorators = {
       DisplayGlobalSettingsDialogEvent: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.Output
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Output
       }],
       cyContainer: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.ViewChild,
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ViewChild,
         args: ['cy', {
           static: false
         }]
@@ -21473,12 +21277,12 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     };
   }
 };
-TwoDComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_12__.Component)({
+TwoDComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_15__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_10__.Component)({
   selector: 'TwoDComponent',
-  template: _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__,
-  changeDetection: _angular_core__WEBPACK_IMPORTED_MODULE_12__.ChangeDetectionStrategy.OnPush,
-  styles: [(_twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2___default())]
-}), (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_12__.Injector, _angular_platform_browser__WEBPACK_IMPORTED_MODULE_13__.EventManager, _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService, golden_layout__WEBPACK_IMPORTED_MODULE_14__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_12__.ElementRef, _angular_core__WEBPACK_IMPORTED_MODULE_12__.ChangeDetectorRef, _angular_cdk_clipboard__WEBPACK_IMPORTED_MODULE_15__.Clipboard, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_16__.GoogleTagManagerService])], TwoDComponent);
+  template: _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__,
+  changeDetection: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ChangeDetectionStrategy.OnPush,
+  styles: [(_twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default())]
+}), (0,tslib__WEBPACK_IMPORTED_MODULE_15__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_10__.Injector, _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__.EventManager, _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__.CommonService, golden_layout__WEBPACK_IMPORTED_MODULE_12__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_10__.ElementRef, _angular_core__WEBPACK_IMPORTED_MODULE_10__.ChangeDetectorRef, _angular_cdk_clipboard__WEBPACK_IMPORTED_MODULE_13__.Clipboard, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_14__.GoogleTagManagerService])], TwoDComponent);
 (function (TwoDComponent) {
   TwoDComponent.componentTypeName = '2D Network';
 })(TwoDComponent || (TwoDComponent = {}));
