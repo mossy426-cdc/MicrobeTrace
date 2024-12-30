@@ -424,6 +424,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     this.tableCleared = new _angular_core__WEBPACK_IMPORTED_MODULE_11__.EventEmitter();
     // EventEmitter to notify components of changes
     this.statisticsChanged = new _angular_core__WEBPACK_IMPORTED_MODULE_11__.EventEmitter();
+    // EventEmitter to notify components of changes
+    this.FP_removeFiles = new _angular_core__WEBPACK_IMPORTED_MODULE_11__.EventEmitter();
+    // EventEmitter to notify components of changes
+    this.twoD_saveNodePos = new _angular_core__WEBPACK_IMPORTED_MODULE_11__.EventEmitter();
     /**
      * Returns an object that will eventually be filled with data. It is accessed throught commonService.session.data
      * It will store a list of nodes, links, and clusters as well as fields that can be used for each
@@ -764,6 +768,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     this._linkThreshold$ = new rxjs__WEBPACK_IMPORTED_MODULE_12__.BehaviorSubject(0.015);
     // Expose as observable so components can subscribe
     this.linkThreshold$ = this._linkThreshold$.asObservable();
+    // BehaviorSubject to store the threshold
+    this._networkUpdated$ = new rxjs__WEBPACK_IMPORTED_MODULE_12__.BehaviorSubject(false);
+    // Expose as observable so components can subscribe
+    this.networkUpdated$ = this._networkUpdated$.asObservable();
     this.exportRequestedSource = new rxjs__WEBPACK_IMPORTED_MODULE_13__.Subject();
     this.exportRequested$ = this.exportRequestedSource.asObservable();
     this.exportOptions = {
@@ -900,6 +908,12 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   // Example: read-only convenience accessor to get the current threshold
   get linkThreshold() {
     return this._linkThreshold$.value;
+  }
+  get networkUpdated() {
+    return this._networkUpdated$.value;
+  }
+  setNetworkUpdated(newPruned) {
+    this._networkUpdated$.next(newPruned);
   }
   // Shared method to notify components of link threshold changes
   onMetricChanged(metric) {
@@ -1126,6 +1140,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       matrix[newLink.source][newLink.target] = newLink;
       matrix[newLink.target][newLink.source] = newLink;
       linkIsNew = 1;
+    }
+    if (newLink.origin.length > 1 && (!this.session.style.widgets['link-origin-array-order'] || this.session.style.widgets['link-origin-array-order'].length == 0)) {
+      this.session.style.widgets['link-origin-array-order'] = newLink.origin;
     }
     return linkIsNew;
     // TODO Remove when not needed
@@ -2617,7 +2634,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     let n = nodes.length;
     for (let i = 0; i < n; i++) {
       const d = nodes[i];
-      if (!d.visible) continue;
       const dv = d[variable];
       if (dv in aggregates) {
         if (!d.visible) continue;
@@ -3596,13 +3612,16 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     }
     for (let i = 0; i < n; i++) {
       const link = links[i];
-      if (link.source === "KF773429" && link.target === "KF773430" || link.source === "KF773430" && link.target === "KF773429") {
-        // console.log('setting link vis: ', _.cloneDeep(link));
-      }
+      // if((link.source === "30582_KF773578_H96cl11" && link.target === "30576_KF773439_B96cl57") || (link.source === "30576_KF773439_B96cl57" && link.target === "30582_KF773578_H96cl11")) {
+      //     console.log('setting link vis: ', _.cloneDeep(link));
+      // }
       let visible = true;
       let overrideNN = false;
       // Add back the distance origin if it was removed and the link has distance to it
       if (link.hasDistance && !link.origin.includes(link.distanceOrigin)) {
+        if (link.source === "30582_KF773578_H96cl11" && link.target === "30576_KF773439_B96cl57" || link.source === "30576_KF773439_B96cl57" && link.target === "30582_KF773578_H96cl11") {
+          console.log('adding back distance origin: ', lodash__WEBPACK_IMPORTED_MODULE_4__.cloneDeep(link));
+        }
         link.origin.push(link.distanceOrigin);
       }
       // No distance value
@@ -3644,24 +3663,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
               visible = true;
             }
           }
-          visible = link[metric] <= threshold;
-          if (!visible) {
-            // Only need to get distance origin and override if there are other files using a distance metric, otherwise the else code block below would be executed since the link would not have distance
-            if (link.origin.length > 1 && link.origin.filter(fileName => {
-              const hasAuspice = /[Aa]uspice/.test(fileName);
-              const includesDistanceOrigin = fileName.includes(link.distanceOrigin);
-              return fileName && !includesDistanceOrigin && !hasAuspice;
-            }).length > 0) {
-              // Set visible and origin to only show the file outside of Distance
-              link.origin = link.origin.filter(fileName => {
-                const hasAuspice = /[Aa]uspice/.test(fileName);
-                const includesDistanceOrigin = fileName.includes(link.distanceOrigin);
-                return fileName && !includesDistanceOrigin && !hasAuspice;
-              });
-              overrideNN = true;
-              visible = true;
-            }
-          }
         } else {
           // If has no distance, then link should be visible and unnaffected by NN
           overrideNN = true;
@@ -3684,7 +3685,11 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         link.origin = this.session.style.widgets['link-origin-array-order'];
       }
       link.visible = visible;
+      // if((link.source === "30582_KF773578_H96cl11" && link.target === "30576_KF773439_B96cl57") || (link.source === "30576_KF773439_B96cl57" && link.target === "30582_KF773578_H96cl11")) {
+      //     console.log('link color 12345: ', _.cloneDeep(link));
+      // }
     }
+
     if (!silent) $(document).trigger("link-visibility");
     if (this.debugMode) {
       console.log("Link Visibility Setting time:", (Date.now() - start).toLocaleString(), "ms");
@@ -3699,9 +3704,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     let min = this.session.style.widgets["cluster-minimum-size"];
     let clusters = this.session.data.clusters;
     let n = clusters.length;
+    console.log('cluster nodes ', clusters);
     for (let i = 0; i < n; i++) {
       const cluster = clusters[i];
-      // console.log('cluster nodes ', cluster);
       cluster.visible = cluster.nodes >= min;
     }
     if (!silent) $(document).trigger("cluster-visibility"); //$window.trigger("cluster-visibility");
@@ -3738,79 +3743,83 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    * @param [histogram] - optional parameter
    */
   updateThresholdHistogram(histogram) {
-    let width = 260,
-      height = 48,
-      svg = null;
-    // Update histogram so that it can be altered outside of the main wrapper 
-    if (histogram) {
-      this.thresholdHistogram = histogram;
-    }
-    svg = d3__WEBPACK_IMPORTED_MODULE_1__.select(this.thresholdHistogram).html(null).attr("width", width).attr("height", height);
-    // add all link distances to data, find max and min distances
-    // let lsv = this.session.style.widgets["link-sort-variable"],
-    //     n = this.session.data.links.length,
-    //     max = Number.MIN_SAFE_INTEGER,
-    //     min = Number.MAX_SAFE_INTEGER,
-    //     data = Array(n),
-    //     dist = null;
-    // for (let i = 0; i < n; i++) {
-    //     dist = this.session.data.links[i][lsv];
-    //     data[i] = dist;
-    //     if (dist < min) min = dist;
-    //     if (dist > max) max = dist;
-    // }
-    // Add all link distances to data, find max and min distances
-    const links = this.session.data.links;
-    const lsv = this.session.style.widgets["link-sort-variable"];
-    const n = links.length;
-    let max = -Infinity;
-    let min = Infinity;
-    // const data: number[] = new Array(n);
-    // let dist: number;
-    // First pass: Compute min and max distances without storing them in a separate array
-    for (let i = 0; i < n; i++) {
-      const dist = typeof links[i][lsv] === 'string' ? parseFloat(links[i][lsv]) : links[i][lsv];
-      // Update min and max
-      if (dist < min) {
-        min = dist;
+    var _this4 = this;
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      let width = 260,
+        height = 48,
+        svg = null;
+      // Update histogram so that it can be altered outside of the main wrapper 
+      if (histogram) {
+        _this4.thresholdHistogram = histogram;
       }
-      if (dist > max) {
-        max = dist;
+      svg = d3__WEBPACK_IMPORTED_MODULE_1__.select(_this4.thresholdHistogram).html(null).attr("width", width).attr("height", height);
+      // add all link distances to data, find max and min distances
+      let lsv = _this4.session.style.widgets["link-sort-variable"],
+        n = _this4.session.data.links.length,
+        max = Number.MIN_SAFE_INTEGER,
+        min = Number.MAX_SAFE_INTEGER,
+        data = Array(n),
+        dist = null;
+      for (let i = 0; i < n; i++) {
+        dist = _this4.session.data.links[i][lsv];
+        data[i] = dist;
+        if (dist < min) min = dist;
+        if (dist > max) max = dist;
       }
-    }
-    let range = max - min;
-    let ticks = 40;
-    const x = d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear().domain([min, max]).range([0, width]);
-    const bins = d3__WEBPACK_IMPORTED_MODULE_1__.histogram().domain(x.domain()).thresholds(x.ticks(ticks))(links);
-    const y = d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear().domain([0, d3__WEBPACK_IMPORTED_MODULE_1__.max(bins, d => d.length)]).range([height, 0]);
-    const bar = svg.selectAll(".bar").data(bins).enter().append("g").attr("class", "bar").attr("transform", d => "translate(" + x(d.x0) + "," + y(d.length) + ")");
-    bar.append("rect").attr("x", 1).attr("width", 6).attr("height", d => height - y(d.length));
-    let that = this;
-    /**
-     * Uses the position on the histogram to set the link thresehold value
-     */
-    function updateThreshold() {
-      let xc = d3__WEBPACK_IMPORTED_MODULE_1__.mouse(svg.node())[0];
-      let decimalPlaces = that.session.style.widgets['default-distance-metric'].toLowerCase() === "tn93" ? 3 : 0;
-      that.session.style.widgets["link-threshold"] = xc / width * range * 1.05 + min;
-      $("#link-threshold").val(parseFloat(that.session.style.widgets["link-threshold"].toFixed(decimalPlaces)));
-    }
-    svg.on("click", () => {
-      updateThreshold();
-      this.updateNetwork();
-    });
-    svg.on("mouseover", () => {
-      let xc = d3__WEBPACK_IMPORTED_MODULE_1__.mouse(svg.node())[0];
-      $('#filtering-threshold').prop('title', "Whats the maximum genetic distance you're willing to call a link? " + (this.session.style.widgets['default-distance-metric'].toLowerCase() === "tn93" ? (xc / width * range * 1.05 + min).toLocaleString() : Math.round(xc / width * range * 1.05 + min).toLocaleString()));
-    });
-    svg.on("mousedown", () => {
-      d3__WEBPACK_IMPORTED_MODULE_1__.event.preventDefault();
-      svg.on("mousemove", updateThreshold);
-      svg.on("mouseup mouseleave", () => {
-        this.updateNetwork();
-        svg.on("mousemove", null).on("mouseup", null).on("mouseleave", null);
+      // Add all link distances to data, find max and min distances
+      // const links = this.session.data.links;
+      // const lsv = this.session.style.widgets["link-sort-variable"];
+      // const n = links.length;
+      // let max = -Infinity;
+      // let min = Infinity;
+      // const data: number[] = new Array(n);
+      // let dist: number;
+      // First pass: Compute min and max distances without storing them in a separate array
+      // for (let i = 0; i < n; i++) {
+      //     const dist = typeof links[i][lsv] === 'string' ? parseFloat(links[i][lsv]) : links[i][lsv];
+      //     // Update min and max
+      //     if (dist < min) {
+      //         min = dist;
+      //     }
+      //     if (dist > max) {
+      //         max = dist;
+      //     }
+      // }
+      let range = max - min;
+      let ticks = 40;
+      const x = d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear().domain([min, max]).range([0, width]);
+      const bins = d3__WEBPACK_IMPORTED_MODULE_1__.histogram().domain(x.domain()).thresholds(x.ticks(ticks))(data);
+      const y = d3__WEBPACK_IMPORTED_MODULE_1__.scaleLinear().domain([0, d3__WEBPACK_IMPORTED_MODULE_1__.max(bins, d => d.length)]).range([height, 0]);
+      const bar = svg.selectAll(".bar").data(bins).enter().append("g").attr("class", "bar").attr("transform", d => "translate(" + x(d.x0) + "," + y(d.length) + ")");
+      bar.append("rect").attr("x", 1).attr("width", 6).attr("height", d => height - y(d.length));
+      let that = _this4;
+      /**
+       * Uses the position on the histogram to set the link thresehold value
+       */
+      function updateThreshold() {
+        let xc = d3__WEBPACK_IMPORTED_MODULE_1__.mouse(svg.node())[0];
+        let decimalPlaces = that.session.style.widgets['default-distance-metric'].toLowerCase() === "tn93" ? 3 : 0;
+        that.session.style.widgets["link-threshold"] = xc / width * range * 1.05 + min;
+        $("#link-threshold").val(parseFloat(that.session.style.widgets["link-threshold"].toFixed(decimalPlaces)));
+      }
+      svg.on("click", () => {
+        updateThreshold();
+        _this4.updateNetwork();
       });
-    });
+      svg.on("mouseover", () => {
+        let xc = d3__WEBPACK_IMPORTED_MODULE_1__.mouse(svg.node())[0];
+        $('#filtering-threshold').prop('title', "Whats the maximum genetic distance you're willing to call a link? " + (_this4.session.style.widgets['default-distance-metric'].toLowerCase() === "tn93" ? (xc / width * range * 1.05 + min).toLocaleString() : Math.round(xc / width * range * 1.05 + min).toLocaleString()));
+      });
+      svg.on("mousedown", () => {
+        d3__WEBPACK_IMPORTED_MODULE_1__.event.preventDefault();
+        svg.on("mousemove", updateThreshold);
+        svg.on("mouseup mouseleave", () => {
+          _this4.updateNetwork();
+          svg.on("mousemove", null).on("mouseup", null).on("mouseleave", null);
+        });
+      });
+      data = [];
+    })();
   }
   static {
     this.ctorParameters = () => [{
@@ -4041,6 +4050,11 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
     // Subscribe to style file applied event
     this.commonService.styleFileApplied.subscribe(() => {
       this.applyStyleFileSettings();
+    });
+    this.commonService.FP_removeFiles.subscribe(() => {
+      this.commonService.session.files.forEach(file => {
+        this.removeFile(file.name, false);
+      });
     });
     // TODO: the rest of ngOnInit can be revised to take advantage of angular features
     $('.alignConfigRow').hide();
@@ -5178,7 +5192,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
       const fnamerow = $('<div class="row w-100"></div>');
       $('<div class="file-name col"></div>').append($('<a href="javascript:void(0);" class="far flaticon-delete-1 align-middle p-1" title="Remove this file"></a>').on('click', () => {
         parentContext.commonService.session.files.splice(parentContext.commonService.session.files.findIndex(f => f.name === file.name), 1);
-        context.visuals.filesPlugin.removeFile(file.name);
+        parentContext.removeFile(file.name);
         $('#launch').prop('disabled', false).focus();
         $('#launch').text('Update');
         root.slideUp(() => root.remove());
@@ -7139,10 +7153,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       console.log("Trying to prepare files");
     }
     // this.commonService.resetData();
-    // TODO:: David Check Below
-    // this.commonService.session.files.forEach(file => {
-    //     this.visuals.filesPlugin.removeFile(file.name, false);
-    //   })
+    this.commonService.FP_removeFiles.emit();
     this.commonService.session.files = [];
     if (!this.commonService.session.style.widgets) {
       this.commonService.session.style.widgets = this.commonService.defaultWidgets();
@@ -7276,7 +7287,8 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
         $(document).trigger(thing + "-visibility");
       });
       this.commonService.updateStatistics();
-      this.updatedVisualization();
+      this.commonService.setNetworkUpdated(true);
+      //   this.updatedVisualization();
     });
   }
   /**
@@ -7326,56 +7338,71 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   onEpsilonValueChange() {
     this.commonService.session.style.widgets["mst-computed"] = false;
-    this.onPruneWithTypesChanged();
+    this.onPruneWithTypesChanged(this.SelectedPruneWityTypesVariable);
   }
-  onPruneWithTypesChanged() {
-    this.commonService.GlobalSettingsModel.SelectedPruneWityTypesVariable = this.SelectedPruneWityTypesVariable;
-    //debugger;
-    if (this.SelectedPruneWityTypesVariable == "None") {
-      $('#filtering-epsilon-row').slideUp();
-      this.commonService.session.style.widgets["link-show-nn"] = false;
-      this.commonService.updateNetwork();
-      this.updatedVisualization();
-    } else {
-      this.SelectedEpsilonValue = Math.pow(10, this.widgets['filtering-epsilon']).toPrecision(3);
-      this.commonService.session.style.widgets["filtering-epsilon"] = this.widgets['filtering-epsilon'];
-      this.commonService.session.style.widgets["link-show-nn"] = true;
-      $('#filtering-epsilon-row').slideDown();
-      // TODO:: Removed to fix NN issue
-      // if(!this.commonService.session.style.widgets["mst-computed"]) {
-      //     this.commonService.computeMST().then(() => {
-      //         this.commonService.updateNetwork();
-      //         this.updatedVisualization();
-      //         if ('tableComp' in this.commonService.visuals) {
-      //             if (this.commonService.visuals.tableComp.dataSetViewSelected == 'Link') {
-      //                 this.commonService.visuals.tableComp.openSelectDataSetScreen({value: 'Link'});
-      //             }
-      //         }
-      //     });
-      //      this.commonService.session.style.widgets["mst-computed"] = true;
-      //      console.log('updated compute:' , this.commonService.session.style.widgets["mst-computed"]);
-      //      return;
-      //    } else {
-      /// TODO:: David Check/Update Below
-      // if(!this.visuals.microbeTrace.commonService.session.style.widgets["mst-computed"]) {
-      //     this.visuals.microbeTrace.commonService.computeMST().then(() => {
-      //         this.visuals.microbeTrace.commonService.updateNetwork();
-      //         this.visuals.microbeTrace.updatedVisualization();
-      //         if ('tableComp' in this.commonService.visuals) {
-      //             if (this.commonService.visuals.tableComp.dataSetViewSelected == 'Link') {
-      //                 this.commonService.visuals.tableComp.openSelectDataSetScreen({value: 'Link'});
-      //             }
-      //         }
-      //     });
-      //     this.visuals.microbeTrace.commonService.session.style.widgets["mst-computed"] = true;
-      //     console.log('updated compute:' , this.visuals.microbeTrace.commonService.session.style.widgets["mst-computed"]);
-      //     return;
-      // } else {
-      this.commonService.updateNetwork();
-      // }
-      this.updatedVisualization();
-    }
+  onPruneWithTypesChanged(newValue) {
+    var _this2 = this;
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      _this2.SelectedPruneWityTypesVariable = newValue;
+      _this2.commonService.GlobalSettingsModel.SelectedPruneWityTypesVariable = _this2.SelectedPruneWityTypesVariable;
+      if (_this2.SelectedPruneWityTypesVariable == "None") {
+        $('#filtering-epsilon-row').slideUp();
+        _this2.commonService.session.style.widgets["link-show-nn"] = false;
+        _this2.commonService.updateNetwork();
+        _this2.commonService.setNetworkUpdated(true);
+        // this.updatedVisualization();
+      } else {
+        _this2.SelectedEpsilonValue = Math.pow(10, _this2.widgets['filtering-epsilon']).toPrecision(3);
+        _this2.commonService.session.style.widgets["filtering-epsilon"] = _this2.widgets['filtering-epsilon'];
+        _this2.commonService.session.style.widgets["link-show-nn"] = true;
+        $('#filtering-epsilon-row').slideDown();
+        _this2.commonService.computeMST().then(() => {
+          _this2.commonService.updateNetwork();
+          _this2.commonService.setNetworkUpdated(true);
+          // TODO:: David is this needed?
+          if ('tableComp' in _this2.commonService.visuals) {
+            if (_this2.commonService.visuals.tableComp.dataSetViewSelected == 'Link') {
+              _this2.commonService.visuals.tableComp.openSelectDataSetScreen({
+                value: 'Link'
+              });
+            }
+          }
+        });
+        return;
+        // TODO:: David Removed to fix NN issue
+        // if(!this.commonService.session.style.widgets["mst-computed"]) {
+        //     this.commonService.computeMST().then(() => {
+        //         this.commonService.updateNetwork();
+        //         this.updatedVisualization();
+        //         if ('tableComp' in this.commonService.visuals) {
+        //             if (this.commonService.visuals.tableComp.dataSetViewSelected == 'Link') {
+        //                 this.commonService.visuals.tableComp.openSelectDataSetScreen({value: 'Link'});
+        //             }
+        //         }
+        //     });
+        //      this.commonService.session.style.widgets["mst-computed"] = true;
+        //      console.log('updated compute:' , this.commonService.session.style.widgets["mst-computed"]);
+        //      return;
+        //    } else {
+        /// TODO:: David Check/Update Below
+        // if(!this.visuals.microbeTrace.commonService.session.style.widgets["mst-computed"]) {
+        //     this.visuals.microbeTrace.commonService.computeMST().then(() => {
+        //         this.visuals.microbeTrace.commonService.updateNetwork();
+        //         this.visuals.microbeTrace.updatedVisualization();
+        //         if ('tableComp' in this.commonService.visuals) {
+        //             if (this.commonService.visuals.tableComp.dataSetViewSelected == 'Link') {
+        //                 this.commonService.visuals.tableComp.openSelectDataSetScreen({value: 'Link'});
+        //             }
+        //         }
+        //     });
+        //     this.visuals.microbeTrace.commonService.session.style.widgets["mst-computed"] = true;
+        //     console.log('updated compute:' , this.visuals.microbeTrace.commonService.session.style.widgets["mst-computed"]);
+        //     return;
+        // } else {
+      }
+    })();
   }
+
   onLinkColorTableChanged() {
     this.commonService.GlobalSettingsModel.SelectedLinkColorTableTypesVariable = this.SelectedLinkColorTableTypesVariable;
     if (this.SelectedLinkColorTableTypesVariable == "Hide") {
@@ -7480,6 +7507,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this.commonService.GlobalSettingsModel.SelectedColorLinksByVariable = this.SelectedColorLinksByVariable;
     if (!this.GlobalSettingsLinkColorDialogSettings.isVisible) {
       // TODO::David you added  "&& this.checkActiveView('link')" below which makes it not dispaly in twoD network
+      // checkActiveView is reliant on commonService.visuals, under current implementation (12/17/24) always returns false and function may not be needed
       if (this.SelectedColorLinksByVariable != "None") {
         this.SelectedLinkColorTableTypesVariable = "Show";
         this.GlobalSettingsLinkColorDialogSettings.setVisibility(true);
@@ -7649,6 +7677,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     if ('bubble' in this.commonService.visuals) {
       this.commonService.visuals.bubble.sortData(variable);
     }
+    this.commonService.twoD_saveNodePos.emit();
     console.log('timeline variable: ', variable);
     if (!this.commonService.temp.style.nodeColor) $("#node-color-variable").trigger("change");
     // let el: HTMLElement = this.pinBtn.nativeElement;
@@ -7668,11 +7697,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       this.commonService.session.network.timelinePinned = this.commonService.session.network.allPinned;
       if (!this.commonService.session.network.allPinned) {
         this.commonService.updatePinNodes(true);
-        //TODO::David Check if needed
-        // this.openPinAllNodes(1);
       }
-
-      this.commonService.session.network.timelineNodes = this.commonService.getNetworkNodes();
     }
     let globalTimelineField = this.commonService.session.style.overwrite && variable == this.commonService.session.style.overwrite['globalTimelineFieldVariable'] ? this.commonService.session.style.overwrite['globalTimelineField'] : this.commonService.titleize(variable);
     const encodedGlobalTimelineField = globalTimelineField.replace(/[\u00A0-\u9999<>\&]/g, function (i) {
@@ -8065,7 +8090,8 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     //them each after all of them are already done.
     this.GlobalSettingsLinkColorDialogSettings.isVisible = true;
     this.GlobalSettingsNodeColorDialogSettings.isVisible = true;
-    this.updatedVisualization();
+    this.commonService.setNetworkUpdated(true);
+    // this.updatedVisualization();
     this.commonService.updateStatistics();
   }
   updateGlobalSettingsModel() {
@@ -9024,9 +9050,6 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     }
     this.previousTab = activeComponentName;
   }
-  // openPinAllNodes(tabNdx: any): void {
-  //this.homepageTabs[tabNdx].componentRef.instance.openPinAllNodes();
-  //}
   addTab(tabLabel, tabTitle, tabPosition, componentRef, activate = true) {
     /*/
      * Ensure that all tabs are not selected before we set the next new tab.
@@ -9061,7 +9084,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this.getGlobalSettingsData();
     //Filtering|Prune With
     this.SelectedPruneWityTypesVariable = this.commonService.session.style.widgets["link-show-nn"] ? "Nearest Neighbor" : "None";
-    this.onPruneWithTypesChanged();
+    // this.onPruneWithTypesChanged();
     //Filtering|Minimum Cluster Size
     this.SelectedClusterMinimumSizeVariable = this.commonService.session.style.widgets["cluster-minimum-size"];
     this.onMinimumClusterSizeChanged();
@@ -11738,7 +11761,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
           },
           position: {
             x: i * this.scaleFactor,
-            y: this.Y_categories.length * this.scaleFactor
+            y: this.Y_categories.length * this.scaleFactor - 50
           },
           classes: ['X_axis']
         });
@@ -11751,7 +11774,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
         },
         position: {
           x: (this.X_categories.length - 1) * this.scaleFactor / 2,
-          y: this.Y_categories.length * this.scaleFactor + 50
+          y: this.Y_categories.length * this.scaleFactor
         },
         classes: ['X_axis', 'axisLabel']
       });
@@ -11786,7 +11809,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
       });
     }
     this.cy.add(Axes);
-    this.cy.fit();
+    this.cy.fit(this.cy.nodes(), 30);
     this.cy.nodes().lock();
   }
   getCytoscapeStyle() {
@@ -11854,7 +11877,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
       layout: {
         name: 'preset',
         fit: true,
-        padding: 20
+        padding: 30
       },
       zoomingEnabled: true,
       userZoomingEnabled: false,
@@ -11955,7 +11978,8 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
         color: '#ff00ff',
         Xgroup: 0,
         Ygroup: 0,
-        strokeColor: node.selected ? this.commonService.session.style.widgets['selected-color'] : '#000000'
+        strokeColor: node.selected ? this.commonService.session.style.widgets['selected-color'] : '#000000',
+        totalCount: 1
       };
       if (this.xVariable != undefined || this.xVariable != 'None') {
         let nodeX = node[this.xVariable];
@@ -11973,6 +11997,8 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
     this.updateColors();
     if (this.widgets["node-timeline-variable"] != 'None') {
       this.sortData(this.widgets["node-timeline-variable"]);
+      let currentLength = this.allData.length;
+      this.visibleData = this.allData.slice(0, currentLength);
     }
     this.updateVisibleNodes();
   }
@@ -11980,14 +12006,11 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
    * updates values of visibleNodes based on SelectedNodeCollapsingTypeVariable and if timeline mode is active
    */
   updateVisibleNodes() {
+    // if no timeline and not collapsed
     if (this.widgets["node-timeline-variable"] == 'None' && this.SelectedNodeCollapsingTypeVariable == false) {
       this.visibleData = this.allData;
-    } else if (this.SelectedNodeCollapsingTypeVariable) {
-      if (this.commonService.getVisibleNodes().length == this.visibleData.reduce((sum, obj) => sum + obj.totalCount, 0)) {
-        return;
-      }
-      this.getCollapsedData(false, false);
-    } else {
+      // if timeline and not collapse
+    } else if (this.widgets["node-timeline-variable"] != 'None' && this.SelectedNodeCollapsingTypeVariable == false) {
       let visibleNodes = this.commonService.getVisibleNodes();
       if (visibleNodes.length == this.visibleData.length) {
         return;
@@ -11998,6 +12021,16 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
           this.visibleData.push(node);
         }
       });
+      // if no timeline and collapse
+    } else if (this.widgets["node-timeline-variable"] == 'None') {
+      // console.log(this.commonService.getVisibleNodes().length, this.visibleData.reduce((sum, obj) => sum + obj.totalCount, 0))
+      this.getCollapsedData(false, false);
+      // if timeline and collapse
+    } else {
+      if (this.commonService.getVisibleNodes().length == this.visibleData.reduce((sum, obj) => sum + obj.totalCount, 0)) {
+        return;
+      }
+      this.getCollapsedData(false, false);
     }
   }
   /**
@@ -12101,8 +12134,9 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
     let changedVisibleNodes = this.generateCollapsedCounts();
     this.generatePieChartsSVGDefs(changedVisibleNodes);
     this.cy.remove('node');
-    this.getData();
     this.updateNodes();
+    this.cy.style().resetToDefault();
+    this.cy.style(this.getCytoscapeStyle());
     this.visibleData.forEach((node, i) => {
       if (node.totalCount == 1 || node.counts.length == 1) {
         return;
@@ -12248,7 +12282,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
   goldenLayoutComponentResize() {
     this.viewHeight = this.container.height - 73;
     this.viewWidth = this.container.width - 42;
-    this.cy.fit();
+    setTimeout(() => this.cy.fit(this.cy.nodes(), 30), 300);
   }
   setSelectedNodes(that) {
     if (that.commonService.visuals.bubble.SelectedNodeCollapsingTypeVariable) {
@@ -12328,7 +12362,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
           y: current.y * this.scaleFactor
         };
       });
-      this.cy.fit();
+      this.cy.fit(this.cy.nodes(), 30);
       this.cy.nodes().lock();
     }
   }
@@ -12340,7 +12374,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
           node.data('nodeSize', this.nodeSize * Math.sqrt(node.data().totalCount));
         });
         this.cy.style().update();
-        this.cy.fit();
+        this.cy.fit(this.cy.nodes(), 30);
       }
     } else {
       this.recalculatePositions();
@@ -12349,7 +12383,7 @@ let BubbleComponent = class BubbleComponent extends _app_base_component_directiv
           node.data('nodeSize', this.nodeSize);
         });
         this.cy.style().update();
-        this.cy.fit();
+        this.cy.fit(this.cy.nodes(), 30);
       }
     }
   }
@@ -17852,6 +17886,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.gtmService = gtmService;
     this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_8__.EventEmitter();
     this.vizLoaded = true;
+    this.nodePositions = new Map();
     this.layoutParallelNodesPerColumn = 4;
     this.debugMode = false;
     this.overideTransparency = false;
@@ -18023,19 +18058,18 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     `;
     // this.setExpanded(this.mainSite);
     this.widgets = this.commonService.session.style.widgets;
-    //TODO::David Below the twoDGraph was used
+    this.container.on('resize', () => {
+      this.fit();
+    });
     this.container.on('hide', () => {
       this.viewActive = false;
       this.cdref.detectChanges();
-      setTimeout(() => {
-        // (this.twoDGraph as any).component.fitView(500);
-      }, 50);
     });
     this.container.on('show', () => {
       this.viewActive = true;
       this.cdref.detectChanges();
       setTimeout(() => {
-        // (this.twoDGraph as any).component.fitView(500);
+        this.fit();
       }, 50);
     });
     // Initialize the selectedNodeShape from the settings
@@ -18055,10 +18089,19 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       }
     });
 
+    this.networkUpdatedSubscription = this.commonService.networkUpdated$.subscribe(newPruned => {
+      console.log('network pruned', newPruned);
+      this._rerender();
+    });
     this.InitView();
   }
-  ngAfterViewInit() {}
-  mapDataToCytoscapeElements(data) {
+  ngAfterViewInit() {
+    this.commonService.twoD_saveNodePos.subscribe(() => {
+      this.saveNodePos();
+      console.log(this.commonService.getVisibleNodes()[0]);
+    });
+  }
+  mapDataToCytoscapeElements(data, timelineTick = false) {
     // Create a set to track unique parent nodes
     const parentNodes = new Set();
     const edges = data.links.map(link => ({
@@ -18080,21 +18123,47 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       if (node.group && this.widgets['polygons-show']) {
         parentNodes.add(node.group);
       }
-      return {
-        data: {
-          id: node.id,
-          label: this.widgets['node-label-variable'] === 'None' ? '' : node.label,
-          parent: node.group && this.widgets['polygons-show'] || undefined,
-          nodeSize: this.getNodeSize(node),
-          nodeColor: this.getNodeColor(node),
-          borderWidth: this.getNodeBorderWidth(node),
-          selectedBorderColor: this.widgets['selected-color'],
-          fontSize: this.getNodeFontSize(node),
-          shape: this.getNodeShape(node),
-          // Include any additional node-specific data properties
-          ...node
-        }
-      };
+      if (timelineTick) {
+        return {
+          data: {
+            id: node.id,
+            label: this.widgets['node-label-variable'] === 'None' ? '' : node.label,
+            parent: node.group && this.widgets['polygons-show'] || undefined,
+            nodeSize: this.getNodeSize(node),
+            nodeColor: this.getNodeColor(node),
+            borderWidth: this.getNodeBorderWidth(node),
+            selectedBorderColor: this.widgets['selected-color'],
+            fontSize: this.getNodeFontSize(node),
+            shape: this.getNodeShape(node),
+            // Include any additional node-specific data properties
+            ...node
+          },
+          position: {
+            x: node._fx,
+            y: node._fy
+          }
+        };
+      } else {
+        return {
+          data: {
+            id: node.id,
+            label: this.widgets['node-label-variable'] === 'None' ? '' : node.label,
+            parent: node.group && this.widgets['polygons-show'] || undefined,
+            nodeSize: this.getNodeSize(node),
+            nodeColor: this.getNodeColor(node),
+            borderWidth: this.getNodeBorderWidth(node),
+            selectedBorderColor: this.widgets['selected-color'],
+            fontSize: this.getNodeFontSize(node),
+            shape: this.getNodeShape(node),
+            // Include any additional node-specific data properties
+            ...node
+          },
+          position: {
+            x: this.nodePositions.get(node.id)?.x || node._fx || Math.random() * 500,
+            y: this.nodePositions.get(node.id)?.y || node._fy || Math.random() * 500
+          }
+        };
+      }
     });
     return {
       edges: edges,
@@ -18125,6 +18194,11 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       style: {
         'width': 'mapData(nodeSize, 0, 100, 10, 50)',
         'height': 'mapData(nodeSize, 0, 100, 10, 50)'
+      }
+    }, {
+      selector: '.hidden',
+      style: {
+        display: 'none'
       }
     },
     // Apply styles only to nodes with nodeColor defined
@@ -18234,50 +18308,30 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
 
     this.cy.on('dragfree', 'node', evt => {
       const node = evt.target;
+      if (this.widgets['node-timeline-variable'] != 'None' && this.widgets['node-timeline-variable'] != undefined) {
+        this.updateNodePos(node);
+      }
       // Handle node drag logic
     });
   }
 
-  saveNodeFx() {
-    // TODO::David Below the twoDGraph was used - please update to cytoscape is possible
-    //  (this.twoDGraph as any).component.datamodel._nodes.forEach(node => {
-    //      let globalNode = (window as any).context.commonService.session.data.nodeFilteredValues.find(x => x._id == node.id)
-    //     globalNode['fx'] = node.x;
-    //     globalNode['fy'] = node.y;
-    // })
+  saveNodePos() {
+    if (this.cy) {
+      this.cy.nodes().forEach(node => {
+        let globalNode = this.commonService.session.data.nodeFilteredValues.find(x => x._id == node.data('id'));
+        globalNode['_fx'] = node.position().x;
+        globalNode['_fy'] = node.position().y;
+      });
+    }
   }
   /**
    * Updates the saved postion of a node when it is dragged by the user
    * @param node
    */
-  updateNodeFx(node, event) {
-    let globalNode = window.context.commonService.session.data.nodeFilteredValues.find(x => x._id == node.id);
-    globalNode['fx'] = node._state.fx;
-    globalNode['fy'] = node._state.fy;
-  }
-  applyNodeFx() {
-    // idk, this forEach loop produces an error (_nodes.forEach  is not a function) but it still executes just fine. Without the forEach loop not are 
-    // placed differently each time the timeline is run.
-    try {
-      // TODO::David twoDGraph was used here 
-      // (this.twoDGraph as any).component.datamodel._nodes.forEach(node => {
-      //     let globalNode = (window as any).context.commonService.session.data.nodeFilteredValues.find(x => x._id == node.id)
-      //     if (node.index == 1) {
-      //         //console.log('prev ', node._state, node.x, node.y)
-      //         //console.log('load ', globalNode['fx'], globalNode['fy'])
-      //     }
-      //     node.x = globalNode['fx'];
-      //     node.y = globalNode['fy'];
-      //     node._state = {fx: globalNode['fx'], fy: globalNode['fy']};
-      //     if (node.index == 1) {
-      //         //console.log('post ', node._state, node.x, node.y)
-      //     }
-      // })
-    } catch (error) {
-      console.log('error setting node positions back to previous location');
-    }
-    // TODO::David twoDGraph was used here
-    // (this.twoDGraph as any).component?.render();  
+  updateNodePos(node) {
+    let globalNode = this.commonService.session.data.nodeFilteredValues.find(x => x._id == node.data('id'));
+    globalNode['_fx'] = node.position().x;
+    globalNode['_fy'] = node.position().y;
   }
   /** Initializes the view.
    *
@@ -18370,14 +18424,9 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       if (this.debugMode) {
         console.log('data: ', this.data);
       }
-      // TODO when done with view, remove this since we are sure we wont need it
-      // $(document).on("node-visibility", function () {
-      //     let networkData = { 
-      //         nodes : that.commonService.getVisibleNodes(), 
-      //         links : that.commonService.getVisibleLinks()
-      //     }
-      //     that.data = that.commonService.convertToGraphDataArray(networkData);
-      // });
+      $(document).on("node-visibility", function () {
+        that._rerender(true);
+      });
       // $(document).on("link-visibility", async function () {
       // });
       // $(document).on("cluster-visibility", function () {
@@ -19113,20 +19162,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     }
     let [X, Y] = this.getRelativeMousePosition(event);
     d3__WEBPACK_IMPORTED_MODULE_3__.select('#tooltip').html(tooltipHtml).style('position', 'absolute').style('left', X + 10 + 'px').style('top', Y - 10 + 'px').style('z-index', 1000).transition().duration(100).style('opacity', 1);
-    // TODO::David The below incoming so and was refactored with the prev implementation, if your implemenation above is best and can ignore the below.  Delete this if not needed
-    // if (this.widgets['node-tooltip-variable'].length > 0 && this.widgets['node-tooltip-variable'][0] == 'None') {
-    //     if (this.widgets['node-highlight']) {
-    //         this.selectedNodeId = d.id;
-    //         console.log('rerender show node tt 1');
-    //         this.debouncedRerender();
-    //     }
-    //     return;
-    // }
-    // if (this.widgets['node-highlight']) {
-    //     this.selectedNodeId = d.id;
-    //     console.log('rerender show node tt 2');
-    //     this.debouncedRerender();
-    // }
   }
   /**
    * Gets data from current link needed for tooltip and displays it in the tooltip
@@ -19599,7 +19634,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.overideTransparency) {
       alphaValue = this.widgets['link-opacity'];
     }
-    // console.log('color: ', finalColor);
     return {
       color: finalColor,
       opacity: alphaValue
@@ -19935,10 +19969,32 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.data === undefined) {
       return;
     }
-    const networkData = {
-      nodes: this.commonService.getVisibleNodes(),
-      links: this.commonService.getVisibleLinks()
-    };
+    let networkData;
+    if (timelineTick) {
+      let nodes = this.commonService.getVisibleNodes();
+      if (nodes.length == this.data.nodes.length) {
+        return;
+      }
+      let links = this.commonService.getVisibleLinks();
+      let visLinks = [];
+      links.forEach(d => {
+        if (!d.visible) return;
+        var source = nodes.find(node => node._id == d.source && node.visible);
+        var target = nodes.find(node => node._id == d.target && node.visible);
+        if (source && target) {
+          visLinks.push(d);
+        }
+      });
+      networkData = {
+        nodes: nodes,
+        links: visLinks
+      };
+    } else {
+      networkData = {
+        nodes: this.commonService.getVisibleNodes(),
+        links: this.commonService.getVisibleLinks()
+      };
+    }
     console.log('link threhold network links: ', networkData.links.length);
     // Determine autoFit based on node-timeline-variable
     if (networkData.nodes.length !== 0) {
@@ -19949,34 +20005,25 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     if (this.debugMode) {
       console.log('link vis rerender: ', this.commonService.getVisibleLinks());
     }
-    this.data = this.commonService.convertToGraphDataArray(networkData);
     // Update Cytoscape visualization if it exists
-    if (this.cy) {
-      this.cy.batch(() => {
-        // Remove existing elements
-        this.cy.elements().remove();
-        // Add new nodes and edges
-        const newElements = this.mapDataToCytoscapeElements(this.data);
-        this.cy.add(newElements);
-        // Apply the Cose layout to arrange the nodes
-        const layout = this.cy.layout({
-          name: 'cose',
-          animate: false,
-          fit: true,
-          padding: 100,
-          nodeRepulsion: node => 400000,
-          idealEdgeLength: edge => 100,
-          edgeElasticity: edge => 100,
-          gravity: 80,
-          numIter: 1000 // Number of iterations
-          // tile: true, // Allow tiling
-          // tilingPaddingVertical: 10, // Vertical padding for tiling
-          // tilingPaddingHorizontal: 10 // Horizontal padding for tiling
-        });
-
-        layout.run();
+    if (this.cy && !timelineTick) {
+      this._partialUpdate();
+    } else if (this.cy && timelineTick) {
+      this.data = this.commonService.convertToGraphDataArray(networkData);
+      // Add new nodes and edges
+      this.cy.elements().remove();
+      const newElements = this.mapDataToCytoscapeElements(this.data, true);
+      this.cy.add(newElements);
+      // Apply the Cose layout to arrange the nodes
+      const layout = this.cy.layout({
+        name: 'preset',
+        fit: true,
+        padding: 30 // Padding around the graph
       });
+
+      layout.run();
     } else {
+      this.data = this.commonService.convertToGraphDataArray(networkData);
       this.cy = (0,cytoscape__WEBPACK_IMPORTED_MODULE_7__["default"])({
         container: this.cyContainer.nativeElement,
         elements: this.mapDataToCytoscapeElements(this.data),
@@ -20306,10 +20353,11 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     }
     // Update Cytoscape edge styles
     if (this.cy) {
+      const isDirected = this.widgets['link-directed'];
       this.cy.style().selector('edge').style({
         'target-arrow-shape': this.widgets['link-directed'] ? 'triangle' : 'none',
         'source-arrow-shape': 'none',
-        'curve-style': 'bezier'
+        'curve-style': isDirected ? 'unbundled-bezier' : 'straight'
         // Add more style properties here if needed
       }).update();
     }
@@ -20322,10 +20370,11 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.widgets['link-bidirectional'] = e === "Show";
     // Update Cytoscape edge styles
     if (this.cy) {
+      const isDirected = this.widgets['link-directed'];
       this.cy.style().selector('edge').style({
         'source-arrow-shape': sourceArrowShape,
         'target-arrow-shape': targetArrowShape,
-        'curve-style': 'bezier'
+        'curve-style': isDirected ? 'unbundled-bezier' : 'straight'
         // Add more style properties here if needed
       }).update();
     }
@@ -20582,23 +20631,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    * @param bounds undefined
    * @returns
    */
-  fit(thing, bounds) {
-    // if (!bounds) bounds = this.svg.node().getBBox();
-    // if (bounds.width == 0 || bounds.height == 0) return; // nothing to fit
-    // let parent = this.svg.node().parentElement.parentElement,
-    //     midX = bounds.x + bounds.width / 2,
-    //     midY = bounds.y + bounds.height / 2;
-    // let scale = 0.8 / Math.max(bounds.width / parent.clientWidth, bounds.height / parent.clientHeight);
-    // const w = parent.clientWidth / 2 - midX*scale ;
-    // const h = parent.clientHeight / 2 - midY*scale;
-    // PRE D3
-    // d3.select('svg#network')
-    //     .transition()
-    //     .duration(750)
-    //     .call(this.zoom.transform, d3.zoomIdentity
-    //         .translate(w, h)
-    //         //.translate(parent.parentNode.clientWidth / 2 - midX, parent.parentNode.clientHeight / 2 - midY)
-    //         .scale(scale));
+  fit() {
+    if (this.cy) this.cy.fit(this.cy.nodes(), 30);
   }
   /**
    * XXXXX Function is never called; Review if necessary XXXXX
@@ -20640,7 +20674,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   openCenter() {
     if (this.cy) {
-      this.cy.fit();
+      this.cy.fit(this.cy.nodes(), 30);
     } else {
       console.error('Cytoscape instance is not initialized.');
     }
@@ -20671,80 +20705,72 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       console.error('Cytoscape instance not initialized; cannot update partially.');
       return;
     }
-    console.log('partial update: ', this.cy.nodes());
-    // 1. Retrieve fresh node/link data
-    const networkData = {
-      nodes: this.commonService.getVisibleNodes(),
-      links: this.commonService.getVisibleLinks()
-    };
-    this.data = this.commonService.convertToGraphDataArray(networkData);
-    const newElements = this.mapDataToCytoscapeElements(this.data);
-    /**
-     * -- 2. Remove nodes/edges that no longer exist in the new data --
-     * First collect up the new IDs for quick membership checks.
-     */
-    // @ts-ignore   
-    const newNodeIds = new Set(newElements.nodes.map(n => n.id));
-    // @ts-ignore
-    const newLinkIds = new Set(newElements.edges.map(l => {
-      // If you build link IDs a certain way, do it here
+    // Cache positions BEFORE making changes to the graph
+    if (!this.nodePositions) {
+      this.nodePositions = new Map();
+    }
+    this.cy.nodes().forEach(node => {
+      const currentPosition = node.position();
+      if (!this.nodePositions.has(node.id())) {
+        this.nodePositions.set(node.id(), currentPosition); // Cache position
+      }
+    });
+    // Use batch mode to disable auto-panning during updates
+    this.cy.batch(() => {
+      // Retrieve fresh node/link data
+      const networkData = {
+        nodes: this.commonService.getVisibleNodes(),
+        links: this.commonService.getVisibleLinks()
+      };
+      this.data = this.commonService.convertToGraphDataArray(networkData);
+      const newElements = this.mapDataToCytoscapeElements(this.data);
+      // Collect new IDs for membership checks
+      const newNodeIds = new Set(newElements.nodes.map(n => n.data.id));
       // @ts-ignore
-      return `${l.source}-${l.target}`;
-    }));
-    // 4. Remove old nodes that are not in newNodeIds
-    //   this.cy.nodes().forEach(node => {
-    //     if (!newNodeIds.has(node.id()) && !node.hasClass('parent')) {
-    //       this.cy.remove(node);
-    //     }
-    //   });
-    // 5. Remove old edges that are not in newLinkIds
-    this.cy.edges().forEach(edge => {
-      if (!newLinkIds.has(edge.id())) {
-        this.cy.remove(edge);
+      const newLinkIds = new Set(newElements.edges.map(l => `${l.source}-${l.target}`));
+      console.log('newNodeIds:', newNodeIds);
+      // Update node visibility and restore positions
+      this.cy.nodes().forEach(node => {
+        if (!newNodeIds.has(node.id()) && !node.hasClass('parent')) {
+          // Hide node but keep its cached position
+          node.addClass('hidden');
+        } else {
+          // Ensure node is visible
+          node.removeClass('hidden');
+          // Restore position from cache
+          const position = this.nodePositions.get(node.id());
+          if (position) {
+            node.position(position);
+          }
+        }
+      });
+      // Remove old edges
+      this.cy.edges().forEach(edge => {
+        if (!newLinkIds.has(edge.id())) {
+          this.cy.remove(edge);
+        }
+      });
+      // Add/Update new edges
+      newElements.edges.forEach(e => {
+        const cyEdge = this.cy.getElementById(e.data.id);
+        if (!cyEdge || !cyEdge.length) {
+          this.cy.add(e); // Add edge
+        } else {
+          cyEdge.data({
+            ...cyEdge.data(),
+            ...e.data
+          }); // Update edge data
+        }
+      });
+    });
+    // Restore positions for all visible nodes explicitly
+    this.cy.nodes(':visible').forEach(node => {
+      const position = this.nodePositions.get(node.id());
+      if (position) {
+        node.position(position);
       }
     });
-    // 6. Add/Update new nodes
-    //   newElements.nodes.forEach(n => {
-    //     const cyNode = this.cy.getElementById(n.data.id);
-    //     if (!cyNode || !cyNode.length) {
-    //       // Node does not exist; add it
-    //       this.cy.add(n);
-    //     } else {
-    //       // Node exists; merge new data if desired
-    //       cyNode.data({ ...cyNode.data(), ...n.data });
-    //     }
-    //   });
-    // 7. Add/Update new edges
-    newElements.edges.forEach(e => {
-      const cyEdge = this.cy.getElementById(e.data.id);
-      if (!cyEdge || !cyEdge.length) {
-        // Edge does not exist; add it
-        this.cy.add(e);
-      } else {
-        // Merge updated data if needed
-        cyEdge.data({
-          ...cyEdge.data(),
-          ...e.data
-        });
-      }
-    });
-    // 5. Optionally re-run your layout if you want to reposition
-    //    or skip if you only do incremental changes
-    // const layout = this.cy.layout({
-    //   name: 'cose',
-    //   animate: false,
-    //   fit: true,
-    //   padding: 100,
-    //   nodeRepulsion: () => 400000,
-    //   idealEdgeLength: () => 100,
-    //   edgeElasticity: () => 100,
-    //   gravity: 80,
-    //   numIter: 1000
-    // });
-    // layout.run();
-    // 6. (Optional) If you have style changes, apply them anew:
-    // this.cy.style().update();
-    console.log('Partial network update complete.');
+    this.fit();
   }
   applyStyleFileSettings() {
     this.widgets = this.commonService.session.style.widgets;
@@ -26071,7 +26097,7 @@ module.exports = "﻿﻿<div class=\"m-content\">\n\n    <div id=\"file-panel\" 
 /***/ ((module) => {
 
 "use strict";
-module.exports = "<div class=\"m-content\">   \n    <div class=\"m-portlet m-portlet--mobile\" style=\"height:100%;\">\n\n        <div *ngIf=\"!officialInstance()\" id=\"url-warning-div\">This is not an official MicrobeTrace instance, please visit our production instance at <a href=\"https://microbetrace.cdc.gov/MicrobeTrace\">https://microbetrace.cdc.gov/MicrobeTrace</a> or our development instance at <a href=\"https://cdcgov.github.io/MicrobeTrace\">https://cdcgov.github.io/MicrobeTrace</a></div>\n        <mat-toolbar id=\"top-toolbar\" class=\"nav-bar\">\n                <div class=\"navbar-logo\">\n                    <span class=\"microbe-font\">Microbe</span>\n                    <span class=\"trace-font\">Trace</span>\n                    <span><img alt=\"microbetrace\" class=\"mt-icon-toolbar\" [src]=\"appRootUrl() + 'assets/images/Logo.png'\"></span>\n                  </div>\n                  <div class=\"menu-items\">\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"fileMenu\"><i class=\"far nav-icon flaticon-file-1\"></i>File<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #fileMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <!-- <button mat-menu-item (click)=\"FileClick('Stash Session')\">Stash</button> -->\n                      <!-- <button mat-menu-item (click)=\"FileClick('Recall Session')\">Recall</button> -->\n                      <button mat-menu-item (click)=\"FileClick('Save Session')\">Save</button>\n                      <!-- <button mat-menu-item (click)=\"FileClick('Open Session')\">Open</button> -->\n                      <button mat-menu-item (click)=\"FileClick('Open URL')\">Open URL</button>\n                      <button mat-menu-item (click)=\"FileClick('Add Data')\">Add Data</button>\n                      <!-- <button mat-menu-item (click)=\"FileClick('New Session')\">New</button> -->\n                    </mat-menu>\n                    <button class=\"navbar-item\" (click)=\"DisplayGlobalSettingsDialog()\" mat-button><i class=\"far nav-icon flaticon-cogwheel-2\"></i>Settings</button>\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"viewMenu\"><i class=\"far nav-icon flaticon-web\"></i>View<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #viewMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <button mat-menu-item (click)=\"Viewclick('2D Network')\">2D Network</button>\n                      <button mat-menu-item (click)=\"Viewclick('Table')\">Table</button>\n                      <button mat-menu-item (click)=\"Viewclick('Map')\">Map</button>\n                      <button mat-menu-item (click)=\"Viewclick('Epi Curve')\">Epi Curve</button>\n                      <button mat-menu-item (click)=\"Viewclick('Phylogenetic Tree')\">Phylogenetic Tree</button>\n                      <button mat-menu-item (click)=\"Viewclick('Alignment View')\">Alignment View</button>\n                      <button mat-menu-item (click)=\"Viewclick('Crosstab')\">CrossTab</button>\n                      <button mat-menu-item (click)=\"Viewclick('Aggregate')\">Aggregate</button>\n                      <button mat-menu-item (click)=\"Viewclick('Gantt Chart')\">Gantt Chart</button>\n                      <button mat-menu-item (click)=\"Viewclick('Heatmap')\">Heatmap</button>\n                      <button mat-menu-item (click)=\"Viewclick('Bubble')\">Bubble</button>\n                      <button mat-menu-item (click)=\"Viewclick('Waterfall')\">Waterfall</button>\n                    </mat-menu>\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"windowMenu\"><i class=\"far nav-icon flaticon-web\"></i>Window<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #windowMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <button mat-menu-item (click)=\"WindowClick('Reload Screen')\">Reload</button>\n                      <button mat-menu-item (click)=\"WindowClick('Fullscreen')\">Fullscreen</button>\n                    </mat-menu>\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"helpMenu\"><i class=\"far nav-icon flaticon-questions-circular-button\"></i>Help<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #helpMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <a href=\"https://github.com/CDCgov/MicrobeTrace/wiki\" class=\"dropdown-item ifOnline\" target=\"_blank\" rel=\"noreferrer noopener\" mat-menu-item>Help</a>\n                      <a href=\"https://github.com/CDCgov/MicrobeTrace/issues/new\" class=\"dropdown-item ifOnline\" target=\"_blank\" rel=\"noreferrer noopener\" mat-menu-item>Report Bug</a>\n                      <button (click)=\"HelpClick('About')\" mat-menu-item>About</button>\n                    </mat-menu>\n                    <!-- <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"langMenu\"><i class=\"far nav-icon flaticon-earth-globe\"></i>Language<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #langMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <button mat-menu-item >English</button>\n                      <button mat-menu-item >Spanish</button>\n                    </mat-menu> -->\n                  </div>\n            <div id=\"search-form\" class=\"form-inline navbar-form\">\n                <label for=\"search\">Search</label>\n                <div class=\"autocomplete-wrapper\">\n                    <input type=\"search\" id=\"search\" class=\"form-control form-control-sm\" (input)=\"onSearch()\" [(ngModel)]=\"searchText\" placeholder=\"Nodes\">\n                    <ul id=\"search-results\"></ul>\n                </div>\n            <button id=\"casesensitivebutton\" (click)=\"onCaseSensitiveChange()\" type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\" title=\"Match Case\">\n                <span>C</span>\n            </button>     \n            <button id=\"wholewordbutton\" type=\"button\" (click)=\"onWholeWordChange()\" class=\"btn btn-light btn-sm\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\" title=\"Match Whole Word\">\n                <span>W</span>\n            </button>      \n        \n            <select [(ngModel)]=\"searchField\" (ngModelChange)=\"onSearchFieldChange($event)\" id=\"search-field\"  class=\"form-control form-control-sm nodeValues\">\n                <option val=\"id\">ID</option>\n            </select>\n            </div> \n          </mat-toolbar>\n\n        <div #visualwrapper id=\"visualwrapper\" class=\"kt-container  kt-grid__item kt-grid__item--fluid \" style=\"margin: 6px 6px 0 6px;\" [style.height.px]=\"getHeight()\">\n            <div class=\"kt-portlet kt-portlet--mobile\" style=\"height:100%\">\n                <div class=\"kt-portlet__head kt-portlet__head--lg\" style=\"height:100%\">\n                    <div class=\"m-portlet__body\" style=\"flex: 1 100%; max-width:100%; height:100%\">\n                        <!-- TODO: Add back or replace-->\n                        <!-- <golden-layout-root #goldenLayout></golden-layout-root> -->\n                        <app-golden-layout-host #goldenLayoutHost></app-golden-layout-host>             \n                    </div>\n                </div>\n            </div>\n\n        <p-dialog class=\"table-z-index\" id=\"global-settings-link-color-table\" \n            [position]=\"GlobalSettingsLinkColorDialogSettings.linkLeft\" \n            [(visible)]=\"GlobalSettingsLinkColorDialogSettings.isVisible\"  \n            [style]=\"{'z-index': '1'}\"\n            (onShow)=\"showLinkColorTable()\"\n            (onHide)=\"hideLinkColorTable()\"\n            >\n            <ng-template pTemplate=\"header\">\n                <div style=\"display: flex; justify-content: space-between; width: 100%;\">\n                    <span>Link Color Table</span>\n                    <span style=\"overflow: visible; position: relative;\">\n                        <button title=\"Settings\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"toggleColorTableSettings('link-color')\"><i class=\"pi pi-cog\"></i></button>\n                        <div id=\"linkColorTableSettings\" class=\"dropdown-menu\" style=\"display: none;\">\n                            <button id=\"linkColorCounts\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('link-color', 'tableCounts')\">\n                                <span>Show Counts</span>\n                                <i [className]=\"this.widgets['link-color-table-counts'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                            <button id=\"linkColorFrequencies\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('link-color', 'tableFreq')\">\n                                <span>Show Frequencies</span>\n                                <i [className]=\"this.widgets['link-color-table-frequencies'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                        </div>\n                    </span>\n                </div>\n            </ng-template>\n            <div style=\"max-height: 50vh\">\n                <table id=\"link-color-table\" style=\"width:100%;height:100%;\"></table>\n            </div>\n        </p-dialog>\n\n\n        <p-dialog id=\"global-settings-node-color-table\" \n            [position]=\"GlobalSettingsNodeColorDialogSettings.nodeLeft\" \n            [(visible)]=\"GlobalSettingsNodeColorDialogSettings.isVisible\"  \n            (onShow)=\"showNodeColorTable()\"\n            (onHide)=\"hideNodeColorTable()\"      \n                    >       \n            <ng-template pTemplate=\"header\">\n                <div style=\"display: flex; justify-content: space-between; width: 100%;\">\n                    <span>Node Color Table</span>\n                    <span style=\"overflow: visible; position: relative;\">\n                        <button title=\"Settings\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"toggleColorTableSettings('node-color')\"><i class=\"pi pi-cog\"></i></button>\n                        <div id=\"nodeColorTableSettings\" class=\"dropdown-menu\" style=\"display: none;\">\n                            <button id=\"nodeColorCounts\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('node-color', 'tableCounts')\">\n                                <span>Show Counts</span>\n                                <i [className]=\"this.widgets['node-color-table-counts'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                            <button id=\"nodeColorFrequencies\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('node-color', 'tableFreq')\">\n                                <span>Show Frequencies</span>\n                                <i [className]=\"this.widgets['node-color-table-frequencies'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                        </div>\n                    </span>\n                </div>\n            </ng-template>\n            <div style=\"max-height: 50vh\">\n                <table id=\"node-color-table\" style=\"width:100%;height:100%;\"></table>\n            </div>\n        </p-dialog>\n        </div>\n    \n        <div id=\"overlay\" appDnd (fileDropped)=\"prepareFilesLists($event)\">\n            <input class=\"dnd-input\" type=\"file\" #fileDropRef id=\"fileDropRef\" multiple (change)=\"prepareFilesLists($event.target.files)\" />\n            <div class=\"welcome-msg\">\n                <div id=\"welcome-title\" class=\"top\">\n                    <span class=\"primary\">Welcome to </span>\n                    <span class=\"microbe primary\">Microbe</span>\n                    <span class=\"primary\">Trace&#8482;</span>\n                    <!-- <span><img class=\"mt-icon\" src=\"../../assets/images/Logo.png\"></span> -->\n                    <!-- Swap/Uncomment when building productions -->\n                    <span><img alt=\"microbetrace\" class=\"mt-icon\" [src]=\"appRootUrl() + 'assets/images/Logo.png'\"></span>\n                </div>\n                <div id=\"welcome-description\" class=\"bottom primary\">The Visualization Multitool for Molecular Epidemiology and Bioinformatics</div>\n            </div>\n            <div id=\"add-data-container\" class=\"add-data-container\">\n                <div class=\"files-msg\">\n                    <span class=\"primary\">Click </span>\n                    <a class=\"here-link primary\" for=\"fileDropRef\">here</a>\n                    <span class=\"primary\"> or Drag & Drop files to load data</span>\n                </div>\n                <div class=\"add-btns primary\">\n                    <!-- TODO: add back in when recall is ready-->\n                    <!-- <button mat-raised-button color=\"primary\" class=\"recall\" (click)=\"recallClicked()\">Recall Previous Session</button> -->\n                    <button mat-raised-button color=\"primary\" (click)=\"continueClicked()\">Continue with Sample Dataset</button>\n                </div>\n            </div>\n            <!-- <div id=\"onload-container\" class=\"launch-options-container primary\">\n                <span class=\"onload-bold\">Onload Settings:</span>\n                <span>Distance Metric: <span class=\"option-value\" [matMenuTriggerFor]=\"metricMenu\">{{metric}} <span class=\"onload-dropdown-symbol\">&#9660;</span></span></span>\n                <span id=\"ambiguities-menu\">Ambiguities: <span class=\"option-value\" [matMenuTriggerFor]=\"ambiMenu\">{{ambiguity}} <span class=\"onload-dropdown-symbol\">&#9660;</span></span></span>\n                <span>View to Launch: <span class=\"option-value\" [matMenuTriggerFor]=\"viewMenuBottom\">{{launchView}} <span class=\"onload-dropdown-symbol\">&#9660;</span></span></span>\n                <span class=\"threshold-option\">Link Threshold: \n                    <form class=\"threshold-input\">\n                    <mat-form-field class=\"threshold-input-length\">\n                        <mat-label></mat-label>\n                      <input matInput (input)=\"updateThreshold($event)\" [value]=\"threshold\">\n                    </mat-form-field>\n                  </form>\n                </span>\n            </div>\n            <mat-menu #metricMenu=\"matMenu\"overlapTrigger=\"false\">\n                <button mat-menu-item (click)=\"updateMetric('TN93')\">TN93</button>\n                <button mat-menu-item (click)=\"updateMetric('SNPs')\">SNPs</button>\n            </mat-menu>\n            <mat-menu #ambiMenu=\"matMenu\" overlapTrigger=\"false\">\n                <button mat-menu-item (click)=\"updateAmbiguity('Average')\">Average</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('Resolve')\">Resolve</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('Skip')\">Skip</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('GapMM')\">GapMM</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('HIV-Trace -g')\">HIV-Trace -g</button>\n            </mat-menu>\n            <mat-menu #viewMenuBottom=\"matMenu\" overlapTrigger=\"false\">\n                <button mat-menu-item (click)=\"updateLaunchView('2D Network')\">2D Network</button>\n                <button mat-menu-item (click)=\"updateLaunchView('Table')\">Table</button>\n                <button mat-menu-item (click)=\"updateLaunchView('Map')\">Bubbles</button>\n                <button mat-menu-item (click)=\"updateLaunchView('Phylogenetic Tree')\">Phylogenetic Tree</button>\n            </mat-menu> -->\n        </div>\n\n        <p-dialog id=\"global-settings-modal\" \n                    [(visible)]=\"GlobalSettingsDialogSettings.isVisible\"  \n                    header=\"Global Settings\" >\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        <tabset #globalSettingsTab class=\"tab-container tabbable-line\" style='width: 100%; height: 100%;'>\n                            <tab heading=\"{{'Filtering' | localize}}\" customClass=\"m-tabs__item\" style='width: 400px; height: 100%;'>\n\n                                <div id=\"filtering-config\" role=\"tabpanel\" aria-labelledby=\"filtering-tab\">\n                                    <div class=\"form-group row\" title=\"By what metric would you like to measure distance?\">\n                                        <div class=\"col-4\">Distance Metric</div>\n                                        <div class=\"col-8\">\n                                            <select id=\"default-distance-metric\" class=\"form-control form-control-sm mr-5\" [(ngModel)]=\"SelectedDistanceMetricVariable\" (ngModelChange)=\"onDistanceMetricChanged()\">\n                                                <option value=\"tn93\">TN93</option>\n                                                <option value=\"snps\">SNPs</option>\n                                            </select>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"By what algorithm would you like to prune links from the network?\">\n                                        <div class=\"col-4\">Prune With</div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"PruneWityTypes\" [(ngModel)]=\"SelectedPruneWityTypesVariable\" (onChange)=\"onPruneWithTypesChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n                                    <div id=\"filtering-epsilon-row\" class=\"form-group row\" style=\"display: none;\" title=\"Select a value for epislon to add links back to minimum spanning network. See 'A Novel Network Representation of SARS-CoV-2 Sequencing Data' for algorithm details.\">\n                                        <div class=\"col-4\">\n                                            <label for=\"filtering-epsilon\">Epsilon: {{ SelectedEpsilonValue }}</label>\n                                        </div>\n                                        <div class=\"col-8\">\n                                            <input type=\"range\" class=\"form-control form-control-sm\" min=\"-8\" max=\"2\" step=\".01\" [(ngModel)]=\"widgets['filtering-epsilon']\" (ngModelChange)=\"onEpsilonValueChange()\">\n                                        </div>\n                                    </div>                                    \n                                    <div class=\"form-group row\" title=\"What's the minimum number of nodes a cluster must have in order to be visible?\">\n                                        <div class=\"col-4\">\n                                            <label for=\"cluster-minimum-size\">Minimum Cluster Size</label>\n                                        </div>\n                                        <div class=\"col-8\">\n                                            <input type=\"number\" class=\"form-control form-control-sm\" min=\"1\" value=\"1\" step=\"1\" [(ngModel)]=\"SelectedClusterMinimumSizeVariable\" (ngModelChange)=\"onMinimumClusterSizeChanged()\">\n                                        </div>\n                                    </div>\n                                    <div id=\"filtering-wrapper\">\n                                        <div class=\"form-group row\" title=\"By what variable would you like to prune links from the network?\">\n                                            <div class=\"col-4\"><label for=\"link-sort-variable\">Filter Links on</label></div>\n                                            <div class=\"col-8\">\n                                                <p-dropdown id=\"link-sort-variable\" [options]=\"ToolTipFieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedLinkSortVariable\" (onChange)=\"onLinkSortChanged()\"></p-dropdown>\n                                            </div>\n                                        </div>\n                                        <div class=\"form-group row\" id=\"filtering-threshold\" title=\"What's the maximum genetic distance you're willing to call a link?\">\n                                            <div class=\"col-4\"><label for=\"link-threshold\">Filtering Threshold</label></div>\n                                            <div><svg id=\"link-threshold-sparkline\" #linkThresholdSparkline style=\"width: 280px; height: 48px;\"></svg></div>\n                                            <div class=\"col-8  offset-4\">\n                                                <input type=\"number\" class=\"form-control form-control-sm\" id=\"link-threshold\" min=\"-1\" value=\"1\" step=\"0.001\" [(ngModel)]=\"SelectedLinkThresholdVariable\" (ngModelChange)=\"onLinkThresholdChanged()\">\n                                            </div>\n                                        </div>\n                                        <div class=\"form-group row\" title=\"Click to reveal all hidden elements of the network.\">\n                                            <div class=\"col-4\"><label for=\"reveal-all\">Reveal</label></div>\n                                            <div class=\"col-8\">\n                                              <button type=\"button\" id=\"reveal-all\" (click)=\"revealClicked()\" class=\"btn btn-light btn-sm w-100\">Everything</button>\n                                            </div>\n                                          </div>\n                                    </div>\n                                    <div class=\"form-group row\" hidden title=\"Click to reveal all hidden elements of the network.\">\n                                        <div class=\"col-4\"><label for=\"RevealAllTab\">Reveal</label></div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"RevealTypes\" [(ngModel)]=\"SelectedRevealTypesVariable\" (onChange)=\"updateGlobalSettingsModel()\"></p-selectButton>\n                                        </div>\n                                    </div>\n                                    <hr>\n                                    <div class=\"form-group row\" title=\"Display a table of overview statistics for the network\">\n                                        <div class=\"col-4\">Statistics</div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"StatisticsTypes\" [(ngModel)]=\"SelectedStatisticsTypesVariable\" (onChange)=\"onShowStatisticsChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n                                </div>\n                            </tab>\n                            <tab heading=\"{{'Styling' | localize}}\" customClass=\"m-tabs__item\" style='width: 400px; height: 100%;'>\n\n                                <div id=\"style-config\" role=\"tabpanel\" aria-labelledby=\"style-tab\">\n                                    <div class=\"form-group row\" title=\"By what variable nodes be colored?\">\n                                        <div class=\"col-4\"><label for=\"node-color-variable\">Color Nodes By</label></div>\n                                        <div class=\"col-8\">\n                                            <p-dropdown id=\"node-color-variable\" [options]=\"FieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedColorNodesByVariable\" (onChange)=\"onColorNodesByChanged()\"></p-dropdown>\n                                        </div>\n                                    </div>\n                                    <div id=\"node-color-table-row\" [hidden]=\"!ShowGlobalSettingsNodeColorTable\" class=\"form-group row\" title=\"Should MicrobeTrace display the table of colors?\">\n                                        <div class=\"col-4\"><label>Nodes Color Table</label></div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"NodeColorTableTypes\" [(ngModel)]=\"SelectedNodeColorTableTypesVariable\" (onChange)=\"onNodeColorTableChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n\n\n                                    <div id=\"node-color-value-row\" class=\"form-group row\" title=\"What color should the nodes be?\">\n                                        <div class=\"col-4\"><label for=\"node-color\">Nodes</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"node-color\" class=\"form-control form-control-sm\" value=\"#1f77b4\" [(ngModel)]=\"SelectedNodeColorVariable\" (ngModelChange)=\"onNodeColorChanged()\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"By what variable should links be colored?\">\n                                        <div class=\"col-4\"><label for=\"link-color-variable\">Color Links By</label></div>\n                                        <div class=\"col-8\">\n                                            <p-dropdown id=\"link-tooltip-variable\" [options]=\"ToolTipFieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedColorLinksByVariable\" (onChange)=\"onColorLinksByChanged()\"></p-dropdown>\n                                        </div>\n                                    </div>\n                                    <div id=\"link-color-table-row\" [hidden]=\"!ShowGlobalSettingsLinkColorTable\"  class=\"form-group row\" title=\"Should MicrobeTrace display the table of colors?\">\n                                        <div class=\"col-4\"><label>Link Color Table</label></div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"LinkColorTableTypes\" [(ngModel)]=\"SelectedLinkColorTableTypesVariable\" (onChange)=\"onLinkColorTableChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n\n                                    <div id=\"link-color-value-row\" class=\"form-group row\" title=\"What color should the links be?\">\n                                        <div class=\"col-4\"><label for=\"link-color\">Links</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"link-color\" class=\"form-control form-control-sm\" [(ngModel)]=\"SelectedLinkColorVariable\" (ngModelChange)=\"onLinkColorChanged()\">\n                                        </div>\n                                    </div>\n\n                                    <div class=\"form-group row\" title=\"What color should denote selection?\">\n                                        <div class=\"col-4\"><label for=\"selected-color\">Selected</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"selected-color\" class=\"form-control form-control-sm\" value=\"#ff8300\" [(ngModel)]=\"SelectedColorVariable\" (ngModelChange)=\"updateGlobalSettingsModel()\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"What color should the background be?\">\n                                        <div class=\"col-4\"><label for=\"background-color\">Background</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"background-color\" class=\"form-control form-control-sm\" value=\"#ffffff\" [(ngModel)]=\"SelectedBackgroundColorVariable\" (ngModelChange)=\"onBackgroundChanged()\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"Load an existing MicrobeTrace style file\">\n                                        <div class=\"col-4\">Apply Style</div>\n                                        <div class=\"col-8\">\n                                            <input type=\"file\" id=\"apply-style\" class=\"d-none\" accept=\".style\" [(ngModel)]=\"SelectedApplyStyleVariable\" (change)=\"onApplyStyle($event)\">\n                                            <label class=\"custom-file-label\" for=\"apply-style\">Choose MicrobeTrace Style File</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </tab>\n\n                            <tab heading=\"{{'Timeline' | localize}}\" customClass=\"m-tabs__item\" style='width: 400px; height: 100%;'>\n                                <div id=\"timeline-config\" role=\"tabpanel\" aria-labelledby=\"timeline-tab\">\n                                    <div class=\"form-group row\" title=\"By what variable timeline applied?\">\n                                        <div class=\"col-4\"><label for=\"node-timeline-variable\">Timeline By</label></div>\n                                        <div class=\"col-8\">\n                                            <p-dropdown id=\"node-timeline-variable\" [options]=\"FieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedTimelineVariable\" (onChange)=\"onTimelineChanged($event.value)\"></p-dropdown>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row \" title=\"How much time between ticks of the timeline (ms)?\">\n                                        <div class=\"col-4\"><label>Timeline Speed: {{ timelineSpeed }} ms</label></div>\n                                        <div class=\"col-8\"><input type=\"range\" class=\"custom-range\" min=\"200\" step=\"100\" max=\"1000\" [(ngModel)]=\"timelineSpeed\"></div>\n                                    </div>\n                                    <div>Timeline works on 2D Network, Map, and Bubble Views.</div>\n                                </div> \n                            </tab>\n                        </tabset>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"modal-footer\">\n                <div class=\"btn-group\" data-toggle=\"buttons\">\n                    <button type=\"button\" class=\"btn btn-primary\" (click)=\"GlobalSettingsDialogSettings.setVisibility(false)\">Done</button>\n                </div>\n            </div>\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"session-recall-modal\" [(visible)]=\"displayRecallStashDialog\" header=\"Recall Stash\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div #stashes id=\"recall-stashes-available\" class=\"table-sm\"></div>\n\n                    <div class=\"modal-footer\">\n                        <button *ngIf=\"!HideThisForNow\" type=\"button\" class=\"btn btn-danger\" id=\"recall-delete-stash\" (click)=\"DisplayRecallStashDialog('Delete')\">Delete</button>\n                        <button type=\"button\" class=\"btn\" (click)=\"DisplayRecallStashDialog('Cancel')\">Cancel</button>\n                        <button type=\"button\" class=\"btn btn-success\" id=\"recall-load-stash\" (click)=\"DisplayRecallStashDialog('Recall')\">Recall</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"open-auspice-url\" [(visible)]=\"displayUrlDialog\" header=\"Open Auspice JSON via URL\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        <input type=\"text\" id=\"auspice-url\" class=\"form-control form-control-sm\" [(ngModel)]=\"auspiceUrlVal\" placeholder=\"URL of Auspice JSON to open\" />\n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn\" (click)=\"DisplayUrlDialog('Cancel')\">Cancel</button>\n                        <button type=\"button\" class=\"btn btn-success\" id=\"url-open-button\" (click)=\"DisplayUrlDialog('Open')\">Open</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"open-old-mt\" [(visible)]=\"displayMTDialog\" header=\"Open Auspice JSON in classic MicrobeTrace\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        Welcome to the newest version of MicrobeTrace! If you'd like to open your auspice JSON file in the previous version of MicrobeTrace, please click this link: <br />\n                        <a href=\"https://microbetrace.cdc.gov/MicrobeTrace/?url={{auspiceUrlVal}}\">https://microbetrace.cdc.gov/MicrobeTrace/?url={{auspiceUrlVal}}</a>\n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn\" (click)=\"DisplayMTDialog('Cancel')\">Close</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"session-stash-modal\" [(visible)]=\"displayStashDialog\" header=\"Save Session\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n\n                    <div class=\"modal-body\">\n                        <div class=\"form-group row\" title=\"What would you like to call this session?\">\n                            <div class=\"col-7\">\n                                <input style=\"height:42px\" type=\"text\" id=\"stash-name\" class=\"form-control form-control-sm\" [(ngModel)]=\"saveFileName\" placeholder=\"Name your session!\">\n                            </div>\n                            <div class=\"col-5\">\n                                <p-dropdown [options]=\"saveFileTypeOptions\" [(ngModel)]=\"selectedSaveFileType\" appendTo=\"body\"></p-dropdown>\n                            </div>\n                        </div>\n                        <div *ngIf=\"selectedSaveFileType=='session'\" class=\"form-group row\" title=\"Should MicrobeTrace compress this save file?\">\n                            <div class=\"col\">\n                                <div class=\"form-check form-check-inline\">\n                                    <input class=\"form-check-input\" type=\"checkbox\" id=\"save-file-compress\" checked>\n                                    <label class=\"form-check-label\" for=\"save-file-compress\">Compress?</label>\n                                  </div>\n                              <div id=\"cluster-checkbox-container\" class=\"form-check form-check-inline\">\n                                <input class=\"form-check-input\" [(ngModel)]=\"saveByCluster\" type=\"checkbox\" id=\"save-file-cluster\">\n                                <label class=\"form-check-label\" for=\"save-file-cluster\">By Cluster</label>\n                              </div>\n                            </div>\n                         </div>\n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn btn-error\" (click)=\"DisplayStashDialog('Cancel')\">Cancel</button>\n                        <button type=\"button\" id=\"stash-data\" class=\"btn btn-primary\" (click)=\"DisplayStashDialog('Save')\" [disabled]=\"saveFileName === undefined || saveFileName === ''\">Save</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n\n        <p-dialog id=\"about-dialog\" [(visible)]=\"displayAbout\" header=\"About Microbetrace\">\n            <div class=\"modal-dialog modal-lg\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        <h3>\n                            <span>{{\"MicrobeTrace\" | localize}} </span>\n                            <small>v<span id=\"version\">{{version}}</span></small>\n                        </h3>\n                        <p>\n                            MicrobeTrace is an interactive web application that renders existing data from high-risk contact networks\n                            in an easy-to-use Graphical User Interface (GUI). The network visualization can be customized according to\n                            supplemental data sources and mathematical inferences like the most probable transmission pathways.\n                            MicrobeTrace is a highly responsive, visual sequence analytics tool which can reduce the gap between data\n                            production and analytics and help you to discover, understand, and display relationships (links) between\n                            patients (nodes). MicrobeTrace can be deployed on laptops to locations without any Internet access, thereby\n                            reducing both the startup cost and analysis time and effort.\n                          </p>\n                          <p class=\"about-links\">\n                            <a href=\"https://github.com/CDCgov/MicrobeTrace/wiki\" target=\"_blank\" rel=\"noreferrer noopener\">\n                              Click Here to Learn More\n                            </a>\n                          </p>\n                          <p>\n                            MicrobeTrace was built by the Molecular Epidemiology and Bionformatics Team at the CDC in Atlanta.</p>\n                            <a class=\"about-links\" href=\"https://cdcgov.github.io/MEBT\" target=\"_blank\" rel=\"noreferrer noopener\" style=\"display: block;\">\n                              Click Here to See MEBT's Other Tools\n                            </a>\n                          \n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn btn-success\" (click)=\"DisplayAbout()\">Close</button>\n                    </div>\n                </div>\n            </div>\n        </p-dialog>\n\n        <div id=\"main-panel\" class=\"pane-container pane-horizontal\">\n            <noscript class=\"container-fluid\">\n              <div class=\"jumbotron\">\n                <h1>Sorry!</h1>\n                <p class=\"lead\">MicrobeTrace requires Javascript to run. Please <a href=\"https://www.enable-javascript.com/\">enable Javascript</a> and refresh MicrobeTrace.</p>\n              </div>\n            </noscript>\n            <div id=\"global-timeline-wrapper\" style=\"display: none;\">\n              <div id=\"global-timeline\" align=\"center\">\n                <div><button type=\"button\" id=\"timeline-play-button\" class=\"btn btn-light btn-sm\" (click)=\"playTimeline()\">{{playBtnText}}</button>\n                <span id=\"global-timeline-field\" contenteditable></span></div>\n                <!-- <svg></svg>\n                <mat-slider></mat-slider> -->\n              </div>  \n            </div>\n          </div>\n\n       \n        <!-- <p-dialog class=\"table-z-index\" id=\"global-settings-link-color-table\" \n                    [position]=\"GlobalSettingsLinkColorDialogSettings.linkLeft\" \n                    [(visible)]=\"GlobalSettingsLinkColorDialogSettings.isVisible\"  \n                    header=\"Link Color Table\" [style]=\"{'z-index': '1'}\"\n                    (onShow)=\"SelectedLinkColorTableTypesVariable='Show'\"\n                    (onHide)=\"SelectedLinkColorTableTypesVariable='Hide'\"\n                    >\n            <div class=\"col-12\" style=\"max-height: 50vh\">\n                <table id=\"link-color-table\" style=\"width:100%;height:100%;\"></table>\n            </div>\n        </p-dialog> -->\n\n        <div id=\"color-transparency-wrapper\">\n            <input type=\"range\" class=\"custom-range\" id=\"color-transparency\" min=\"0\" max=\"1\" step=\"0.05\" value=\"1\" >\n        </div>\n\n\n    </div>\n</div>\n";
+module.exports = "<div class=\"m-content\">   \n    <div class=\"m-portlet m-portlet--mobile\" style=\"height:100%;\">\n\n        <div *ngIf=\"!officialInstance()\" id=\"url-warning-div\">This is not an official MicrobeTrace instance, please visit our production instance at <a href=\"https://microbetrace.cdc.gov/MicrobeTrace\">https://microbetrace.cdc.gov/MicrobeTrace</a> or our development instance at <a href=\"https://cdcgov.github.io/MicrobeTrace\">https://cdcgov.github.io/MicrobeTrace</a></div>\n        <mat-toolbar id=\"top-toolbar\" class=\"nav-bar\">\n                <div class=\"navbar-logo\">\n                    <span class=\"microbe-font\">Microbe</span>\n                    <span class=\"trace-font\">Trace</span>\n                    <span><img alt=\"microbetrace\" class=\"mt-icon-toolbar\" [src]=\"appRootUrl() + 'assets/images/Logo.png'\"></span>\n                  </div>\n                  <div class=\"menu-items\">\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"fileMenu\"><i class=\"far nav-icon flaticon-file-1\"></i>File<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #fileMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <!-- <button mat-menu-item (click)=\"FileClick('Stash Session')\">Stash</button> -->\n                      <!-- <button mat-menu-item (click)=\"FileClick('Recall Session')\">Recall</button> -->\n                      <button mat-menu-item (click)=\"FileClick('Save Session')\">Save</button>\n                      <!-- <button mat-menu-item (click)=\"FileClick('Open Session')\">Open</button> -->\n                      <button mat-menu-item (click)=\"FileClick('Open URL')\">Open URL</button>\n                      <button mat-menu-item (click)=\"FileClick('Add Data')\">Add Data</button>\n                      <!-- <button mat-menu-item (click)=\"FileClick('New Session')\">New</button> -->\n                    </mat-menu>\n                    <button class=\"navbar-item\" (click)=\"DisplayGlobalSettingsDialog()\" mat-button><i class=\"far nav-icon flaticon-cogwheel-2\"></i>Settings</button>\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"viewMenu\"><i class=\"far nav-icon flaticon-web\"></i>View<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #viewMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <button mat-menu-item (click)=\"Viewclick('2D Network')\">2D Network</button>\n                      <button mat-menu-item (click)=\"Viewclick('Table')\">Table</button>\n                      <button mat-menu-item (click)=\"Viewclick('Map')\">Map</button>\n                      <button mat-menu-item (click)=\"Viewclick('Epi Curve')\">Epi Curve</button>\n                      <button mat-menu-item (click)=\"Viewclick('Phylogenetic Tree')\">Phylogenetic Tree</button>\n                      <button mat-menu-item (click)=\"Viewclick('Alignment View')\">Alignment View</button>\n                      <button mat-menu-item (click)=\"Viewclick('Crosstab')\">CrossTab</button>\n                      <button mat-menu-item (click)=\"Viewclick('Aggregate')\">Aggregate</button>\n                      <button mat-menu-item (click)=\"Viewclick('Gantt Chart')\">Gantt Chart</button>\n                      <button mat-menu-item (click)=\"Viewclick('Heatmap')\">Heatmap</button>\n                      <button mat-menu-item (click)=\"Viewclick('Bubble')\">Bubble</button>\n                      <button mat-menu-item (click)=\"Viewclick('Waterfall')\">Waterfall</button>\n                    </mat-menu>\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"windowMenu\"><i class=\"far nav-icon flaticon-web\"></i>Window<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #windowMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <button mat-menu-item (click)=\"WindowClick('Reload Screen')\">Reload</button>\n                      <button mat-menu-item (click)=\"WindowClick('Fullscreen')\">Fullscreen</button>\n                    </mat-menu>\n                    <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"helpMenu\"><i class=\"far nav-icon flaticon-questions-circular-button\"></i>Help<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #helpMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <a href=\"https://github.com/CDCgov/MicrobeTrace/wiki\" class=\"dropdown-item ifOnline\" target=\"_blank\" rel=\"noreferrer noopener\" mat-menu-item>Help</a>\n                      <a href=\"https://github.com/CDCgov/MicrobeTrace/issues/new\" class=\"dropdown-item ifOnline\" target=\"_blank\" rel=\"noreferrer noopener\" mat-menu-item>Report Bug</a>\n                      <button (click)=\"HelpClick('About')\" mat-menu-item>About</button>\n                    </mat-menu>\n                    <!-- <button class=\"navbar-item\" mat-button [matMenuTriggerFor]=\"langMenu\"><i class=\"far nav-icon flaticon-earth-globe\"></i>Language<span class=\"dropdown-symbol\">&#9660;</span></button>\n                    <mat-menu #langMenu=\"matMenu\" overlapTrigger=\"false\">\n                      <button mat-menu-item >English</button>\n                      <button mat-menu-item >Spanish</button>\n                    </mat-menu> -->\n                  </div>\n            <div id=\"search-form\" class=\"form-inline navbar-form\">\n                <label for=\"search\">Search</label>\n                <div class=\"autocomplete-wrapper\">\n                    <input type=\"search\" id=\"search\" class=\"form-control form-control-sm\" (input)=\"onSearch()\" [(ngModel)]=\"searchText\" placeholder=\"Nodes\">\n                    <ul id=\"search-results\"></ul>\n                </div>\n            <button id=\"casesensitivebutton\" (click)=\"onCaseSensitiveChange()\" type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\" title=\"Match Case\">\n                <span>C</span>\n            </button>     \n            <button id=\"wholewordbutton\" type=\"button\" (click)=\"onWholeWordChange()\" class=\"btn btn-light btn-sm\" data-toggle=\"button\" aria-pressed=\"false\" autocomplete=\"off\" title=\"Match Whole Word\">\n                <span>W</span>\n            </button>      \n        \n            <select [(ngModel)]=\"searchField\" (ngModelChange)=\"onSearchFieldChange($event)\" id=\"search-field\"  class=\"form-control form-control-sm nodeValues\">\n                <option val=\"id\">ID</option>\n            </select>\n            </div> \n          </mat-toolbar>\n\n        <div #visualwrapper id=\"visualwrapper\" class=\"kt-container  kt-grid__item kt-grid__item--fluid \" style=\"margin: 6px 6px 0 6px;\" [style.height.px]=\"getHeight()\">\n            <div class=\"kt-portlet kt-portlet--mobile\" style=\"height:100%\">\n                <div class=\"kt-portlet__head kt-portlet__head--lg\" style=\"height:100%\">\n                    <div class=\"m-portlet__body\" style=\"flex: 1 100%; max-width:100%; height:100%\">\n                        <!-- TODO: Add back or replace-->\n                        <!-- <golden-layout-root #goldenLayout></golden-layout-root> -->\n                        <app-golden-layout-host #goldenLayoutHost></app-golden-layout-host>             \n                    </div>\n                </div>\n            </div>\n\n        <p-dialog class=\"table-z-index\" id=\"global-settings-link-color-table\" \n            [position]=\"GlobalSettingsLinkColorDialogSettings.linkLeft\" \n            [(visible)]=\"GlobalSettingsLinkColorDialogSettings.isVisible\"  \n            [style]=\"{'z-index': '1'}\"\n            (onShow)=\"showLinkColorTable()\"\n            (onHide)=\"hideLinkColorTable()\"\n            >\n            <ng-template pTemplate=\"header\">\n                <div style=\"display: flex; justify-content: space-between; width: 100%;\">\n                    <span>Link Color Table</span>\n                    <span style=\"overflow: visible; position: relative;\">\n                        <button title=\"Settings\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"toggleColorTableSettings('link-color')\"><i class=\"pi pi-cog\"></i></button>\n                        <div id=\"linkColorTableSettings\" class=\"dropdown-menu\" style=\"display: none;\">\n                            <button id=\"linkColorCounts\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('link-color', 'tableCounts')\">\n                                <span>Show Counts</span>\n                                <i [className]=\"this.widgets['link-color-table-counts'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                            <button id=\"linkColorFrequencies\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('link-color', 'tableFreq')\">\n                                <span>Show Frequencies</span>\n                                <i [className]=\"this.widgets['link-color-table-frequencies'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                        </div>\n                    </span>\n                </div>\n            </ng-template>\n            <div style=\"max-height: 50vh\">\n                <table id=\"link-color-table\" style=\"width:100%;height:100%;\"></table>\n            </div>\n        </p-dialog>\n\n\n        <p-dialog id=\"global-settings-node-color-table\" \n            [position]=\"GlobalSettingsNodeColorDialogSettings.nodeLeft\" \n            [(visible)]=\"GlobalSettingsNodeColorDialogSettings.isVisible\"  \n            (onShow)=\"showNodeColorTable()\"\n            (onHide)=\"hideNodeColorTable()\"      \n                    >       \n            <ng-template pTemplate=\"header\">\n                <div style=\"display: flex; justify-content: space-between; width: 100%;\">\n                    <span>Node Color Table</span>\n                    <span style=\"overflow: visible; position: relative;\">\n                        <button title=\"Settings\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"toggleColorTableSettings('node-color')\"><i class=\"pi pi-cog\"></i></button>\n                        <div id=\"nodeColorTableSettings\" class=\"dropdown-menu\" style=\"display: none;\">\n                            <button id=\"nodeColorCounts\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('node-color', 'tableCounts')\">\n                                <span>Show Counts</span>\n                                <i [className]=\"this.widgets['node-color-table-counts'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                            <button id=\"nodeColorFrequencies\" class=\"dropdown-item\" (click)=\"toggleColorTableColumns('node-color', 'tableFreq')\">\n                                <span>Show Frequencies</span>\n                                <i [className]=\"this.widgets['node-color-table-frequencies'] ? 'pi pi-check' : 'pi pi-times'\" style=\"line-height: 1.5\"></i>\n                            </button>\n                        </div>\n                    </span>\n                </div>\n            </ng-template>\n            <div style=\"max-height: 50vh\">\n                <table id=\"node-color-table\" style=\"width:100%;height:100%;\"></table>\n            </div>\n        </p-dialog>\n        </div>\n    \n        <div id=\"overlay\" appDnd (fileDropped)=\"prepareFilesLists($event)\">\n            <input class=\"dnd-input\" type=\"file\" #fileDropRef id=\"fileDropRef\" multiple (change)=\"prepareFilesLists($event.target.files)\" />\n            <div class=\"welcome-msg\">\n                <div id=\"welcome-title\" class=\"top\">\n                    <span class=\"primary\">Welcome to </span>\n                    <span class=\"microbe primary\">Microbe</span>\n                    <span class=\"primary\">Trace&#8482;</span>\n                    <!-- <span><img class=\"mt-icon\" src=\"../../assets/images/Logo.png\"></span> -->\n                    <!-- Swap/Uncomment when building productions -->\n                    <span><img alt=\"microbetrace\" class=\"mt-icon\" [src]=\"appRootUrl() + 'assets/images/Logo.png'\"></span>\n                </div>\n                <div id=\"welcome-description\" class=\"bottom primary\">The Visualization Multitool for Molecular Epidemiology and Bioinformatics</div>\n            </div>\n            <div id=\"add-data-container\" class=\"add-data-container\">\n                <div class=\"files-msg\">\n                    <span class=\"primary\">Click </span>\n                    <a class=\"here-link primary\" for=\"fileDropRef\">here</a>\n                    <span class=\"primary\"> or Drag & Drop files to load data</span>\n                </div>\n                <div class=\"add-btns primary\">\n                    <!-- TODO: add back in when recall is ready-->\n                    <!-- <button mat-raised-button color=\"primary\" class=\"recall\" (click)=\"recallClicked()\">Recall Previous Session</button> -->\n                    <button mat-raised-button color=\"primary\" (click)=\"continueClicked()\">Continue with Sample Dataset</button>\n                </div>\n            </div>\n            <!-- <div id=\"onload-container\" class=\"launch-options-container primary\">\n                <span class=\"onload-bold\">Onload Settings:</span>\n                <span>Distance Metric: <span class=\"option-value\" [matMenuTriggerFor]=\"metricMenu\">{{metric}} <span class=\"onload-dropdown-symbol\">&#9660;</span></span></span>\n                <span id=\"ambiguities-menu\">Ambiguities: <span class=\"option-value\" [matMenuTriggerFor]=\"ambiMenu\">{{ambiguity}} <span class=\"onload-dropdown-symbol\">&#9660;</span></span></span>\n                <span>View to Launch: <span class=\"option-value\" [matMenuTriggerFor]=\"viewMenuBottom\">{{launchView}} <span class=\"onload-dropdown-symbol\">&#9660;</span></span></span>\n                <span class=\"threshold-option\">Link Threshold: \n                    <form class=\"threshold-input\">\n                    <mat-form-field class=\"threshold-input-length\">\n                        <mat-label></mat-label>\n                      <input matInput (input)=\"updateThreshold($event)\" [value]=\"threshold\">\n                    </mat-form-field>\n                  </form>\n                </span>\n            </div>\n            <mat-menu #metricMenu=\"matMenu\"overlapTrigger=\"false\">\n                <button mat-menu-item (click)=\"updateMetric('TN93')\">TN93</button>\n                <button mat-menu-item (click)=\"updateMetric('SNPs')\">SNPs</button>\n            </mat-menu>\n            <mat-menu #ambiMenu=\"matMenu\" overlapTrigger=\"false\">\n                <button mat-menu-item (click)=\"updateAmbiguity('Average')\">Average</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('Resolve')\">Resolve</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('Skip')\">Skip</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('GapMM')\">GapMM</button>\n                <button mat-menu-item (click)=\"updateAmbiguity('HIV-Trace -g')\">HIV-Trace -g</button>\n            </mat-menu>\n            <mat-menu #viewMenuBottom=\"matMenu\" overlapTrigger=\"false\">\n                <button mat-menu-item (click)=\"updateLaunchView('2D Network')\">2D Network</button>\n                <button mat-menu-item (click)=\"updateLaunchView('Table')\">Table</button>\n                <button mat-menu-item (click)=\"updateLaunchView('Map')\">Bubbles</button>\n                <button mat-menu-item (click)=\"updateLaunchView('Phylogenetic Tree')\">Phylogenetic Tree</button>\n            </mat-menu> -->\n        </div>\n\n        <p-dialog id=\"global-settings-modal\" \n                    [(visible)]=\"GlobalSettingsDialogSettings.isVisible\"  \n                    header=\"Global Settings\" >\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        <tabset #globalSettingsTab class=\"tab-container tabbable-line\" style='width: 100%; height: 100%;'>\n                            <tab heading=\"{{'Filtering' | localize}}\" customClass=\"m-tabs__item\" style='width: 400px; height: 100%;'>\n\n                                <div id=\"filtering-config\" role=\"tabpanel\" aria-labelledby=\"filtering-tab\">\n                                    <div class=\"form-group row\" title=\"By what metric would you like to measure distance?\">\n                                        <div class=\"col-4\">Distance Metric</div>\n                                        <div class=\"col-8\">\n                                            <select id=\"default-distance-metric\" class=\"form-control form-control-sm mr-5\" [(ngModel)]=\"SelectedDistanceMetricVariable\" (ngModelChange)=\"onDistanceMetricChanged()\">\n                                                <option value=\"tn93\">TN93</option>\n                                                <option value=\"snps\">SNPs</option>\n                                            </select>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"By what algorithm would you like to prune links from the network?\">\n                                        <div class=\"col-4\">Prune With</div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"PruneWityTypes\" [(ngModel)]=\"SelectedPruneWityTypesVariable\" (ngModelChange)=\"onPruneWithTypesChanged(SelectedPruneWityTypesVariable)\"></p-selectButton>\n                                        </div>\n                                    </div>\n                                    <div id=\"filtering-epsilon-row\" class=\"form-group row\" style=\"display: none;\" title=\"Select a value for epislon to add links back to minimum spanning network. See 'A Novel Network Representation of SARS-CoV-2 Sequencing Data' for algorithm details.\">\n                                        <div class=\"col-4\">\n                                            <label for=\"filtering-epsilon\">Epsilon: {{ SelectedEpsilonValue }}</label>\n                                        </div>\n                                        <div class=\"col-8\">\n                                            <input type=\"range\" class=\"form-control form-control-sm\" min=\"-8\" max=\"2\" step=\".01\" [(ngModel)]=\"widgets['filtering-epsilon']\" (ngModelChange)=\"onEpsilonValueChange()\">\n                                        </div>\n                                    </div>                                    \n                                    <div class=\"form-group row\" title=\"What's the minimum number of nodes a cluster must have in order to be visible?\">\n                                        <div class=\"col-4\">\n                                            <label for=\"cluster-minimum-size\">Minimum Cluster Size</label>\n                                        </div>\n                                        <div class=\"col-8\">\n                                            <input type=\"number\" class=\"form-control form-control-sm\" min=\"1\" value=\"1\" step=\"1\" [(ngModel)]=\"SelectedClusterMinimumSizeVariable\" (ngModelChange)=\"onMinimumClusterSizeChanged()\">\n                                        </div>\n                                    </div>\n                                    <div id=\"filtering-wrapper\">\n                                        <div class=\"form-group row\" title=\"By what variable would you like to prune links from the network?\">\n                                            <div class=\"col-4\"><label for=\"link-sort-variable\">Filter Links on</label></div>\n                                            <div class=\"col-8\">\n                                                <p-dropdown id=\"link-sort-variable\" [options]=\"ToolTipFieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedLinkSortVariable\" (onChange)=\"onLinkSortChanged()\"></p-dropdown>\n                                            </div>\n                                        </div>\n                                        <div class=\"form-group row\" id=\"filtering-threshold\" title=\"What's the maximum genetic distance you're willing to call a link?\">\n                                            <div class=\"col-4\"><label for=\"link-threshold\">Filtering Threshold</label></div>\n                                            <div><svg id=\"link-threshold-sparkline\" #linkThresholdSparkline style=\"width: 280px; height: 48px;\"></svg></div>\n                                            <div class=\"col-8  offset-4\">\n                                                <input type=\"number\" class=\"form-control form-control-sm\" id=\"link-threshold\" min=\"-1\" value=\"1\" step=\"0.001\" [(ngModel)]=\"SelectedLinkThresholdVariable\" (ngModelChange)=\"onLinkThresholdChanged()\">\n                                            </div>\n                                        </div>\n                                        <div class=\"form-group row\" title=\"Click to reveal all hidden elements of the network.\">\n                                            <div class=\"col-4\"><label for=\"reveal-all\">Reveal</label></div>\n                                            <div class=\"col-8\">\n                                              <button type=\"button\" id=\"reveal-all\" (click)=\"revealClicked()\" class=\"btn btn-light btn-sm w-100\">Everything</button>\n                                            </div>\n                                          </div>\n                                    </div>\n                                    <div class=\"form-group row\" hidden title=\"Click to reveal all hidden elements of the network.\">\n                                        <div class=\"col-4\"><label for=\"RevealAllTab\">Reveal</label></div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"RevealTypes\" [(ngModel)]=\"SelectedRevealTypesVariable\" (onChange)=\"updateGlobalSettingsModel()\"></p-selectButton>\n                                        </div>\n                                    </div>\n                                    <hr>\n                                    <div class=\"form-group row\" title=\"Display a table of overview statistics for the network\">\n                                        <div class=\"col-4\">Statistics</div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"StatisticsTypes\" [(ngModel)]=\"SelectedStatisticsTypesVariable\" (onChange)=\"onShowStatisticsChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n                                </div>\n                            </tab>\n                            <tab heading=\"{{'Styling' | localize}}\" customClass=\"m-tabs__item\" style='width: 400px; height: 100%;'>\n\n                                <div id=\"style-config\" role=\"tabpanel\" aria-labelledby=\"style-tab\">\n                                    <div class=\"form-group row\" title=\"By what variable nodes be colored?\">\n                                        <div class=\"col-4\"><label for=\"node-color-variable\">Color Nodes By</label></div>\n                                        <div class=\"col-8\">\n                                            <p-dropdown id=\"node-color-variable\" [options]=\"FieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedColorNodesByVariable\" (onChange)=\"onColorNodesByChanged()\"></p-dropdown>\n                                        </div>\n                                    </div>\n                                    <div id=\"node-color-table-row\" [hidden]=\"!ShowGlobalSettingsNodeColorTable\" class=\"form-group row\" title=\"Should MicrobeTrace display the table of colors?\">\n                                        <div class=\"col-4\"><label>Nodes Color Table</label></div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"NodeColorTableTypes\" [(ngModel)]=\"SelectedNodeColorTableTypesVariable\" (onChange)=\"onNodeColorTableChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n\n\n                                    <div id=\"node-color-value-row\" class=\"form-group row\" title=\"What color should the nodes be?\">\n                                        <div class=\"col-4\"><label for=\"node-color\">Nodes</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"node-color\" class=\"form-control form-control-sm\" value=\"#1f77b4\" [(ngModel)]=\"SelectedNodeColorVariable\" (ngModelChange)=\"onNodeColorChanged()\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"By what variable should links be colored?\">\n                                        <div class=\"col-4\"><label for=\"link-color-variable\">Color Links By</label></div>\n                                        <div class=\"col-8\">\n                                            <p-dropdown id=\"link-tooltip-variable\" [options]=\"ToolTipFieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedColorLinksByVariable\" (onChange)=\"onColorLinksByChanged()\"></p-dropdown>\n                                        </div>\n                                    </div>\n                                    <div id=\"link-color-table-row\" [hidden]=\"!ShowGlobalSettingsLinkColorTable\"  class=\"form-group row\" title=\"Should MicrobeTrace display the table of colors?\">\n                                        <div class=\"col-4\"><label>Link Color Table</label></div>\n                                        <div class=\"col-8\">\n                                            <p-selectButton [options]=\"LinkColorTableTypes\" [(ngModel)]=\"SelectedLinkColorTableTypesVariable\" (onChange)=\"onLinkColorTableChanged()\"></p-selectButton>\n                                        </div>\n                                    </div>\n\n                                    <div id=\"link-color-value-row\" class=\"form-group row\" title=\"What color should the links be?\">\n                                        <div class=\"col-4\"><label for=\"link-color\">Links</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"link-color\" class=\"form-control form-control-sm\" [(ngModel)]=\"SelectedLinkColorVariable\" (ngModelChange)=\"onLinkColorChanged()\">\n                                        </div>\n                                    </div>\n\n                                    <div class=\"form-group row\" title=\"What color should denote selection?\">\n                                        <div class=\"col-4\"><label for=\"selected-color\">Selected</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"selected-color\" class=\"form-control form-control-sm\" value=\"#ff8300\" [(ngModel)]=\"SelectedColorVariable\" (ngModelChange)=\"updateGlobalSettingsModel()\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"What color should the background be?\">\n                                        <div class=\"col-4\"><label for=\"background-color\">Background</label></div>\n                                        <div class=\"col-8\">\n                                            <input type=\"color\" id=\"background-color\" class=\"form-control form-control-sm\" value=\"#ffffff\" [(ngModel)]=\"SelectedBackgroundColorVariable\" (ngModelChange)=\"onBackgroundChanged()\">\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row\" title=\"Load an existing MicrobeTrace style file\">\n                                        <div class=\"col-4\">Apply Style</div>\n                                        <div class=\"col-8\">\n                                            <input type=\"file\" id=\"apply-style\" class=\"d-none\" accept=\".style\" [(ngModel)]=\"SelectedApplyStyleVariable\" (change)=\"onApplyStyle($event)\">\n                                            <label class=\"custom-file-label\" for=\"apply-style\">Choose MicrobeTrace Style File</label>\n                                        </div>\n                                    </div>\n                                </div>\n                            </tab>\n\n                            <tab heading=\"{{'Timeline' | localize}}\" customClass=\"m-tabs__item\" style='width: 400px; height: 100%;'>\n                                <div id=\"timeline-config\" role=\"tabpanel\" aria-labelledby=\"timeline-tab\">\n                                    <div class=\"form-group row\" title=\"By what variable timeline applied?\">\n                                        <div class=\"col-4\"><label for=\"node-timeline-variable\">Timeline By</label></div>\n                                        <div class=\"col-8\">\n                                            <p-dropdown id=\"node-timeline-variable\" [options]=\"FieldList\" appendTo=\"body\" [(ngModel)]=\"SelectedTimelineVariable\" (onChange)=\"onTimelineChanged($event.value)\"></p-dropdown>\n                                        </div>\n                                    </div>\n                                    <div class=\"form-group row \" title=\"How much time between ticks of the timeline (ms)?\">\n                                        <div class=\"col-4\"><label>Timeline Speed: {{ timelineSpeed }} ms</label></div>\n                                        <div class=\"col-8\"><input type=\"range\" class=\"custom-range\" min=\"200\" step=\"100\" max=\"1000\" [(ngModel)]=\"timelineSpeed\"></div>\n                                    </div>\n                                    <div>Timeline works on 2D Network, Map, and Bubble Views.</div>\n                                </div> \n                            </tab>\n                        </tabset>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"modal-footer\">\n                <div class=\"btn-group\" data-toggle=\"buttons\">\n                    <button type=\"button\" class=\"btn btn-primary\" (click)=\"GlobalSettingsDialogSettings.setVisibility(false)\">Done</button>\n                </div>\n            </div>\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"session-recall-modal\" [(visible)]=\"displayRecallStashDialog\" header=\"Recall Stash\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div #stashes id=\"recall-stashes-available\" class=\"table-sm\"></div>\n\n                    <div class=\"modal-footer\">\n                        <button *ngIf=\"!HideThisForNow\" type=\"button\" class=\"btn btn-danger\" id=\"recall-delete-stash\" (click)=\"DisplayRecallStashDialog('Delete')\">Delete</button>\n                        <button type=\"button\" class=\"btn\" (click)=\"DisplayRecallStashDialog('Cancel')\">Cancel</button>\n                        <button type=\"button\" class=\"btn btn-success\" id=\"recall-load-stash\" (click)=\"DisplayRecallStashDialog('Recall')\">Recall</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"open-auspice-url\" [(visible)]=\"displayUrlDialog\" header=\"Open Auspice JSON via URL\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        <input type=\"text\" id=\"auspice-url\" class=\"form-control form-control-sm\" [(ngModel)]=\"auspiceUrlVal\" placeholder=\"URL of Auspice JSON to open\" />\n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn\" (click)=\"DisplayUrlDialog('Cancel')\">Cancel</button>\n                        <button type=\"button\" class=\"btn btn-success\" id=\"url-open-button\" (click)=\"DisplayUrlDialog('Open')\">Open</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"open-old-mt\" [(visible)]=\"displayMTDialog\" header=\"Open Auspice JSON in classic MicrobeTrace\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        Welcome to the newest version of MicrobeTrace! If you'd like to open your auspice JSON file in the previous version of MicrobeTrace, please click this link: <br />\n                        <a href=\"https://microbetrace.cdc.gov/MicrobeTrace/?url={{auspiceUrlVal}}\">https://microbetrace.cdc.gov/MicrobeTrace/?url={{auspiceUrlVal}}</a>\n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn\" (click)=\"DisplayMTDialog('Cancel')\">Close</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n        <p-dialog id=\"session-stash-modal\" [(visible)]=\"displayStashDialog\" header=\"Save Session\">\n            <div class=\"modal-dialog\" role=\"document\">\n                <div class=\"modal-content\">\n\n                    <div class=\"modal-body\">\n                        <div class=\"form-group row\" title=\"What would you like to call this session?\">\n                            <div class=\"col-7\">\n                                <input style=\"height:42px\" type=\"text\" id=\"stash-name\" class=\"form-control form-control-sm\" [(ngModel)]=\"saveFileName\" placeholder=\"Name your session!\">\n                            </div>\n                            <div class=\"col-5\">\n                                <p-dropdown [options]=\"saveFileTypeOptions\" [(ngModel)]=\"selectedSaveFileType\" appendTo=\"body\"></p-dropdown>\n                            </div>\n                        </div>\n                        <div *ngIf=\"selectedSaveFileType=='session'\" class=\"form-group row\" title=\"Should MicrobeTrace compress this save file?\">\n                            <div class=\"col\">\n                                <div class=\"form-check form-check-inline\">\n                                    <input class=\"form-check-input\" type=\"checkbox\" id=\"save-file-compress\" checked>\n                                    <label class=\"form-check-label\" for=\"save-file-compress\">Compress?</label>\n                                  </div>\n                              <div id=\"cluster-checkbox-container\" class=\"form-check form-check-inline\">\n                                <input class=\"form-check-input\" [(ngModel)]=\"saveByCluster\" type=\"checkbox\" id=\"save-file-cluster\">\n                                <label class=\"form-check-label\" for=\"save-file-cluster\">By Cluster</label>\n                              </div>\n                            </div>\n                         </div>\n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn btn-error\" (click)=\"DisplayStashDialog('Cancel')\">Cancel</button>\n                        <button type=\"button\" id=\"stash-data\" class=\"btn btn-primary\" (click)=\"DisplayStashDialog('Save')\" [disabled]=\"saveFileName === undefined || saveFileName === ''\">Save</button>\n                    </div>\n                </div><!-- /.modal-content -->\n            </div><!-- /.modal-dialog -->\n        </p-dialog><!-- /.modal -->\n\n\n        <p-dialog id=\"about-dialog\" [(visible)]=\"displayAbout\" header=\"About Microbetrace\">\n            <div class=\"modal-dialog modal-lg\" role=\"document\">\n                <div class=\"modal-content\">\n                    <div class=\"modal-body\">\n                        <h3>\n                            <span>{{\"MicrobeTrace\" | localize}} </span>\n                            <small>v<span id=\"version\">{{version}}</span></small>\n                        </h3>\n                        <p>\n                            MicrobeTrace is an interactive web application that renders existing data from high-risk contact networks\n                            in an easy-to-use Graphical User Interface (GUI). The network visualization can be customized according to\n                            supplemental data sources and mathematical inferences like the most probable transmission pathways.\n                            MicrobeTrace is a highly responsive, visual sequence analytics tool which can reduce the gap between data\n                            production and analytics and help you to discover, understand, and display relationships (links) between\n                            patients (nodes). MicrobeTrace can be deployed on laptops to locations without any Internet access, thereby\n                            reducing both the startup cost and analysis time and effort.\n                          </p>\n                          <p class=\"about-links\">\n                            <a href=\"https://github.com/CDCgov/MicrobeTrace/wiki\" target=\"_blank\" rel=\"noreferrer noopener\">\n                              Click Here to Learn More\n                            </a>\n                          </p>\n                          <p>\n                            MicrobeTrace was built by the Molecular Epidemiology and Bionformatics Team at the CDC in Atlanta.</p>\n                            <a class=\"about-links\" href=\"https://cdcgov.github.io/MEBT\" target=\"_blank\" rel=\"noreferrer noopener\" style=\"display: block;\">\n                              Click Here to See MEBT's Other Tools\n                            </a>\n                          \n                    </div>\n                    <div class=\"modal-footer\">\n                        <button type=\"button\" class=\"btn btn-success\" (click)=\"DisplayAbout()\">Close</button>\n                    </div>\n                </div>\n            </div>\n        </p-dialog>\n\n        <div id=\"main-panel\" class=\"pane-container pane-horizontal\">\n            <noscript class=\"container-fluid\">\n              <div class=\"jumbotron\">\n                <h1>Sorry!</h1>\n                <p class=\"lead\">MicrobeTrace requires Javascript to run. Please <a href=\"https://www.enable-javascript.com/\">enable Javascript</a> and refresh MicrobeTrace.</p>\n              </div>\n            </noscript>\n            <div id=\"global-timeline-wrapper\" style=\"display: none;\">\n              <div id=\"global-timeline\" align=\"center\">\n                <div><button type=\"button\" id=\"timeline-play-button\" class=\"btn btn-light btn-sm\" (click)=\"playTimeline()\">{{playBtnText}}</button>\n                <span id=\"global-timeline-field\" contenteditable></span></div>\n                <!-- <svg></svg>\n                <mat-slider></mat-slider> -->\n              </div>  \n            </div>\n          </div>\n\n       \n        <!-- <p-dialog class=\"table-z-index\" id=\"global-settings-link-color-table\" \n                    [position]=\"GlobalSettingsLinkColorDialogSettings.linkLeft\" \n                    [(visible)]=\"GlobalSettingsLinkColorDialogSettings.isVisible\"  \n                    header=\"Link Color Table\" [style]=\"{'z-index': '1'}\"\n                    (onShow)=\"SelectedLinkColorTableTypesVariable='Show'\"\n                    (onHide)=\"SelectedLinkColorTableTypesVariable='Hide'\"\n                    >\n            <div class=\"col-12\" style=\"max-height: 50vh\">\n                <table id=\"link-color-table\" style=\"width:100%;height:100%;\"></table>\n            </div>\n        </p-dialog> -->\n\n        <div id=\"color-transparency-wrapper\">\n            <input type=\"range\" class=\"custom-range\" id=\"color-transparency\" min=\"0\" max=\"1\" step=\"0.05\" value=\"1\" >\n        </div>\n\n\n    </div>\n</div>\n";
 
 /***/ }),
 
