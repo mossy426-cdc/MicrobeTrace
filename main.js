@@ -318,10 +318,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   CommonService: () => (/* binding */ CommonService)
 /* harmony export */ });
 /* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! tslib */ 24398);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs */ 75797);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! rxjs */ 10819);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! rxjs */ 43942);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ 86164);
 /* harmony import */ var patristic__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! patristic */ 50826);
 /* harmony import */ var patristic__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(patristic__WEBPACK_IMPORTED_MODULE_2__);
@@ -336,7 +337,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_helperClasses_auspiceHandler__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/helperClasses/auspiceHandler */ 1481);
 /* harmony import */ var _shared_common_app_component_base__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/common/app-component-base */ 2449);
 /* harmony import */ var _microbe_trace_next_plugin_visuals__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../microbe-trace-next-plugin-visuals */ 53193);
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common/http */ 46443);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/common/http */ 46443);
 
 
 
@@ -1650,6 +1651,20 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       });
     });
   }
+  fromWorker(worker) {
+    return new rxjs__WEBPACK_IMPORTED_MODULE_14__.Observable(observer => {
+      const messageHandler = event => observer.next(event);
+      const errorHandler = error => observer.error(error);
+      worker.addEventListener('message', messageHandler);
+      worker.addEventListener('error', errorHandler);
+      // Cleanup function
+      return () => {
+        worker.removeEventListener('message', messageHandler);
+        worker.removeEventListener('error', errorHandler);
+        worker.terminate();
+      };
+    });
+  }
   /**
    * Asynchronously parses csv matrix file content and adds nodes and links to session.data
    * @param {string} file content from csv matrix file
@@ -1657,46 +1672,55 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   parseCSVMatrix(file) {
     console.log('parsing csv matrix');
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       let check = this.session.files.length > 1;
       const origin = [file.name];
       let nn = 0,
         nl = 0;
       this.computer.compute_parse_csv_matrixWorker.postMessage(file.contents);
-      this.computer.compute_parse_csv_matrixWorker.onmessage = response => {
-        const data = JSON.parse(this.decode(new Uint8Array(response.data.data)));
-        if (this.debugMode) {
-          console.log('CSV Matrix Transit time: ', (Date.now() - response.data.start).toLocaleString(), 'ms');
+      // Convert worker messages to Observable
+      const workerObservable = this.fromWorker(this.computer.compute_parse_csv_matrixWorker);
+      const sub = workerObservable.subscribe({
+        next: response => {
+          const data = JSON.parse(this.decode(new Uint8Array(response.data.data)));
+          if (this.debugMode) {
+            console.log('CSV Matrix Transit time: ', (Date.now() - response.data.start).toLocaleString(), 'ms');
+          }
+          const start = Date.now();
+          const nodes = data.nodes;
+          const tn = nodes.length;
+          for (let i = 0; i < tn; i++) {
+            nn += this.addNode({
+              _id: this.filterXSS(nodes[i]),
+              origin: origin
+            }, check);
+          }
+          const links = data.links;
+          const tl = links.length;
+          for (let j = 0; j < tl; j++) {
+            nl += this.addLink(Object.assign(links[j], {
+              origin: origin,
+              hasDistance: true,
+              distanceOrigin: origin
+            }), check);
+          }
+          if (this.debugMode) {
+            console.log('CSV Matrix Merge time: ', (Date.now() - start).toLocaleString(), 'ms');
+          }
+          resolve({
+            nn,
+            nl,
+            tn,
+            tl
+          });
+          sub.unsubscribe();
+        },
+        error: err => {
+          console.error('Worker error:', err);
+          reject(err);
+          sub.unsubscribe();
         }
-        const start = Date.now();
-        const nodes = data.nodes;
-        const tn = nodes.length;
-        for (let i = 0; i < tn; i++) {
-          nn += this.addNode({
-            _id: this.filterXSS(nodes[i]),
-            origin: origin
-          }, check);
-        }
-        const links = data.links;
-        const tl = links.length;
-        for (let j = 0; j < tl; j++) {
-          // console.log('has distance is true: ', JSON.stringify(links[j]));
-          nl += this.addLink(Object.assign(links[j], {
-            origin: origin,
-            hasDistance: true,
-            distanceOrigin: origin
-          }), check);
-        }
-        if (this.debugMode) {
-          console.log('CSV Matrix Merge time: ', (Date.now() - start).toLocaleString(), 'ms');
-        }
-        resolve({
-          nn,
-          nl,
-          tn,
-          tl
-        });
-      };
+      });
     });
   }
   /**
@@ -1803,7 +1827,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       const n = params.nodes.length;
       const referenceLength = params.reference.length;
       this.computer.compute_align_swWorker.postMessage(params);
-      this.computer.compute_align_swWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_align_swWorker.onmessage().subscribe(response => {
         let subset = JSON.parse(this.decode(new Uint8Array(response.data.nodes)));
         console.log("Alignment transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
         const start = Date.now();
@@ -1828,6 +1852,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         this.session.data.nodeFields.push('_cigar');
         console.log("Alignment Padding time: ", (Date.now() - start).toLocaleString(), "ms");
         resolve(subset);
+        sub.unsubscribe();
       });
     });
   }
@@ -1837,11 +1862,12 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       this.computer.compute_consensusWorker.postMessage({
         data: nodes
       });
-      this.computer.compute_consensusWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_consensusWorker.onmessage().subscribe(response => {
         if (this.debugMode) {
           console.log("Consensus Transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
         }
         resolve(this.decode(new Uint8Array(response.data.consensus)));
+        sub.unsubscribe();
       });
       //let computer: WorkerModule = new WorkerModule();
       //let response = computer.compute_consensus({ data: nodes });
@@ -1856,7 +1882,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       let subset = nodes.filter(d => d.seq);
       const subsetLength = subset.length;
       this.computer.compute_ambiguity_countsWorker.postMessage(subset);
-      this.computer.compute_ambiguity_countsWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_ambiguity_countsWorker.onmessage().subscribe(response => {
         console.log("Ambiguity Count Transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
         const start = Date.now();
         const dists = new Float32Array(response.data.counts);
@@ -1866,6 +1892,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         this.session.data.nodeFields.push('_ambiguity');
         console.log("Ambiguity Count Merge time: ", (Date.now() - start).toLocaleString(), "ms");
         resolve();
+        sub.unsubscribe();
       });
       //let computer: WorkerModule = new WorkerModule();
       //let response = computer.compute_ambiguity_counts(subset);
@@ -1909,7 +1936,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           start: start
         }
       });
-      this.computer.compute_consensusWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_consensusWorker.onmessage().subscribe(response => {
         const dists = new Uint16Array(response.data.dists);
         console.log("Consensus Difference Transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
         start = Date.now();
@@ -1919,6 +1946,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         this.session.data.nodeFields.push('_diff');
         console.log("Consensus Difference Merge time: ", (Date.now() - start).toLocaleString(), "ms");
         resolve();
+        sub.unsubscribe();
       });
     });
   }
@@ -1936,7 +1964,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         strategy: this.session.style.widgets["ambiguity-resolution-strategy"],
         threshold: this.session.style.widgets["ambiguity-threshold"]
       });
-      this.computer.compute_linksWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_linksWorker.onmessage().subscribe(response => {
         let dists = this.session.style.widgets['default-distance-metric'].toLowerCase() == 'snps' ? new Uint16Array(response.data.links) : new Float32Array(response.data.links);
         if (this.debugMode) {
           console.log("Links Transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
@@ -1945,10 +1973,12 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         let check = this.session.files.length > 1;
         let n = subset.length;
         let l = 0;
+        console.log('link same compute---', n);
         for (let i = 0; i < n; i++) {
           const sourceID = subset[i]._id;
           for (let j = 0; j < i; j++) {
             let targetID = subset[j]._id;
+            console.log('link same compute');
             k += this.addLink({
               source: sourceID,
               target: targetID,
@@ -1964,9 +1994,11 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           console.log("Links Merge time: ", (Date.now() - start).toLocaleString(), "ms");
         }
         resolve(k);
+        sub.unsubscribe(); // remove the subscription once done
       });
     });
   }
+
   getDM() {
     const start = Date.now();
     return new Promise(resolve => {
@@ -2024,7 +2056,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
             matrix: dm,
             round: this.session.style.widgets["tree-round"]
           });
-          this.computer.compute_treeWorker.onmessage().subscribe(response => {
+          const sub = this.computer.compute_treeWorker.onmessage().subscribe(response => {
             const treeObj = this.decode(new Uint8Array(response.data.tree));
             const treeString = patristic__WEBPACK_IMPORTED_MODULE_2__.parseJSON(treeObj).toNewick();
             if (this.debugMode) {
@@ -2042,7 +2074,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         links: this.session.data.links,
         tree: this.temp.tree
       });
-      this.computer.compute_directionalityWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_directionalityWorker.onmessage().subscribe(response => {
         const flips = new Uint8Array(response.data.output);
         if (this.debugMode) {
           console.log("Directionality Transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
@@ -2073,7 +2105,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         epsilon: this.session.style.widgets["filtering-epsilon"],
         metric: this.session.style.widgets['link-sort-variable']
       });
-      this.computer.compute_mstWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_mstWorker.onmessage().subscribe(response => {
         if (response.data == "Error") {
           return reject("MST washed out");
         }
@@ -2091,6 +2123,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           console.log("MST Merge time: ", (Date.now() - start).toLocaleString(), "ms");
         }
         resolve();
+        sub.unsubscribe();
       });
     });
   }
@@ -2102,7 +2135,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         epsilon: this.session.style.widgets["filtering-epsilon"],
         metric: this.session.style.widgets['link-sort-variable']
       });
-      this.computer.compute_nnWorker.onmessage().subscribe(response => {
+      const sub = this.computer.compute_nnWorker.onmessage().subscribe(response => {
         if (response.data == "Error") {
           return reject("Nearest Neighbor washed out");
         }
@@ -2120,6 +2153,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           console.log("NN Merge time: ", (Date.now() - start).toLocaleString(), "ms");
         }
         resolve();
+        sub.unsubscribe();
       });
     });
   }
@@ -2130,7 +2164,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         this.computer.compute_triangulationWorker.postMessage({
           matrix: dm
         });
-        this.computer.compute_triangulationWorker.onmessage().subscribe(response => {
+        const sub = this.computer.compute_triangulationWorker.onmessage().subscribe(response => {
           if (response.data == "Error") return reject("Triangulation washed out");
           if (this.debugMode) {
             console.log("Triangulation Transit time: ", (Date.now() - response.data.start).toLocaleString(), "ms");
@@ -2159,6 +2193,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
             console.log("Triangulation Merge time: ", (Date.now() - start).toLocaleString(), "ms");
           }
           resolve();
+          sub.unsubscribe();
         });
       });
     });
@@ -3829,7 +3864,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     }, {
       type: _microbe_trace_next_plugin_visuals__WEBPACK_IMPORTED_MODULE_10__.MicrobeTraceNextVisuals
     }, {
-      type: _angular_common_http__WEBPACK_IMPORTED_MODULE_14__.HttpClient
+      type: _angular_common_http__WEBPACK_IMPORTED_MODULE_15__.HttpClient
     }];
   }
   static {
@@ -3840,9 +3875,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     };
   }
 };
-CommonService = (0,tslib__WEBPACK_IMPORTED_MODULE_15__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_11__.Directive)(), (0,_angular_core__WEBPACK_IMPORTED_MODULE_11__.Injectable)({
+CommonService = (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_11__.Directive)(), (0,_angular_core__WEBPACK_IMPORTED_MODULE_11__.Injectable)({
   providedIn: 'root'
-}), (0,tslib__WEBPACK_IMPORTED_MODULE_15__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_11__.Injector, _shared_utils_local_storage_service__WEBPACK_IMPORTED_MODULE_7__.LocalStorageService, _microbe_trace_next_plugin_visuals__WEBPACK_IMPORTED_MODULE_10__.MicrobeTraceNextVisuals, _angular_common_http__WEBPACK_IMPORTED_MODULE_14__.HttpClient])], CommonService);
+}), (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_11__.Injector, _shared_utils_local_storage_service__WEBPACK_IMPORTED_MODULE_7__.LocalStorageService, _microbe_trace_next_plugin_visuals__WEBPACK_IMPORTED_MODULE_10__.MicrobeTraceNextVisuals, _angular_common_http__WEBPACK_IMPORTED_MODULE_15__.HttpClient])], CommonService);
 
 /***/ }),
 
@@ -3902,11 +3937,12 @@ __webpack_require__.r(__webpack_exports__);
 // import { ComponentContainer } from 'golden-layout';
 // import { ConsoleReporter } from 'jasmine';
 let FilesComponent = class FilesComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_12__.BaseComponentDirective {
-  constructor(container, elRef, eventEmitterService, commonService) {
+  constructor(container, elRef, eventEmitterService, commonService, cdr) {
     super(elRef.nativeElement);
     this.container = container;
     this.eventEmitterService = eventEmitterService;
     this.commonService = commonService;
+    this.cdr = cdr;
     this.LoadDefaultVisualizationEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_13__.EventEmitter();
     this.SelectedDefaultDistanceMetricVariable = "tn93";
     this.SelectedAmbiguityResolutionStrategyVariable = "AVERAGE";
@@ -4409,11 +4445,9 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
     console.log('launch click');
     if (this.commonService.session.network.launched) {
       console.log('launch click launched ', this.commonService.session.network.launched);
-      this.commonService.session.data = this.commonService.sessionSkeleton().data;
-      const newTempSkeleton = this.commonService.tempSkeleton();
-      this.commonService.temp.trees = newTempSkeleton.trees;
+      this.commonService.resetData();
       $('#launch').text('Update');
-      this.visuals.twoD.isLoading = true;
+      // this.visuals.twoD.isLoading = true;
     } else if (!this.commonService.session.network.launched) {
       console.log('launch click not launched ', this.commonService.session.network.launched);
       this.commonService.resetData();
@@ -4586,7 +4620,6 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
           // console.log("safe link is: ",safeLink);
           // Link is the same -> bidirectional
           if (srcIndex != -1 && tgtIndex != -1) {
-            // console.log('link same');
             // Set distance if distance set (field 3)
             l += this.commonService.addLink(Object.assign({
               source: '' + safeLink[file.field1],
@@ -4930,15 +4963,17 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
     }
     this.commonService.session.data.nodeFilteredValues = nodes;
     //Add links for nodes with no edges
-    this.uniqueNodes.forEach(x => {
-      this.commonService.addLink(Object.assign({
-        source: '' + x,
-        target: '' + x,
-        origin: origin,
-        visible: true,
-        distance: 0
-      }, 'generated'));
-    });
+    // TODO: This was here before but not sure why we needed this
+    // this.uniqueNodes.forEach(x => {
+    //   console.log('link same 4: ', x);
+    //   this.commonService.addLink(Object.assign({
+    //     source: '' + x,
+    //     target: '' + x,
+    //     origin: origin,
+    //     visible: true,
+    //     distance: 0,
+    //   }, 'generated'));
+    // });
     this.processSequence();
   }
   /**
@@ -4950,6 +4985,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
       if (!_this.commonService.session.meta.anySequences) return _this.commonService.runHamsters();
       _this.commonService.session.data.nodeFields.push('seq');
       let subset = [];
+      console.log('link same nodes22: ', _this.commonService.session.data.nodes.length, _this.commonService.session.data.nodes);
       let nodes = _this.commonService.session.data.nodes;
       const n = nodes.length;
       const gapString = '-'.repeat(_this.commonService.session.data.reference.length);
@@ -4961,6 +4997,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
           subset.push(d);
         }
       }
+      console.log('link same nodes33: ', subset);
       if (_this.commonService.session.style.widgets['align-sw']) {
         _this.showMessage('Aligning Sequences...');
         let output = yield _this.commonService.session.align({
@@ -4995,6 +5032,9 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
       _this.commonService.runHamsters();
       _this.showMessage("Finishing...");
       _this.displayloadingInformationModal = false;
+      setTimeout(() => {
+        _this.cdr.detectChanges();
+      }, 1000);
     })();
   }
   /**
@@ -5536,6 +5576,8 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
       type: _shared_utils_event_emitter_service__WEBPACK_IMPORTED_MODULE_11__.EventEmitterService
     }, {
       type: _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService
+    }, {
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_13__.ChangeDetectorRef
     }];
   }
   static {
@@ -5551,7 +5593,7 @@ FilesComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__decorate)([(0,_angular
   template: _files_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__,
   changeDetection: _angular_core__WEBPACK_IMPORTED_MODULE_13__.ChangeDetectionStrategy.OnPush,
   styles: [(_files_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2___default())]
-}), (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__metadata)("design:paramtypes", [golden_layout__WEBPACK_IMPORTED_MODULE_15__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_13__.ElementRef, _shared_utils_event_emitter_service__WEBPACK_IMPORTED_MODULE_11__.EventEmitterService, _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService])], FilesComponent);
+}), (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__metadata)("design:paramtypes", [golden_layout__WEBPACK_IMPORTED_MODULE_15__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_13__.ElementRef, _shared_utils_event_emitter_service__WEBPACK_IMPORTED_MODULE_11__.EventEmitterService, _contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService, _angular_core__WEBPACK_IMPORTED_MODULE_13__.ChangeDetectorRef])], FilesComponent);
 (function (FilesComponent) {
   FilesComponent.componentTypeName = 'Files';
 })(FilesComponent || (FilesComponent = {}));
