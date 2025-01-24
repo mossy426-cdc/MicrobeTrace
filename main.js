@@ -7395,6 +7395,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
         _this2.commonService.session.style.widgets["link-show-nn"] = false;
         _this2.commonService.updateNetwork();
         _this2.commonService.setNetworkUpdated(true);
+        _this2.commonService.onStatisticsChanged("Show");
         // this.updatedVisualization();
       } else {
         _this2.SelectedEpsilonValue = Math.pow(10, _this2.widgets['filtering-epsilon']).toPrecision(3);
@@ -7412,6 +7413,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
               });
             }
           }
+          _this2.commonService.onStatisticsChanged("Show");
         });
         return;
         // TODO:: David Removed to fix NN issue
@@ -18101,6 +18103,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       this.cdref.detectChanges();
       setTimeout(() => {
         this.fit();
+        this.commonService.onStatisticsChanged("Show");
       }, 50);
     });
     // Initialize the selectedNodeShape from the settings
