@@ -20426,7 +20426,13 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       // No scaling needed
       return null;
     }
-    const vlinks = this.getVLinks().filter(link => this.isNumber(link[variable]));
+    const vlinks = this.commonService.getVisibleLinks(true).filter(link => {
+      console.log("link", link);
+      console.log("variable", variable);
+      console.log("value", link[variable]);
+      const value = link[variable];
+      return this.isNumber(value) || !this.isNumber(value) && !isNaN(Number(value));
+    });
     if (vlinks.length === 0) {
       console.warn('No valid link-width data available for scaling.');
       return null;
