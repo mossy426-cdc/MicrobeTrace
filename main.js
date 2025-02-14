@@ -583,7 +583,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         'link-width-variable': 'None',
         'link-width-reciprocal': true,
         'link-origin-array-order': [],
-        'map-basemap-show': false,
+        'map-basemap-show': true,
         'map-collapsing-on': true,
         'map-counties-show': false,
         'map-countries-show': true,
@@ -2986,7 +2986,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     const meta = this.session.meta;
     if (this.debugMode) {
       console.log('reset data called');
-      console.log('session files1', JSON.stringify(this.visuals.microbeTrace.commonService.session.files));
       console.log('session files2', JSON.stringify(this.session.files));
       console.log('session data files: ', JSON.stringify(files));
       console.log('session data matrix: ', JSON.stringify(this.temp.matrix));
@@ -15824,6 +15823,7 @@ let MapComponent = class MapComponent extends _app_base_component_directive__WEB
   }
   loadSettings() {
     //Components|Online|Basemap
+    console.log('SelectedBasemapTypeVariable: ', this.SelectedBasemapTypeVariable);
     this.SelectedBasemapTypeVariable = this.commonService.session.style.widgets['map-basemap-show'] ? 'Show' : 'Hide';
     if (this.SelectedBasemapTypeVariable === 'Show') {
       this.onBasemapChange(this.SelectedBasemapTypeVariable, true);
@@ -15832,6 +15832,10 @@ let MapComponent = class MapComponent extends _app_base_component_directive__WEB
     this.SelectedSatelliteTypeVariable = this.commonService.session.style.widgets['map-satellite-show'] ? 'Show' : 'Hide';
     if (this.SelectedSatelliteTypeVariable === 'Show') {
       this.onSatelliteChange(this.SelectedSatelliteTypeVariable, true);
+    }
+    if (this.SelectedBasemapTypeVariable === 'Hide' && this.SelectedSatelliteTypeVariable === 'Hide') {
+      this.SelectedBasemapTypeVariable = 'Show';
+      this.onBasemapChange(this.SelectedBasemapTypeVariable, true);
     }
     //Components|Network|Nodes
     this.SelectedNodesTypeVariable = this.commonService.session.style.widgets['map-node-show'] ? 'Show' : 'Hide';
