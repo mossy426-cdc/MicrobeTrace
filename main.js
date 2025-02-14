@@ -8349,12 +8349,14 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   updateGlobalSettingsModel() {
     this.commonService.GlobalSettingsModel.SelectedRevealTypesVariable = this.SelectedRevealTypesVariable;
+    // TODO: See if we need to flip these now since the service should override these local settings
     this.SelectedDistanceMetricVariable = this.commonService.session.style.widgets['default-distance-metric'];
+    this.SelectedLinkThresholdVariable = this.commonService.session.style.widgets['link-threshold'];
     this.commonService.GlobalSettingsModel.SelectedNodeColorVariable = this.SelectedNodeColorVariable;
     this.commonService.session.style.widgets['node-color'] = this.SelectedNodeColorVariable;
     this.commonService.session.style.widgets['link-color'] = this.SelectedLinkColorVariable;
-    this.commonService.session.style.widgets['link-threshold'] = this.SelectedLinkThresholdVariable;
     this.commonService.session.style.widgets['node-color-variable'] = this.SelectedColorNodesByVariable;
+    this.commonService.session.style.widgets['link-threshold-variable'] = this.SelectedDistanceMetricVariable;
     //this.commonService.session.style.widgets['node-color-variable'] = this.SelectedNodeColorVariable;
     // TODO: Removed, see if this is still necessary
     // this.commonService.session.style.widgets['link-tooltip-variable'] = this.SelectedColorLinksByVariable;
@@ -9092,6 +9094,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     switch (actionName) {
       case "Global Settings":
         {
+          console.log('snps settings: ', this.SelectedDistanceMetricVariable);
           this.DisplayGlobalSettingsDialog();
           break;
         }
@@ -9167,8 +9170,9 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     }
   }
   DisplayGlobalSettingsDialog(activeTab = "Styling") {
-    console.log(this.commonService.session.style.widgets['default-distance-metric']);
     this.getGlobalSettingsData();
+    // TODO: May need to refacor this
+    this.updateGlobalSettingsModel();
     this.GlobalSettingsDialogSettings.setVisibility(true);
     this.cachedGlobalSettingsVisibility = this.GlobalSettingsDialogSettings.isVisible;
     this.commonService.updateThresholdHistogram(this.linkThresholdSparkline.nativeElement);
