@@ -330,7 +330,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CommonService: () => (/* binding */ CommonService)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! rxjs */ 75797);
@@ -2215,7 +2215,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   }
   runHamsters() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('running hamsters');
       if (!_this.session.style.widgets['triangulate-false']) _this.computeTriangulation();
       // this.computeNN();
@@ -2234,7 +2234,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   finishUp() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       clearTimeout(_this2.temp.messageTimeout);
       // cycles through each node and link and if variable in nodeFields/linkFields not a key for the node/link, it is added with value of null
       ["node", "link"].forEach(v => {
@@ -2345,7 +2345,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           return _delayFunction.apply(this, arguments);
         }
         function _delayFunction() {
-          _delayFunction = (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (x, callback) {
+          _delayFunction = (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (x, callback) {
             yield new Promise(resolve => setTimeout(resolve, x)).then(() => {
               callback();
             });
@@ -2356,10 +2356,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           return _loadOtherViews.apply(this, arguments);
         }
         function _loadOtherViews() {
-          _loadOtherViews = (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+          _loadOtherViews = (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
             var _this3 = this;
             this.session.layout.content.forEach( /*#__PURE__*/function () {
-              var _ref = (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (view) {
+              var _ref = (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (view) {
                 let viewName = convertName(view.type);
                 if (view.type == _this3.session.style.widgets['default-view']) {
                   return;
@@ -3846,7 +3846,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   updateThresholdHistogram(histogram) {
     var _this4 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let width = 260,
         height = 48,
         svg = null;
@@ -3960,7 +3960,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FilesComponent: () => (/* binding */ FilesComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _files_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files-plugin.component.html?ngResource */ 96303);
 /* harmony import */ var _files_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files-plugin.component.less?ngResource */ 94908);
@@ -5048,7 +5048,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   processSequence() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.commonService.session.meta.anySequences) return _this.commonService.runHamsters();
       _this.commonService.session.data.nodeFields.push('seq');
       let subset = [];
@@ -5525,7 +5525,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   readFastas() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const fastas = _this2.commonService.session.files.filter(f => _this2.commonService.includes(f.extension, 'fas'));
       const nodeFilesWithSeqs = _this2.commonService.session.files.filter(f => f.format === "node" && f.field2 != "None" && f.field2 != "");
       if (fastas.length === 0 && nodeFilesWithSeqs.length === 0) return [];
@@ -5582,7 +5582,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
   }
   updatePreview(data) {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!data) {
         data = yield _this3.readFastas();
       }
@@ -5749,8 +5749,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoldenLayoutHostComponent: () => (/* binding */ GoldenLayoutHostComponent)
 /* harmony export */ });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! golden-layout */ 81156);
 /* harmony import */ var _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./golden-layout-component.service */ 39107);
@@ -6022,7 +6022,7 @@ let GoldenLayoutHostComponent = class GoldenLayoutHostComponent {
 GoldenLayoutHostComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_15__.Component)({
   selector: 'app-golden-layout-host',
   template: '<ng-template #componentViewContainer></ng-template>',
-  styles: [(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
+  styles: [(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
 }), (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_15__.ApplicationRef, _angular_core__WEBPACK_IMPORTED_MODULE_15__.ElementRef, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__.GoldenLayoutComponentService])], GoldenLayoutHostComponent);
 
 
@@ -6711,7 +6711,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MicrobeTraceNextHomeComponent: () => (/* binding */ MicrobeTraceNextHomeComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _microbe_trace_next_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.html?ngResource */ 99768);
 /* harmony import */ var _microbe_trace_next_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.less?ngResource */ 57087);
@@ -7081,7 +7081,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
    */
   performExport(elementsForExport = [this.visualWrapperRef.nativeElement], exportNodeTable = false, exportLinkTable = false) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!elementsForExport[0]) {
         console.error('Visual wrapper container not found');
         return;
@@ -7212,7 +7212,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   performExportSVG(elementsForExport, mainSVGString, exportNodeTable = false, exportLinkTable = false) {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('Exporting SVG');
       if (exportLinkTable) {
         elementsForExport.unshift(_this2.linkColorTable.nativeElement);
@@ -7593,7 +7593,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   onPruneWithTypesChanged(newValue) {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this3.SelectedPruneWityTypesVariable = newValue;
       _this3.commonService.GlobalSettingsModel.SelectedPruneWityTypesVariable = _this3.SelectedPruneWityTypesVariable;
       if (_this3.SelectedPruneWityTypesVariable == "None") {
@@ -9538,7 +9538,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AggregateComponent: () => (/* binding */ AggregateComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _aggregate_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./aggregate.component.html?ngResource */ 23870);
 /* harmony import */ var _aggregate_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./aggregate.component.scss?ngResource */ 11954);
@@ -9800,7 +9800,7 @@ let AggregateComponent = class AggregateComponent extends _app_base_component_di
   }
   exportVisualization() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log(_this.SelectedAggregateExportFilename + '.' + _this.SelectedAggregateExportFileType);
       if (_this.SelectedAggregateExportFileType == 'csv.zip') {
         let zip = new (jszip__WEBPACK_IMPORTED_MODULE_6___default())();
@@ -14174,7 +14174,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   HeatmapComponent: () => (/* binding */ HeatmapComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _heatmap_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./heatmap.component.html?ngResource */ 2124);
 /* harmony import */ var _heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./heatmap.component.scss?ngResource */ 72188);
@@ -14264,7 +14264,7 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
   }
   ngOnInit() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       // Lazy load Plotly.js when the component initializes
       _this.Plotly = yield __webpack_require__.e(/*! import() */ 616).then(__webpack_require__.t.bind(__webpack_require__, /*! plotly.js-dist-min */ 44616, 23));
       _this.viewActive = true;
@@ -16089,7 +16089,8 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     this.SelectedLeafTooltipVariable = 'id';
     this.LeafTooltipFieldList = [];
     this.SelectedLeafNodeShowVariable = true;
-    this.SelectedLeafNodeSizeVariable = 5;
+    this.SelectedLeafNodeSizeVariable = 'None';
+    this.SelectedLeafNodeSize = 5;
     this.SelectedLeafNodeColorVariable = this.settings['node-color'];
     this.SelectedSelectedLeafNodeColorVariable = this.settings['selected-color'];
     // Branch Tab
@@ -16233,7 +16234,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       d3__WEBPACK_IMPORTED_MODULE_8__.select(label).style('font-size', `${this.SelectedLeafLabelSizeVariable}px`);
     };
     this.getLeafSize = (node_id, variable) => {
-      let defaultSize = 5;
+      let defaultSize = this.SelectedLeafNodeSize;
       let size = defaultSize,
         med = defaultSize,
         oldrng,
@@ -16245,9 +16246,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
           return true;
         }
       });
-      if (typeof variable === "number") {
-        return variable;
-      } else if (variable === 'None') {
+      if (variable === 'None') {
         return defaultSize;
       } else {
         let v = node[0][variable];
@@ -16401,7 +16400,8 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
         console.log(node);
         // Pre D3
         const leftVal = d3__WEBPACK_IMPORTED_MODULE_8__.event.pageX + 8;
-        const topVal = d3__WEBPACK_IMPORTED_MODULE_8__.event.pageY - 28;
+        const topVal = d3__WEBPACK_IMPORTED_MODULE_8__.event.pageY - 8;
+        console.log(topVal + " " + leftVal);
         d3__WEBPACK_IMPORTED_MODULE_8__.select('#phyloTooltip').html(node[htmlValue]).style('position', 'absolute').style('display', 'block').style('left', `${leftVal}px`).style('top', `${topVal}px`).style('z-index', 1000).transition().duration(100).style('opacity', 1).style('color', '#333333').style('background', '#f5f5f5').style('border', '1px solid #cccccc').style('border-radius', '.25rem').style('padding', '.25rem');
       }
     };
@@ -16423,8 +16423,8 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   updateMinMaxNode() {
     const visNodes = this.commonService.getVisibleNodes();
     let n = visNodes.length;
-    let maxWidth = this.settings['node-radius-max'];
-    let minWidth = this.settings['node-radius-min'];
+    let maxWidth = 20;
+    let minWidth = this.SelectedLeafNodeSize;
     this.nodeMin = Number.MAX_VALUE;
     this.nodeMax = Number.MIN_VALUE;
     for (let i = 0; i < n; i++) {
@@ -16539,22 +16539,26 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       if (node === undefined) node = this.commonService.session.data.nodes.find(d => d._id === data.data.id);
       d3__WEBPACK_IMPORTED_MODULE_8__.select(circle).attr('title', node[labelVar]);
     });
+    this.styleTree();
   }
   onHorizontalStretchChange(event) {
     let cached = this.tree.animation;
     this.tree.setAnimation(0);
     this.tree.setHStretch(this.SelectedHorizontalStretchVariable);
     this.tree.setAnimation(cached);
+    this.styleTree();
   }
   onVerticalStretchChange(event) {
     let cached = this.tree.animation;
     this.tree.setAnimation(0);
     this.tree.setVStretch(this.SelectedVerticalStretchVariable);
     this.tree.setAnimation(cached);
+    this.styleTree();
   }
   onBranchLabelShowChange(event) {
     this.SelectedBranchLabelShowVariable = event;
     this.tree.setBranchLabels(event);
+    this.styleTree();
   }
   onBranchLabelSizeChange(event) {
     this.SelectedBranchLabelSizeVariable = event;
@@ -16563,6 +16567,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   onBranchDistanceShowChange(event) {
     this.SelectedBranchDistanceShowVariable = event;
     this.tree.setBranchDistances(event);
+    this.styleTree();
   }
   onBranchDistanceSizeChange(event) {
     this.SelectedBranchDistanceSizeVariable = event;
@@ -16571,6 +16576,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   onBranchNodeShowChange(event) {
     this.SelectedBranchNodeShowVariable = event;
     this.tree.setBranchNodes(event);
+    this.styleTree();
   }
   onBranchNodeSizeChange(event) {
     this.SelectedBranchNodeSizeVariable = event;
@@ -16578,16 +16584,23 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   }
   onBranchTooltipShowChange(event) {
     this.SelectedBranchTooltipShowVariable = event;
+    this.styleTree();
   }
   onLeafLabelTooltipShowChange(event) {
     this.SelectedLeafTooltipShowVariable = event;
+    this.styleTree();
   }
   onLeafLabelShowChange(event) {
     this.SelectedLeafLabelShowVariable = event;
     this.tree.setLeafLabels(event);
+    this.styleTree();
   }
   showGlobalSettings() {
     this.DisplayGlobalSettingsDialogEvent.emit('Styling');
+  }
+  onLeafNodeSizeChange(event) {
+    this.SelectedLeafNodeSize = event;
+    this.styleTree();
   }
   onLeafNodeSizeVariableChange(event) {
     this.SelectedLeafNodeSizeVariable = event;
@@ -25130,8 +25143,6 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/*
 }
 
 #phyloTooltip {
-  position: absolute;
-  background: lightgray;
   border-radius: 0.25rem;
   padding: 0.25rem;
 }
@@ -25163,7 +25174,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/*
 
 .flaticon-download:before {
   font-weight: 800 !important;
-}`, "",{"version":3,"sources":["webpack://./src/app/visualizationComponents/PhylogeneticComponent/phylogenetic-plugin.component.scss"],"names":[],"mappings":"AAAA;;;;;EAAA;AAOA;EACI,YAAA;AAAJ;;AAGA;EACE,kBAAA;EACA,gBAAA;EACA,qBAAA;AAAF;;AAGA;EACI,kBAAA;EACA,qBAAA;EACA,sBAAA;EACA,gBAAA;AAAJ;;AAKI;EACE,SAAA;EACA,gBAAA;AAFN;AAOI;EACE,uBAAA;EACA,yBAAA;AALN;;AAUC,+BAAA;AACA;EACC,qBAAA,EAAA,4BAAA;EACA,oCAAA,EAAA,qCAAA;AAPF;;AAUA;EACE,kBAAA;EACA,0CAAA;EACA,iBAAA;AAPF;;AAUA;EACE,2BAAA;AAPF;;AAWA;EACE,2BAAA;AARF","sourcesContent":["/*\n * phylogenetic-plugin.component.css\n * Copyright (C) 2022 ylb9\n *\n * Distributed under terms of the MIT license.\n */\n\n#phylocanavas {\n    height: 100%;\n}\n\n:host {\n  position: absolute;\n  overflow: hidden;\n  z-index: 1 !important;\n}\n\n#phyloTooltip {\n    position: absolute;\n    background: lightgray;\n    border-radius: 0.25rem;\n    padding: 0.25rem;\n}\n\n:host ::ng-deep {\n  .p-accordion-tab:not(.p-accordion-tab-active) {\n    .p-toggleable-content {\n      height: 0;\n      overflow: hidden;\n    }\n  }\n\n  .p-accordion-tab.p-accordion-tab-active {\n    .p-toggleable-content {\n      height: auto !important;\n      overflow: auto !important;\n    }\n  }\n}\n\n /* Button appearance on hover */\n .btn-icon:hover {\n  transform: scale(1.1); /* Slight enlarge on hover */\n  background-color: rgba(0, 0, 0, 0.1); /* Subtle background color on hover */\n}\n\n.btn-icon {\n  margin-right: 10px;\n  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);\n  background: white;\n}\n\n.flaticon-settings:before {\n  font-weight: 800 !important;\n}\n\n\n.flaticon-download:before {\n  font-weight: 800 !important;\n}\n  \n"],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./src/app/visualizationComponents/PhylogeneticComponent/phylogenetic-plugin.component.scss"],"names":[],"mappings":"AAAA;;;;;EAAA;AAOA;EACI,YAAA;AAAJ;;AAGA;EACE,kBAAA;EACA,gBAAA;EACA,qBAAA;AAAF;;AAGA;EACI,sBAAA;EACA,gBAAA;AAAJ;;AAKI;EACE,SAAA;EACA,gBAAA;AAFN;AAOI;EACE,uBAAA;EACA,yBAAA;AALN;;AAUC,+BAAA;AACA;EACC,qBAAA,EAAA,4BAAA;EACA,oCAAA,EAAA,qCAAA;AAPF;;AAUA;EACE,kBAAA;EACA,0CAAA;EACA,iBAAA;AAPF;;AAUA;EACE,2BAAA;AAPF;;AAWA;EACE,2BAAA;AARF","sourcesContent":["/*\n * phylogenetic-plugin.component.css\n * Copyright (C) 2022 ylb9\n *\n * Distributed under terms of the MIT license.\n */\n\n#phylocanavas {\n    height: 100%;\n}\n\n:host {\n  position: absolute;\n  overflow: hidden;\n  z-index: 1 !important;\n}\n\n#phyloTooltip {\n    border-radius: 0.25rem;\n    padding: 0.25rem;\n}\n\n:host ::ng-deep {\n  .p-accordion-tab:not(.p-accordion-tab-active) {\n    .p-toggleable-content {\n      height: 0;\n      overflow: hidden;\n    }\n  }\n\n  .p-accordion-tab.p-accordion-tab-active {\n    .p-toggleable-content {\n      height: auto !important;\n      overflow: auto !important;\n    }\n  }\n}\n\n /* Button appearance on hover */\n .btn-icon:hover {\n  transform: scale(1.1); /* Slight enlarge on hover */\n  background-color: rgba(0, 0, 0, 0.1); /* Subtle background color on hover */\n}\n\n.btn-icon {\n  margin-right: 10px;\n  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);\n  background: white;\n}\n\n.flaticon-settings:before {\n  font-weight: 800 !important;\n}\n\n\n.flaticon-download:before {\n  font-weight: 800 !important;\n}\n  \n"],"sourceRoot":""}]);
 // Exports
 module.exports = ___CSS_LOADER_EXPORT___.toString();
 
@@ -26619,7 +26630,7 @@ module.exports = "﻿﻿<!--<div id=\"map\" [ngStyle]=\"svgStyle\"></div>-->\n<!
 /***/ ((module) => {
 
 "use strict";
-module.exports = "﻿﻿<div class=\"m-content\">\n    <div id=\"tool-btn-container\" class=\"m-portlet\">\n        <span style=\"overflow: visible; position: relative; width: 110px;\">\n            <a title=\"Settings\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"openSettings()\"><i class=\"flaticon-settings primary\"></i></a>\n        </span>\n        <span style=\"overflow: visible; position: relative; width: 110px;\">\n            <a title=\"Export Screen\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"openExport()\"><i class=\"flaticon-download primary\"></i></a>\n        </span>\n        <span style=\"overflow: visible; position: relative; width: 110px;\">\n            <a title=\"Center Screen\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"openCenter()\"><i class=\"flaticon-eye primary\"></i></a>\n        </span>\n    </div>\n    <div class=\"m-portlet__body\" style=\"height: 100%;\">\n        <br />\n        <div className=\"phylocanvas\" id=\"phylocanvas\" style=\"cursor: grab;\"></div>\n        <div id=\"phyloTooltip\"></div>\n    </div>\n</div>\n<div class=\"view-controls\">\n\n    <p-dialog *ngIf=\"viewActive\" id=\"phylotree-settings-pane\" \n              [positionLeft]=\"PhylogeneticTreeExportDialogSettings.left\" \n              [positionTop]=\"PhylogeneticTreeExportDialogSettings.top\" \n              [(visible)]=\"PhylogeneticTreeExportDialogSettings.isVisible\"  \n              [contentStyle]=\"{'overflow': 'visible'}\"\n              header=\"Phylogenetic Tree Settings\" appendTo=\"body\"\n              >\n              <tabset class=\"tab-container tabbable-line\">\n              <tab heading=\"{{'Tree' | localize}}\" [active]=\"true\" customClass=\"m-tabs__item\">\n              <p-accordion [multiple]='true'>\n                  <p-accordionTab style=\"color:#495057\" header=\"Layout\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"tree-layout\">Layout</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"tree-layout\" appendTo=\"body\" [options]=\"TreeLayouts\" [(ngModel)]=\"SelectedTreeLayoutVariable\" (ngModelChange)=\"onTreeLayoutChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Mode\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"tree-mode\">Mode</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"tree-mode\" appendTo=\"body\" [options]=\"TreeModes\" [(ngModel)]=\"SelectedTreeModeVariable\" (ngModelChange)=\"onTreeModeChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Type\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"tree-type\">Type</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"tree-type\" appendTo=\"body\" [options]=\"TreeTypes\" [(ngModel)]=\"SelectedTreeTypeVariable\" (ngModelChange)=\"onTreeTypeChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Stretch\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"horizontal-stretch\">Horizontal Stretch</label></div>\n                                <input type=\"range\" class=\"custom-range\" id=\"horizontal-stretch\" min=\"0\" value=\"1\" step=\"0.2\" max=\"10\" [(ngModel)]=\"SelectedHorizontalStretchVariable\" (change)=\"onHorizontalStretchChange($event)\">\n                              <div class=\"col-4\"><label for=\"vertical-stretch\">Vertical Stretch</label></div>\n                                <input type=\"range\" class=\"custom-range\" id=\"vertical-stretch\" min=\"0\" value=\"1\" step=\"0.2\" max=\"10\" [(ngModel)]=\"SelectedVerticalStretchVariable\" (change)=\"onVerticalStretchChange($event)\">\n                          </div>\n                      </div>\n                  </p-accordionTab>\n              </p-accordion>\n              </tab>\n\n              <tab heading=\"{{'Leaves' | localize}}\" customClass=\"m-tabs__item\">\n              <p-accordion>\n                  <p-accordionTab style=\"color:#495057\" header=\"Labels and Tooltips\">\n                      <div #leafcontrolslabels>\n                          <div class=\"form-group row leaf-label-visibility-row\" title=\"Show leaf labels?\">\n                              <div class=\"col-4\">Show Leaf Labels</div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"leaf-label-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedLeafLabelShowVariable\" (ngModelChange)=\"onLeafLabelShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-label-variable-row\" title=\"What vasriable should be used as the leaf label?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"leaf-label-variable\">Label Variable</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"leaf-label-variable\" appendTo=\"body\" [options]=\"LeafLabelFieldList\" [(ngModel)]=\"SelectedLeafLabelVariable\" (ngModelChange)=\"onLeafLabelVariableChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-label-size-row\" title=\"How big should leaf labels be?\">\n                              <div class=\"col-4\"><label for=\"leaf-label-size\">Label Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"leaf-label-size\" min=\"1\" value=\"{{ SelectedLeafLabelSizeVariable }}\" step=\"1\" max=\"32\" [(ngModel)]=\"SelectedLeafLabelSizeVariable\" (ngModelChange)=\"onLeafLabelSizeChange($event)\">\n                          </div>\n                          <div class=\"form-group row leaf-tooltip-visibility-row\" title=\"Show leaf tooltips?\">\n                              <div class=\"col-4\">Show Leaf Tooltips</div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"leaf-tooltip-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedLeafTooltipShowVariable\" (ngModelChange)=\"onLeafLabelTooltipShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-tooltip-variable-row\" title=\"What vasriable should be used as the leaf tooltip?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"leaf-tooltip-variable\">Tooltip Variable</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"leaf-tooltip-variable\" appendTo=\"body\" [options]=\"LeafLabelFieldList\" [(ngModel)]=\"SelectedLeafTooltipVariable\" (ngModelChange)=\"onLeafTooltipVariableChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Leaf Size\">\n                      <div #leafcontrolslabels>\n                          <!--<div class=\"form-group row leaf-shape-row\" title=\"What shape should leaves be?\">\n                              <div class=\"col-4\"><label for=\"leaf-shape-variable\">Leaf Shape</label></div>\n                              <p-dropdown id=\"leaf-shape-variable\" [options]=\"LeafShapes\" appendTo=\"body\" [(ngModel)]=\"SelectedLeafShapeVariable\" (ngModelChange)=\"onLeafShapeVariableChange($event)\"></p-dropdown>\n                          </div>-->\n                          <div class=\"form-group row leaf-size-var-row\" title=\"What variable should be used to size the nodes?\">\n                              <div class=\"col-4\"><label for=\"leaf-size-var\">Leaf Size Variable</label></div>\n                              <div class=\"col-8\">\n                                <p-dropdown id=\"leaf-size-var\" appendTo=\"body\" [options]=\"LeafLabelFieldList\" [(ngModel)]=\"SelectedLeafNodeSizeVariable\" (ngModelChange)=\"onLeafNodeSizeVariableChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-size-row\" title=\"How big should leaves be?\">\n                              <div class=\"col-4\"><label for=\"leaf-size\">Leaf Size</label></div>\n                              <div class=\"col-8\"><input type=\"range\" class=\"custom-range\" id=\"leaf-size\" min=\"0.5\" value=\"{{ SelectedLeafNodeSizeVariable }}\" step=\"0.5\" max=\"20\" [(ngModel)]=\"SelectedLeafNodeSizeVariable\" (ngModelChange)=\"onLeafNodeSizeVariableChange($event)\"></div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Colors\">\n                      <button pButton type=\"button\" label=\"Show Colors\" class=\"ui-button-raised\" (click)=\"showGlobalSettings()\"></button>\n                  </p-accordionTab>\n              </p-accordion>\n              </tab>\n\n              <tab heading=\"{{'Branches' | localize}}\" customClass=\"m-tabs__item\">\n              <p-accordion>\n                  <p-accordionTab style=\"color:#495057\" header=\"Labels\">\n                      <div #branchcontrolslabels>\n                          <div class=\"form-group row branch-distance-visibility-row\" title=\"Show distance labels?\">\n                              <div class=\"col-4\"><label for=\"branch-distance-visibility\">Distance Labels</label></div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"branch-distance-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedBranchDistanceShowVariable\" (ngModelChange)=\"onBranchDistanceShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row link-size-row\" title=\"How big should branch labels be?\">\n                              <div class=\"col-4\"><label for=\"link-size\">Branch Label Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"link-size\" min=\"1\" value=\"1\" step=\"1\" max=\"25\" [(ngModel)]=\"SelectedBranchDistanceSizeVariable\" (ngModelChange)=\"onBranchDistanceSizeChange($event)\">\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Branch Size\">\n                      <div #branchcontrollables>\n                        <div class=\"form-group row branch-node-visibility-row\" title=\"Show branch Nodes?\">\n                              <div class=\"col-4\"><label for=\"branch-node-visibility\">Branch Nodes</label></div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"branch-node-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedBranchNodeShowVariable\" (ngModelChange)=\"onBranchNodeShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row branch-node-size-row\" title=\"How big should branch nodes be?\">\n                              <div class=\"col-4\"><label for=\"link-size\">Branch Node Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"branch-node-size\" min=\"1\" value=\"{{ SelectedBranchNodeSizeVariable }}\" step=\"0.5\" max=\"10\" [(ngModel)]=\"SelectedBranchNodeSizeVariable\" (ngModelChange)=\"onBranchNodeSizeChange($event)\">\n                          </div>\n                          <div class=\"form-group row link-size-row\" title=\"How big should branches be?\">\n                              <div class=\"col-4\"><label for=\"link-size\">Branch Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"link-size\" min=\"1\" value=\"{{ SelectedBranchSizeVariable }}\" step=\"1\" max=\"10\" [(ngModel)]=\"SelectedBranchSizeVariable\" (ngModelChange)=\"onBranchSizeChange($event)\">\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Colors\">\n                      <button pButton type=\"button\" label=\"Show Colors\" class=\"ui-button-raised\" (click)=\"showGlobalSettings()\"></button>\n                  </p-accordionTab>\n              </p-accordion>\n              </tab>\n              </tabset>\n    </p-dialog>\n</div>\n<div id=\"phylo-context-menu\" class=\"dropdown-menu\">\n    <div id=\"reroot\" class=\"dropdown-item\">Set As Root</div>\n    <div id=\"rotate\" class=\"dropdown-item\">Rotate</div>\n    <div id=\"flip\" class=\"dropdown-item\">Flip</div>\n</div>\n<p-dialog *ngIf=\"viewActive\" id=\"network-export-modal\" [(visible)]=\"ShowPhylogeneticExportPane\" header=\"Export Phylogenetic Tree\" class=\"dialogSize\" (onHide)=\"onCloseExport()\" appendTo=\"body\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-body\" style='min-width: 500px; height: 100%;'>\n                <p-accordion [multiple]=\"true\">\n                    <p-accordionTab header=\"Export Image of Tree\" style=\"color:#495057\" [selected]=\"true\">\n                        <div class=\"form-group row\">\n                            <div class=\"col-8\">\n                                <input type=\"text\" id=\"tree-image-filename\" class=\"form-control form-control-sm\" placeholder=\"Image Filename\" [(ngModel)]=\"SelectedTreeImageFilenameVariable\" >\n                            </div>\n                            <div class=\"col-3\">\n                                <p-dropdown id=\"network-export-filetype\" [options]=\"NetworkExportFileTypeList\" [(ngModel)]=\"SelectedNetworkExportFileTypeListVariable\" ></p-dropdown>\n                            </div>\n                            <div class=\"col-8\">\n                                <button type=\"button\" id=\"export-tree\" class=\"btn btn-primary\" (click)=\"saveImage($event)\">Save Image</button>\n                            </div>\n                        </div>\n                    </p-accordionTab>\n                    <p-accordionTab header=\"Export Newick String\" style=\"color:#495057\" [selected]=\"true\">\n                        <div class=\"form-group row\">\n                            <div class=\"col-8\">\n                                <input type=\"text\" id=\"newick-string-filename\" class=\"form-control form-control-sm\" placeholder=\"Newick Filename\" [(ngModel)]=\"SelectedNewickStringFilenameVariable\" >\n                            </div>\n                            <div class=\"col-3\"></div>\n                            <div class=\"col-8\">\n                                <button type=\"button\" id=\"export-newick\" class=\"btn btn-primary\" (click)=\"saveNewickString($event)\">Save Newick String</button>\n                            </div>\n                        </div>\n                    </p-accordionTab>\n                </p-accordion>\n            </div>\n                <div class=\"modal-footer\">\n                </div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</p-dialog><!-- /.modal -->\n";
+module.exports = "﻿﻿<div class=\"m-content\">\n    <div id=\"tool-btn-container\" class=\"m-portlet\">\n        <span style=\"overflow: visible; position: relative; width: 110px;\">\n            <a title=\"Settings\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"openSettings()\"><i class=\"flaticon-settings primary\"></i></a>\n        </span>\n        <span style=\"overflow: visible; position: relative; width: 110px;\">\n            <a title=\"Export Screen\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"openExport()\"><i class=\"flaticon-download primary\"></i></a>\n        </span>\n        <span style=\"overflow: visible; position: relative; width: 110px;\">\n            <a title=\"Center Screen\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" style=\"float:left\" (click)=\"openCenter()\"><i class=\"flaticon-eye primary\"></i></a>\n        </span>\n    </div>\n    <div class=\"m-portlet__body\" style=\"height: 100%;\">\n        <br />\n        <div className=\"phylocanvas\" id=\"phylocanvas\" style=\"cursor: grab;\"></div>\n        <div id=\"phyloTooltip\"></div>\n    </div>\n</div>\n<div class=\"view-controls\">\n\n    <p-dialog *ngIf=\"viewActive\" id=\"phylotree-settings-pane\" \n              [positionLeft]=\"PhylogeneticTreeExportDialogSettings.left\" \n              [positionTop]=\"PhylogeneticTreeExportDialogSettings.top\" \n              [(visible)]=\"PhylogeneticTreeExportDialogSettings.isVisible\"  \n              [contentStyle]=\"{'overflow': 'visible'}\"\n              header=\"Phylogenetic Tree Settings\" appendTo=\"body\"\n              >\n              <tabset class=\"tab-container tabbable-line\">\n              <tab heading=\"{{'Tree' | localize}}\" [active]=\"true\" customClass=\"m-tabs__item\">\n              <p-accordion [multiple]='true'>\n                  <p-accordionTab style=\"color:#495057\" header=\"Layout\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"tree-layout\">Layout</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"tree-layout\" appendTo=\"body\" [options]=\"TreeLayouts\" [(ngModel)]=\"SelectedTreeLayoutVariable\" (ngModelChange)=\"onTreeLayoutChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Mode\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"tree-mode\">Mode</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"tree-mode\" appendTo=\"body\" [options]=\"TreeModes\" [(ngModel)]=\"SelectedTreeModeVariable\" (ngModelChange)=\"onTreeModeChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Type\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"tree-type\">Type</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"tree-type\" appendTo=\"body\" [options]=\"TreeTypes\" [(ngModel)]=\"SelectedTreeTypeVariable\" (ngModelChange)=\"onTreeTypeChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Stretch\">\n                      <div #treecontrolslabels>\n                          <div class=\"form-group row tree-type-row\" title=\"What kind of tree should be displayed?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"horizontal-stretch\">Horizontal Stretch</label></div>\n                                <input type=\"range\" class=\"custom-range\" id=\"horizontal-stretch\" min=\"0\" value=\"1\" step=\"0.2\" max=\"10\" [(ngModel)]=\"SelectedHorizontalStretchVariable\" (change)=\"onHorizontalStretchChange($event)\">\n                              <div class=\"col-4\"><label for=\"vertical-stretch\">Vertical Stretch</label></div>\n                                <input type=\"range\" class=\"custom-range\" id=\"vertical-stretch\" min=\"0\" value=\"1\" step=\"0.2\" max=\"10\" [(ngModel)]=\"SelectedVerticalStretchVariable\" (change)=\"onVerticalStretchChange($event)\">\n                          </div>\n                      </div>\n                  </p-accordionTab>\n              </p-accordion>\n              </tab>\n\n              <tab heading=\"{{'Leaves' | localize}}\" customClass=\"m-tabs__item\">\n              <p-accordion>\n                  <p-accordionTab style=\"color:#495057\" header=\"Labels and Tooltips\">\n                      <div #leafcontrolslabels>\n                          <div class=\"form-group row leaf-label-visibility-row\" title=\"Show leaf labels?\">\n                              <div class=\"col-4\">Show Leaf Labels</div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"leaf-label-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedLeafLabelShowVariable\" (ngModelChange)=\"onLeafLabelShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-label-variable-row\" title=\"What vasriable should be used as the leaf label?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"leaf-label-variable\">Label Variable</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"leaf-label-variable\" appendTo=\"body\" [options]=\"LeafLabelFieldList\" [(ngModel)]=\"SelectedLeafLabelVariable\" (ngModelChange)=\"onLeafLabelVariableChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-label-size-row\" title=\"How big should leaf labels be?\">\n                              <div class=\"col-4\"><label for=\"leaf-label-size\">Label Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"leaf-label-size\" min=\"1\" value=\"{{ SelectedLeafLabelSizeVariable }}\" step=\"1\" max=\"32\" [(ngModel)]=\"SelectedLeafLabelSizeVariable\" (ngModelChange)=\"onLeafLabelSizeChange($event)\">\n                          </div>\n                          <div class=\"form-group row leaf-tooltip-visibility-row\" title=\"Show leaf tooltips?\">\n                              <div class=\"col-4\">Show Leaf Tooltips</div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"leaf-tooltip-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedLeafTooltipShowVariable\" (ngModelChange)=\"onLeafLabelTooltipShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-tooltip-variable-row\" title=\"What vasriable should be used as the leaf tooltip?\" style=\"overflow:visible\">\n                              <div class=\"col-4\"><label for=\"leaf-tooltip-variable\">Tooltip Variable</label></div>\n                              <div class=\"col-8\">\n                                  <p-dropdown id=\"leaf-tooltip-variable\" appendTo=\"body\" [options]=\"LeafLabelFieldList\" [(ngModel)]=\"SelectedLeafTooltipVariable\" (ngModelChange)=\"onLeafTooltipVariableChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Leaf Size\">\n                      <div #leafcontrolslabels>\n                          <!--<div class=\"form-group row leaf-shape-row\" title=\"What shape should leaves be?\">\n                              <div class=\"col-4\"><label for=\"leaf-shape-variable\">Leaf Shape</label></div>\n                              <p-dropdown id=\"leaf-shape-variable\" [options]=\"LeafShapes\" appendTo=\"body\" [(ngModel)]=\"SelectedLeafShapeVariable\" (ngModelChange)=\"onLeafShapeVariableChange($event)\"></p-dropdown>\n                          </div>-->\n                          <div class=\"form-group row leaf-size-var-row\" title=\"What variable should be used to size the nodes?\">\n                              <div class=\"col-4\"><label for=\"leaf-size-var\">Leaf Size Variable</label></div>\n                              <div class=\"col-8\">\n                                <p-dropdown id=\"leaf-size-var\" appendTo=\"body\" [options]=\"LeafLabelFieldList\" [(ngModel)]=\"SelectedLeafNodeSizeVariable\" (ngModelChange)=\"onLeafNodeSizeVariableChange($event)\"> </p-dropdown>\n                              </div>\n                          </div>\n                          <div class=\"form-group row leaf-size-row\" title=\"How big should leaves be?\">\n                              <div class=\"col-4\"><label for=\"leaf-size\">Leaf Size</label></div>\n                              <div class=\"col-8\"><input type=\"range\" class=\"custom-range\" id=\"leaf-size\" min=\"1\" value=\"{{ SelectedLeafNodeSize }}\" step=\"0.5\" max=\"50\" [(ngModel)]=\"SelectedLeafNodeSize\" (ngModelChange)=\"onLeafNodeSizeChange($event)\"></div>\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Colors\">\n                      <button pButton type=\"button\" label=\"Show Colors\" class=\"ui-button-raised\" (click)=\"showGlobalSettings()\"></button>\n                  </p-accordionTab>\n              </p-accordion>\n              </tab>\n\n              <tab heading=\"{{'Branches' | localize}}\" customClass=\"m-tabs__item\">\n              <p-accordion>\n                  <p-accordionTab style=\"color:#495057\" header=\"Labels\">\n                      <div #branchcontrolslabels>\n                          <div class=\"form-group row branch-distance-visibility-row\" title=\"Show distance labels?\">\n                              <div class=\"col-4\"><label for=\"branch-distance-visibility\">Distance Labels</label></div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"branch-distance-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedBranchDistanceShowVariable\" (ngModelChange)=\"onBranchDistanceShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row link-size-row\" title=\"How big should branch labels be?\">\n                              <div class=\"col-4\"><label for=\"link-size\">Branch Label Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"link-size\" min=\"1\" value=\"1\" step=\"1\" max=\"25\" [(ngModel)]=\"SelectedBranchDistanceSizeVariable\" (ngModelChange)=\"onBranchDistanceSizeChange($event)\">\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Branch Size\">\n                      <div #branchcontrollables>\n                        <div class=\"form-group row branch-node-visibility-row\" title=\"Show branch Nodes?\">\n                              <div class=\"col-4\"><label for=\"branch-node-visibility\">Branch Nodes</label></div>\n                              <div class=\"col-8\">\n                                  <p-selectButton id=\"branch-node-visibility\" [options]=\"hideShowOptions\" [(ngModel)]=\"SelectedBranchNodeShowVariable\" (ngModelChange)=\"onBranchNodeShowChange($event)\"></p-selectButton>\n                              </div>\n                          </div>\n                          <div class=\"form-group row branch-node-size-row\" title=\"How big should branch nodes be?\">\n                              <div class=\"col-4\"><label for=\"link-size\">Branch Node Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"branch-node-size\" min=\"1\" value=\"{{ SelectedBranchNodeSizeVariable }}\" step=\"0.5\" max=\"10\" [(ngModel)]=\"SelectedBranchNodeSizeVariable\" (ngModelChange)=\"onBranchNodeSizeChange($event)\">\n                          </div>\n                          <div class=\"form-group row link-size-row\" title=\"How big should branches be?\">\n                              <div class=\"col-4\"><label for=\"link-size\">Branch Size</label></div>\n                              <input type=\"range\" class=\"custom-range\" id=\"link-size\" min=\"1\" value=\"{{ SelectedBranchSizeVariable }}\" step=\"1\" max=\"10\" [(ngModel)]=\"SelectedBranchSizeVariable\" (ngModelChange)=\"onBranchSizeChange($event)\">\n                          </div>\n                      </div>\n                  </p-accordionTab>\n                  <p-accordionTab style=\"color:#495057\" header=\"Colors\">\n                      <button pButton type=\"button\" label=\"Show Colors\" class=\"ui-button-raised\" (click)=\"showGlobalSettings()\"></button>\n                  </p-accordionTab>\n              </p-accordion>\n              </tab>\n              </tabset>\n    </p-dialog>\n</div>\n<div id=\"phylo-context-menu\" class=\"dropdown-menu\">\n    <div id=\"reroot\" class=\"dropdown-item\">Set As Root</div>\n    <div id=\"rotate\" class=\"dropdown-item\">Rotate</div>\n    <div id=\"flip\" class=\"dropdown-item\">Flip</div>\n</div>\n<p-dialog *ngIf=\"viewActive\" id=\"network-export-modal\" [(visible)]=\"ShowPhylogeneticExportPane\" header=\"Export Phylogenetic Tree\" class=\"dialogSize\" (onHide)=\"onCloseExport()\" appendTo=\"body\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-body\" style='min-width: 500px; height: 100%;'>\n                <p-accordion [multiple]=\"true\">\n                    <p-accordionTab header=\"Export Image of Tree\" style=\"color:#495057\" [selected]=\"true\">\n                        <div class=\"form-group row\">\n                            <div class=\"col-8\">\n                                <input type=\"text\" id=\"tree-image-filename\" class=\"form-control form-control-sm\" placeholder=\"Image Filename\" [(ngModel)]=\"SelectedTreeImageFilenameVariable\" >\n                            </div>\n                            <div class=\"col-3\">\n                                <p-dropdown id=\"network-export-filetype\" [options]=\"NetworkExportFileTypeList\" [(ngModel)]=\"SelectedNetworkExportFileTypeListVariable\" ></p-dropdown>\n                            </div>\n                            <div class=\"col-8\">\n                                <button type=\"button\" id=\"export-tree\" class=\"btn btn-primary\" (click)=\"saveImage($event)\">Save Image</button>\n                            </div>\n                        </div>\n                    </p-accordionTab>\n                    <p-accordionTab header=\"Export Newick String\" style=\"color:#495057\" [selected]=\"true\">\n                        <div class=\"form-group row\">\n                            <div class=\"col-8\">\n                                <input type=\"text\" id=\"newick-string-filename\" class=\"form-control form-control-sm\" placeholder=\"Newick Filename\" [(ngModel)]=\"SelectedNewickStringFilenameVariable\" >\n                            </div>\n                            <div class=\"col-3\"></div>\n                            <div class=\"col-8\">\n                                <button type=\"button\" id=\"export-newick\" class=\"btn btn-primary\" (click)=\"saveNewickString($event)\">Save Newick String</button>\n                            </div>\n                        </div>\n                    </p-accordionTab>\n                </p-accordion>\n            </div>\n                <div class=\"modal-footer\">\n                </div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</p-dialog><!-- /.modal -->\n";
 
 /***/ }),
 
