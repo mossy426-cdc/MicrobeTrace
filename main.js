@@ -9111,10 +9111,6 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     const localVal = RegExp(/localhost/);
     if (prodVal.test(this.currentUrl) || devVal.test(this.currentUrl) || localVal.test(this.currentUrl)) {
       return true;
-    } else {
-      const el = this.getElementById("overlay");
-      if (el) el.style.top = `${$('#url-warning-div').height()}px`;
-      return false;
     }
   }
   getHeight() {
