@@ -1398,15 +1398,17 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   addNode(newNode, check = null) {
     //  If _id, set id to _id 
     if (newNode._id) {
-      newNode.id = newNode._id;
-    } else if (newNode.id) {
-      newNode._id = newNode.id;
-    }
-    // If node id is not already a string, convert it to a string and trim it
-    if (typeof newNode._id !== 'string') {
-      newNode._id = newNode._id.toString();
+      if (typeof newNode._id !== 'string') {
+        newNode._id = newNode._id.toString();
+      }
       newNode._id = newNode._id.trim();
       newNode.id = newNode._id;
+    } else if (newNode.id) {
+      if (typeof newNode.id !== 'string') {
+        newNode.id = newNode.id.toString();
+      }
+      newNode.id = newNode.id.trim();
+      newNode._id = newNode.id;
     }
     if (this.session.data.nodeExclusions.indexOf(newNode._id) > -1) {
       return 0;
@@ -2673,6 +2675,12 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   updateNetworkVisuals(silent = false) {
     console.log('--- Update network visuals called- silent: ', silent);
     console.log('network nodes: ', this.session.data.nodes);
+    // if nodes have node with id 30576_KF773440_B96cl58    
+    if (this.session.data.nodes.some(node => node._id == '30576_KF773440_B96cl58')) {
+      console.log('--- node 1id!!: ', this.session.data.nodes[0]);
+    } else {
+      console.log('--- node 2id!!: ', this.session.data.nodes[0]);
+    }
     console.log('network links: ', this.session.data.links);
     console.log('network clusters: ', this.session.data.clusters);
     this.tagClusters().then(() => {
@@ -21348,6 +21356,13 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       console.log('--- TwoD networkDataL 2: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
       console.log('--- TwoD networkDataN 2: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.nodes));
       const nodeIds = new Set(networkData.nodes.map(n => n.id));
+      const nodeIds2 = new Set(_this.commonService.session.data.nodes.map(n => n.id));
+      // if nodeids 2 includes 30576_KF773440_B96cl58
+      if (nodeIds2.has('30576_KF773440_B96cl58')) {
+        console.log('--- TwoD nodeIds2 includes 30576_KF773440_B96cl58');
+      } else {
+        console.log('--- TwoD nodeIds2 does not include 30576_KF773440_B96cl58');
+      }
       networkData.links.forEach(link => {
         if (!nodeIds.has(link.source)) {
           console.warn('Link source not found in nodes:', link.source, link);
