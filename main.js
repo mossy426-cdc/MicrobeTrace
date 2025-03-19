@@ -1396,18 +1396,18 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    * @returns {number} - `1` if a new node was added to the array, `0` otherwise.
    */
   addNode(newNode, check = null) {
-    //  If no _id, set _id to id
-    if (this.isNumber(newNode._id)) {
-      newNode._id = '' + newNode._id;
-      if (!newNode._id || newNode._id === '') {
-        newNode._id = newNode.id;
-      }
-    } else {
-      if (newNode.id) {
-        newNode._id = newNode.id;
-      }
+    //  If _id, set id to _id 
+    if (newNode._id) {
+      newNode.id = newNode._id;
+    } else if (newNode.id) {
+      newNode._id = newNode.id;
     }
-    newNode._id = newNode._id.trim();
+    // If node id is not already a string, convert it to a string and trim it
+    if (typeof newNode._id !== 'string') {
+      newNode._id = newNode._id.toString();
+      newNode._id = newNode._id.trim();
+      newNode.id = newNode._id;
+    }
     if (this.session.data.nodeExclusions.indexOf(newNode._id) > -1) {
       return 0;
     }
@@ -2968,8 +2968,26 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     console.log('create link color map');
     // 1) Gather
     const linkColorVariable = this.session.style.widgets['link-color-variable'];
+    if (linkColorVariable == "None") {
+      this.temp.style.linkColorMap = () => this.session.style.widgets["link-color"];
+      this.temp.style.linkAlphaMap = () => 1 - this.session.style.widgets["link-opacity"];
+      return [];
+    }
     const links = this.session.data.links;
-    const linkColors = this.session.style.linkColors; // e.g. d3.schemePaired
+    let linkColors;
+    if (this.session.style.linkColorsTable && this.session.style.linkColorsTable[linkColorVariable]) {
+      linkColors = this.session.style.linkColorsTable[linkColorVariable];
+    } else if (linkColorVariable == 'source' || linkColorVariable == 'target') {
+      this.session.style.linkColorsTable = {};
+      this.session.style.linkColorsTableKeys = {};
+      linkColors = this.session.style.linkColorsTable[linkColorVariable] = [d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10[0]].concat(d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10.slice(2));
+      this.session.style.linkColors = [d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10[0]].concat(d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10.slice(2));
+    } else {
+      this.session.style.linkColorsTable = {};
+      this.session.style.linkColorsTableKeys = {};
+      linkColors = this.session.style.linkColorsTable[linkColorVariable] = d3__WEBPACK_IMPORTED_MODULE_1__.schemePaired;
+      this.session.style.linkColors = d3__WEBPACK_IMPORTED_MODULE_1__.schemePaired;
+    }
     const linkAlphas = this.session.style.linkAlphas; // e.g. [1, 1, ...]
     const linkColorsTable = this.session.style.linkColorsTable;
     const linkColorsTableKeys = this.session.style.linkColorsTableKeys;
@@ -2983,6 +3001,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     this.session.style.linkAlphas = result.updatedLinkAlphas;
     this.session.style.linkColorsTable = result.updatedLinkColorsTable;
     this.session.style.linkColorsTableKeys = result.updatedLinkColorsTableKeys;
+    console.log('create link color map 1: ', this.session.style.linkColorsTable);
+    console.log('create link color map 2: ', this.session.style.linkColorsTableKeys);
+    console.log('create link color map 3: ', this.session.style.linkColors);
+    console.log('create link color map 4: ', this.session.style.linkAlphas);
     return result.aggregates;
   }
   /**
@@ -2991,9 +3013,15 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   createPolygonColorMap() {
     // If you store your “polygonGroups” in this.temp, do:
+    if (!this.temp.polygonGroups || !this.session.style.widgets['polygons-color-show']) {
+      this.temp.style.polygonColorMap = () => this.session.style.widgets['polygon-color'];
+      return [];
+    }
     const polygonGroups = this.temp.polygonGroups || [];
     const polygonColors = this.session.style.polygonColors;
     const polygonAlphas = this.session.style.polygonAlphas;
+    console.log('--- polygonGroups: ', polygonGroups);
+    console.log('--- polygonColors: ', polygonGroups);
     const result = this.colorMappingService.createPolygonColorMap(polygonGroups, polygonColors, polygonAlphas, this.debugMode);
     this.temp.style.polygonColorMap = result.colorMap;
     this.temp.style.polygonAlphaMap = result.alphaMap;
@@ -7358,6 +7386,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this.playBtnText = "Play";
     this.previousTab = '';
     this.bpaaSPayloadWrappers = [];
+    this.networkRendered = false;
     this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_17__.EventEmitter();
     this.currentThresholdStepSize = 0.001;
     this.HideThisForNow = false;
@@ -7430,19 +7459,24 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     });
     // Subscribe to network rendered
     this.networkRenderedSubscription = this.store.networkRendered$.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_18__.takeUntil)(this.destroy$)).subscribe(rendered => {
-      console.log('--miceobtrace :', this.commonService.session.network.isFullyLoaded);
-      // console.log('--- Network Rendered: ', rendered);
+      console.log('DEBUG: networkRenderedSubscription fired. rendered =', rendered);
+      console.log('DEBUG: session.network.isFullyLoaded?', this.commonService.session.network.isFullyLoaded);
       if (rendered) {
         this.displayloadingInformationModal = false;
         this.messages = [];
-        this.onLinkColorTableChanged();
+        console.log('DEBUG: Calling onLinkColorTableChanged from networkRenderedSubscription...');
+        console.log('DEBUG: #link-color-table rowcount BEFORE = ', $('#link-color-table').find('tr').length);
+        // Optionally call or not call your method:
+        // this.onLinkColorTableChanged();
+        this.networkRendered = true;
+        // Also see if forcing a detect changes right here changes the outcome:
+        console.log('DEBUG: inrender sub => about to detect changes manually...');
         this.cdref.detectChanges();
-        // Only show loading modal when loading network outside of demo network to not have it appear on load
+        console.log('DEBUG: #link-color-table rowcount AFTER  = ', $('#link-color-table').find('tr').length);
       } else if (!rendered && this.commonService.demoNetworkRendered && this.commonService.session.network.isFullyLoaded) {
-        // Clear messages for loading modal
-        // this.messages = [];
         this.displayloadingInformationModal = true;
         this.showMessage('Rendering Network...');
+        this.networkRendered = false;
       }
     });
     // Subscribe to network rendered
@@ -7571,6 +7605,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   showMessage(msg) {
     this.messages = [...this.messages, msg];
     setTimeout(() => {
+      console.log('DEBUG: inshowmessage => about to detect changes manually...');
       this.cdref.detectChanges();
     }, 0);
   }
@@ -8127,6 +8162,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     }
     if (this.SelectedColorLinksByVariable != this.widgets['link-color-variable']) {
       this.SelectedColorLinksByVariable = this.widgets['link-color-variable'];
+      console.log('link colorTable - applystylefile: ', $('#link-color-table'));
       this.onColorLinksByChanged();
     }
     if (this.SelectedBackgroundColorVariable != this.widgets['background-color']) {
@@ -8162,6 +8198,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
         this.commonService.setLinkVisibility(true);
         this.commonService.updateNetworkVisuals(true);
         this.store.setLinkThreshold(this.SelectedLinkThresholdVariable);
+        console.log('onlink compute mst');
         this.onLinkColorTableChanged();
         // TODO:: David is this needed?
         if ('tableComp' in this.commonService.visuals) {
@@ -8191,12 +8228,33 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       //    } else {
     }
   }
+  // This is the method that actually toggles the link-color dialog & table
   onLinkColorTableChanged(silent = false) {
+    console.log('DEBUG: onLinkColorTableChanged fired. value=', this.SelectedLinkColorTableTypesVariable, 'silent=', silent);
+    // Keep your GlobalSettingsModel in sync
     this.commonService.GlobalSettingsModel.SelectedLinkColorTableTypesVariable = this.SelectedLinkColorTableTypesVariable;
-    if (this.SelectedLinkColorTableTypesVariable == "Hide") {
+    if (this.SelectedLinkColorTableTypesVariable === 'Hide') {
+      console.log('DEBUG: Hiding link color dialog and clearing table');
       this.GlobalSettingsLinkColorDialogSettings.setVisibility(false);
+      $('#link-color-table').empty();
     } else {
-      this.onColorLinksByChanged(silent);
+      console.log('DEBUG: Showing link color dialog & building table');
+      this.GlobalSettingsLinkColorDialogSettings.setVisibility(true);
+      if (this.SelectedColorLinksByVariable === 'None') {
+        console.log('DEBUG: Link color variable=NONE => empty table');
+        $('#link-color-table').empty();
+      } else {
+        console.log('DEBUG: Generating link table. Table element =', this.linkColorTable?.nativeElement);
+        this.generateNodeLinkTable('#link-color-table');
+      }
+      $('#link-color-table-row').slideDown();
+    }
+    // If OnPush, sometimes you might also need:
+    if (!silent) {
+      console.log('DEBUG: onLinkColorTableChanged => Marking for check');
+      this.cdref.markForCheck();
+      // or .detectChanges() if you want an immediate synchronous check
+      // this.cdref.detectChanges();
     }
   }
   /**
@@ -8292,70 +8350,106 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     if (!silent) this.publishUpdateLinkColor();
   }
   onColorLinksByChanged(silent = false) {
-    console.log('oncolorLinksByChanged - selected color links by variable: ', this.SelectedColorLinksByVariable);
-    console.log('oncolorLinksByChanged - selected color links by variable: ', this.GlobalSettingsLinkColorDialogSettings.isVisible);
-    this.commonService.GlobalSettingsModel.SelectedColorLinksByVariable = this.SelectedColorLinksByVariable;
-    if (!this.GlobalSettingsLinkColorDialogSettings.isVisible) {
-      // TODO::David you added  "&& this.checkActiveView('link')" below which makes it not dispaly in twoD network
-      // checkActiveView is reliant on commonService.visuals, under current implementation (12/17/24) always returns false and function may not be needed
-      if (this.SelectedColorLinksByVariable != "None") {
-        console.log('onColorLinksByChanged - selected color links by variable2: ', this.SelectedColorLinksByVariable);
-        this.SelectedLinkColorTableTypesVariable = "Show";
-        this.GlobalSettingsLinkColorDialogSettings.setVisibility(true);
-        this.cachedGlobalSettingsLinkColorVisibility = this.GlobalSettingsLinkColorDialogSettings.isVisible;
-        this.ShowGlobalSettingsLinkColorTable = false;
-        this.cdref.detectChanges();
-      }
-    }
+    console.log('DEBUG: onColorLinksByChanged fired. variable =', this.SelectedColorLinksByVariable, 'silent=', silent);
     this.commonService.GlobalSettingsModel.SelectedColorLinksByVariable = this.SelectedColorLinksByVariable;
     this.commonService.session.style.widgets['link-color-variable'] = this.SelectedColorLinksByVariable;
-    if (this.SelectedColorLinksByVariable != "None") {
-      this.generateNodeLinkTable("#link-color-table");
-      console.log('onColorLinksByChanged - selected color links by variable4: ', this.SelectedColorLinksByVariable);
-      $('#link-color-value-row').slideUp();
-      console.log('show global settings link color table: ', this.ShowGlobalSettingsLinkColorTable);
-      //If hidden by default, unhide to perform slide up and down
-      if (!this.ShowGlobalSettingsLinkColorTable) {
-        const element = this.el.nativeElement.querySelector('#link-color-table');
-        this.commonService.setLinkTableElement(element);
-        this.ShowGlobalSettingsLinkColorTable = true;
-        this.cdref.detectChanges();
-        console.log('element: ', element);
-      } else {
-        $('#link-color-table-row').slideDown();
-      }
-      if (!silent) this.publishUpdateLinkColor();
+    if (this.SelectedColorLinksByVariable !== 'None') {
+      console.log('DEBUG: onColorLinksByChanged => user picked something, setting table to Show');
+      this.SelectedLinkColorTableTypesVariable = 'Show';
     } else {
-      console.log('show hide global settings link color table: ', this.ShowGlobalSettingsLinkColorTable);
-      $('#link-color-table').empty();
-      $('#link-color-value-row').slideDown();
-      $('#link-color-table-row').slideUp();
+      console.log('DEBUG: onColorLinksByChanged => user picked None, setting table to Hide');
       this.SelectedLinkColorTableTypesVariable = 'Hide';
-      this.onLinkColorTableChanged(silent);
-      if (!silent) this.publishUpdateLinkColor();
-      this.exportTables['link-color'] = false;
     }
+    if (!silent) {
+      console.log('DEBUG: onColorLinksByChanged => publishing link-color updates to views');
+      this.publishUpdateLinkColor();
+    }
+    this.onLinkColorTableChanged(silent);
   }
+  // onColorLinksByChanged(silent: boolean = false) {
+  //     // console.log('oncolorLinksByChanged - selected color links by variable: ', this.SelectedColorLinksByVariable);
+  //     console.log('oncolorLinksByChanged 2 - is visible: ', this.GlobalSettingsLinkColorDialogSettings.isVisible);
+  //     // console.log('3 onColorLinksByChanged - show link: ', this.ShowGlobalSettingsLinkColorTable);
+  //     this.commonService.GlobalSettingsModel.SelectedColorLinksByVariable = this.SelectedColorLinksByVariable;
+  //     if (!this.GlobalSettingsLinkColorDialogSettings.isVisible) {
+  //         // TODO::David you added  "&& this.checkActiveView('link')" below which makes it not dispaly in twoD network
+  //         // checkActiveView is reliant on commonService.visuals, under current implementation (12/17/24) always returns false and function may not be needed
+  //         // if (this.SelectedColorLinksByVariable != "None") {
+  //         //     console.log('onColorLinksByChanged - selected color links by variable2: ', this.SelectedColorLinksByVariable);
+  //         //     this.SelectedLinkColorTableTypesVariable = "Show";
+  //         //     this.GlobalSettingsLinkColorDialogSettings.setVisibility(true);
+  //         //     this.cachedGlobalSettingsLinkColorVisibility = this.GlobalSettingsLinkColorDialogSettings.isVisible;
+  //         //     this.ShowGlobalSettingsLinkColorTable = false;
+  //         //     this.cdref.detectChanges();
+  //         // }
+  //     }
+  //     this.commonService.GlobalSettingsModel.SelectedColorLinksByVariable = this.SelectedColorLinksByVariable;
+  //     this.commonService.session.style.widgets['link-color-variable'] = this.SelectedColorLinksByVariable;
+  //     if (this.SelectedColorLinksByVariable != "None") {
+  //         // console.log('1 onColorLinksByChanged - selected color links by variable3: ', this.SelectedColorLinksByVariable);
+  //         console.log('color links by changed: ', $('#link-color-table'));
+  //         // this.ShowGlobalSettingsLinkColorTable = true;
+  //         this.generateNodeLinkTable("#link-color-table");
+  //         // console.log('onColorLinksByChanged - selected color links by variable4: ', this.SelectedColorLinksByVariable);
+  //         $('#link-color-value-row').slideUp();
+  //         console.log('xy global show: ', $('#link-color-table'));
+  //         //If hidden by default, unhide to perform slide up and down
+  //         if(!this.ShowGlobalSettingsLinkColorTable){
+  //             console.log('xy global in');
+  //             this.ShowGlobalSettingsLinkColorTable = true;
+  //             this.GlobalSettingsLinkColorDialogSettings.setVisibility(true);
+  //             // const element = this.el.nativeElement.querySelector('#link-color-table');
+  //             // this.commonService.setLinkTableElement(element);
+  //             // this.generateNodeLinkTable("#link-color-table");
+  //             this.cdref.detectChanges();
+  //         } else {
+  //             console.log('xy global else');
+  //             this.GlobalSettingsLinkColorDialogSettings.setVisibility(true);
+  //             // this.generateNodeLinkTable("#link-color-table");
+  //             $('#link-color-table-row').slideDown();
+  //         }
+  //         console.log('xy global show 2: ', $('#link-color-table'));
+  //         if(!silent) this.publishUpdateLinkColor();
+  //     }
+  //     else {
+  //         console.log('---- gnerenate Link Color Table empty -------', $('#link-color-table'));
+  //         $('#link-color-table').empty();
+  //         $('#link-color-value-row').slideDown();
+  //         $('#link-color-table-row').slideUp();
+  //         this.SelectedLinkColorTableTypesVariable='Hide';
+  //         console.log('onLinkColorTableChanged - onColorLinksByChanged');
+  //         console.log('4 color links by changed: ', $('#link-color-table'));
+  //         this.onLinkColorTableChanged(silent);
+  //         console.log('5color links by changed: ', $('#link-color-table'));
+  //         if(!silent) this.publishUpdateLinkColor();
+  //         this.exportTables['link-color'] = false;
+  //     }
+  //     console.log('oncolorLinksByChanged 7 - is visible: ', this.GlobalSettingsLinkColorDialogSettings.isVisible);
+  //     console.log('3this.ShowGlobalSettingsLinkColorTable: ', this.ShowGlobalSettingsLinkColorTable); 
+  // }
+  // The actual function that builds your color table
   generateNodeLinkTable(tableId, isEditable = true) {
-    const linkColorTable = $(tableId).empty().append("<tr>" + ("<th class='p-1 table-header-row'><div class='header-content'><span contenteditable>Link " + this.commonService.titleize(this.SelectedColorLinksByVariable) + "</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>") + `<th class='table-header-row tableCount' ${this.widgets['link-color-table-counts'] ? "" : "style='display: none'"}><div class='header-content'><span contenteditable>Count</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + `<th class='table-header-row tableFrequency' ${this.widgets['link-color-table-frequencies'] ? "" : "style='display: none'"}><div class='header-content'><span contenteditable>Frequency</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + "<th>Color</th>" + "</tr>");
-    if (!this.commonService.session.style.linkValueNames) this.commonService.session.style.linkValueNames = {};
-    let aggregates = this.commonService.createLinkColorMap();
-    if (this.commonService.debugMode) {
-      console.log('link aggregates: ', aggregates);
-    }
-    let vlinks = this.commonService.getVisibleLinks();
-    let aggregateValues = Object.keys(aggregates);
+    console.log('DEBUG: generateNodeLinkTable called. tableId=', tableId);
+    console.log('DEBUG: table before .empty(): child rowcount=', $(tableId).find('tr').length);
+    const linkColorTable = $(tableId).empty().append('<tr>' + "<th class='p-1 table-header-row'><div class='header-content'><span>Link " + this.commonService.titleize(this.SelectedColorLinksByVariable) + "</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>" + `<th class='table-header-row tableCount' ${this.widgets['link-color-table-counts'] ? '' : 'style="display: none"'}><div class='header-content'><span>Count</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + `<th class='table-header-row tableFrequency' ${this.widgets['link-color-table-frequencies'] ? '' : 'style="display: none"'}><div class='header-content'><span>Frequency</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + '<th>Color</th>' + '</tr>');
+    // Debug checks
+    console.log('DEBUG: after appending header, table rowcount=', $(tableId).find('tr').length);
+    // If you suspect linkColorMap may be empty or never updated, log it:
+    const aggregates = this.commonService.createLinkColorMap();
+    console.log('DEBUG: createLinkColorMap =>', aggregates);
+    const vlinks = this.commonService.getVisibleLinks();
+    console.log('DEBUG: getVisibleLinks =>', vlinks?.length);
+    const aggregateValues = Object.keys(aggregates);
+    console.log('DEBUG: aggregateValues =>', aggregateValues);
     const disabled = isEditable ? '' : 'disabled';
     aggregateValues.forEach((value, i) => {
       if (aggregates[value] == 0) {
         return;
       }
-      if (this.commonService.debugMode) {
-        console.log('link color aggregates value: ', aggregates[value]);
-        console.log('link color value: ', value);
-        console.log('link color map: ', this.commonService.temp.style.linkColorMap);
-        console.log('link color map value: ', this.commonService.temp.style.linkColorMap(value));
-      }
+      // console.log('link color aggregates value: ', aggregates[value]);
+      // console.log('link color value: ', value);
+      // console.log('link color map: ', this.commonService.temp.style.linkColorMap);
+      // console.log('link color map value: ', this.commonService.temp.style.linkColorMap(value));
       // Grab color of link from session
       const color = this.commonService.temp.style.linkColorMap(value);
       // Create color input element with color value and assign id to retrieve new value on change
@@ -8393,8 +8487,13 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       } else {
         row.append(nonEditCell);
       }
+      console.log('---- link colorTable: ', i, linkColorTable);
       linkColorTable.append(row);
     });
+    console.log('DEBUG: after building rows, rowcount=', $(tableId).find('tr').length);
+    // At the end, we do a final check of the DOM:
+    const finalCount = $(tableId).find('tr').length;
+    console.log('DEBUG: final rowcount in table:', finalCount);
     if (isEditable) {
       linkColorTable.find("td").on("dblclick", function () {
         $(this).attr("contenteditable", "true").focus();
@@ -8407,6 +8506,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     let isAscending = true; // add this line before the click event handler
     this.updateCountFreqTable('link-color');
     $('#linkColorTableSettings').on('mouseleave', () => $('#linkColorTableSettings').delay(500).css('display', 'none'));
+    // console lof the rows in the table
     $(tableId).on('click', '.sort-button', function () {
       const table = $(this).parents('table').eq(0);
       let rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).parent().parent().index()));
@@ -8626,12 +8726,17 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     }
   }
   showLinkColorTable() {
+    console.log('onLinkColorTableChanged - show');
     if (this.SelectedLinkColorTableTypesVariable != ' Show') {
       this.SelectedLinkColorTableTypesVariable = 'Show';
       this.onLinkColorTableChanged();
     }
   }
   hideLinkColorTable() {
+    if (this.ShowGlobalSettingsLinkColorTable) {
+      // This was just the initial load (or a code-based hide).
+      return;
+    }
     if (this.SelectedLinkColorTableTypesVariable != 'Hide') {
       this.SelectedLinkColorTableTypesVariable = 'Hide';
       this.onLinkColorTableChanged();
@@ -8646,17 +8751,17 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     if (!this.GlobalSettingsNodeColorDialogSettings.isVisible) {
       console.log('on color nodes by changed - visible: ', this.SelectedColorNodesByVariable);
       // TODO::David you added  "&& this.checkActiveView('node')" below which makes it not dispaly in twoD network
-      if (this.SelectedColorNodesByVariable != "None") {
-        this.SelectedNodeColorTableTypesVariable = 'Show';
-        this.GlobalSettingsNodeColorDialogSettings.setVisibility(true);
-        this.cachedGlobalSettingsNodeColorVisibility = this.GlobalSettingsNodeColorDialogSettings.isVisible;
-        const prevColorNodesByVariable = this.SelectedColorNodesByVariable;
-        // this reset to false to trigger showing the node color table
-        this.ShowGlobalSettingsNodeColorTable = false;
-        // this detect changes leads to SelectedColorNodesByVariable being set to default value when loading MT files that have both 2D and map view
-        this.cdref.detectChanges();
-        if (prevColorNodesByVariable != this.SelectedColorNodesByVariable) this.SelectedColorNodesByVariable = prevColorNodesByVariable;
-      }
+      // if (this.SelectedColorNodesByVariable != "None") {
+      //     this.SelectedNodeColorTableTypesVariable = 'Show';
+      //     this.GlobalSettingsNodeColorDialogSettings.setVisibility(true);
+      //     this.cachedGlobalSettingsNodeColorVisibility = this.GlobalSettingsNodeColorDialogSettings.isVisible;
+      //     const prevColorNodesByVariable = this.SelectedColorNodesByVariable;
+      //     // this reset to false to trigger showing the node color table
+      //     this.ShowGlobalSettingsNodeColorTable = false;
+      //     // this detect changes leads to SelectedColorNodesByVariable being set to default value when loading MT files that have both 2D and map view
+      //     this.cdref.detectChanges();
+      //     if (prevColorNodesByVariable != this.SelectedColorNodesByVariable) this.SelectedColorNodesByVariable = prevColorNodesByVariable;
+      // }
     }
     this.commonService.session.style.widgets["node-color-variable"] = this.SelectedColorNodesByVariable;
     console.log('on color nodes by changed5 - visible: ', this.SelectedColorNodesByVariable);
@@ -8665,6 +8770,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     }
     console.log('on color nodes by changed6 - visible: ', this.ShowGlobalSettingsNodeColorTable);
     if (this.SelectedColorNodesByVariable !== "None") {
+      this.ShowGlobalSettingsNodeColorTable = true;
       this.generateNodeColorTable("#node-color-table");
       $('#node-color-value-row').slideUp();
       //If hidden by default, unhide to perform slide up and down
@@ -8931,6 +9037,11 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this.commonService.GlobalSettingsModel.SelectedBackgroundColorVariable = this.SelectedBackgroundColorVariable;
     this.commonService.session.style.widgets['background-color'] = this.SelectedBackgroundColorVariable;
     this.commonService.GlobalSettingsModel.SelectedApplyStyleVariable = this.SelectedApplyStyleVariable;
+    this.ShowGlobalSettingsLinkColorTable = this.GlobalSettingsLinkColorDialogSettings.isVisible;
+    console.log('3 this.ShowGlobalSettingsLinkColorTable: ', this.ShowGlobalSettingsLinkColorTable);
+    console.log('4 this.ShowGlobalSettingsLinkColorTable: ', this.GlobalSettingsLinkColorDialogSettings.isVisible);
+    // print out #global-settings-link-color-table element
+    console.log('xy link color table 3: ', $('#link-color-table'));
   }
   /**
    * this.publishUpdateVisualization()
@@ -9039,6 +9150,10 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this._goldenLayoutHostComponent.TabChangedEvent.subscribe(v => {
       this.commonService.activeTab = v;
       console.log('tab changed settigns viz: ', v);
+      // If network is not even renered yet, no need ot update these values
+      if (!this.networkRendered) {
+        return;
+      }
       if (v === "Files" || v === "Epi Curve" || v === "Alignment View" || v === "Table" || v === "Crosstab" || v === "Aggregate" || v === "Heatmap" || v === "Gantt Chart") {
         this.GlobalSettingsLinkColorDialogSettings.setVisibility(false);
         this.GlobalSettingsNodeColorDialogSettings.setVisibility(false);
@@ -9065,6 +9180,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       } else if (!this.GlobalSettingsLinkColorDialogSettings.isVisible && this.SelectedLinkColorTableTypesVariable == 'Show') {
         this.SelectedLinkColorTableTypesVariable = 'Hide';
       }
+      console.log('linktable vis - false tab changed: ', this.GlobalSettingsLinkColorDialogSettings.isVisible);
       this.updatecurrentThresholdStepSize();
     });
     console.log('tab changed end: ');
@@ -9203,8 +9319,11 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this.activeTabIndex = 0;
   }
   getfileContent(fileList) {
+    // Loading new data so setting network rendered to false
+    this.networkRendered = false;
     this.GlobalSettingsDialogSettings.setVisibility(false);
     this.GlobalSettingsLinkColorDialogSettings.setVisibility(false);
+    console.log('link table vis - false get file content');
     this.GlobalSettingsNodeColorDialogSettings.setVisibility(false);
     if (this.commonService.debugMode) {
       console.log('GetFile Ontent Called');
@@ -9985,7 +10104,8 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   loadUISettings() {
     this.ShowGlobalSettingsLinkColorTable = false;
     this.ShowGlobalSettingsNodeColorTable = false;
-    console.log('oncolorNodesByChanged - selected color nodes by variable: ');
+    // console.log('xy link color table: ', linkColorTable);
+    console.log('xy link color table 1.5: ', $('#link-color-table'));
     //Styling|Color Nodes By
     this.SelectedColorNodesByVariable = this.commonService.session.style.widgets["node-color-variable"];
     this.onColorNodesByChanged(false);
@@ -9993,13 +10113,17 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     //Styling|Nodes
     this.SelectedNodeColorVariable = this.commonService.session.style.widgets["node-color"];
     this.onNodeColorChanged(true);
+    console.log('xy link color table 2: ', $('#link-color-table'));
     //Styling|Color Links By
     if (this.commonService.session.style.widgets['link-color-variable'] === "None") {
       this.commonService.session.style.widgets['link-color-variable'] = "origin";
     }
+    //  console.log('1this.ShowGlobalSettingsLinkColorTable: ', this.ShowGlobalSettingsLinkColorTable); 
     this.SelectedColorLinksByVariable = this.commonService.session.style.widgets['link-color-variable'];
-    console.log('oncolorLinksByChanged - selected color links by variable: ', this.SelectedColorLinksByVariable);
+    console.log('oncolorLinksByChanged - loadUISettings - selected color links by variable: ', this.SelectedColorLinksByVariable);
+    console.log('link colorTable - loadui1: ', $('#link-color-table'));
     this.onColorLinksByChanged(true);
+    console.log('xy link colorTable 3 - loadui2: ', $('#link-color-table'));
     //Styling|Links
     this.SelectedLinkColorVariable = this.commonService.session.style.widgets["link-color"];
     this.onLinkColorChanged(true);
@@ -10008,8 +10132,11 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     //Styling|Background
     this.SelectedBackgroundColorVariable = this.commonService.session.style.widgets['background-color'];
     this.onBackgroundChanged();
-    console.log('this.ShowGlobalSettingsLinkColorTable: ', this.ShowGlobalSettingsLinkColorTable);
+    //  console.log('xy link color table 3: ', linkColorTable);
+    //  console.log('this.ShowGlobalSettingsLinkColorTable: ', this.ShowGlobalSettingsLinkColorTable); 
+    //  console.log('2 this.ShowGlobalSettingsLinkColorTable: ', this.GlobalSettingsLinkColorDialogSettings.isVisible); 
     this.store.setSettingsLoaded(true);
+    console.log('link colorTable - loadui3: ', $('#link-color-table'));
     this.updateGlobalSettingsModel();
   }
   publishLoadNewData() {
@@ -19228,8 +19355,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         return {
           data: {
             id: node.id,
-            label: this.widgets['node-label-variable'] === 'None' ? '' : node.label,
-            // Existing label
+            label: this.widgets['node-label-variable'] === 'None' || !node.label ? '' : node.label,
             parent: node.group && this.widgets['polygons-show'] || undefined,
             // Assign parent if exists
             nodeSize: this.getNodeSize(node),
@@ -19264,7 +19390,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       css: {
         'background-color': 'data(nodeColor)',
         // Use dynamic node color
-        'label': 'data(label)',
         // 'width': 'mapData(nodeSize, 0, 100, 10, 50)', // Existing dynamic sizing
         // 'height': 'mapData(nodeSize, 0, 100, 10, 50)',
         'border-width': 'data(borderWidth)',
@@ -19276,6 +19401,16 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         'shape': 'data(shape)',
         'z-index': 10 // Not a standard Cytoscape property, but kept for clarity
         // 'font-size': 'data(fontSize)' // Ensure this line is included
+      }
+    }, {
+      selector: 'node[label]',
+      css: {
+        'label': 'data(label)'
+      }
+    }, {
+      selector: 'node[!label]',
+      css: {
+        'label': '' // or omit entirely
       }
     },
     // Apply styles only to nodes with nodeSize defined
@@ -19316,11 +19451,15 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         'z-index': 20,
         // Not a standard Cytoscape property, but kept for clarity
         // We also need to ensure that it uses data(...) for color & alpha:
-        'background-color': 'data(nodeColor)',
+        'background-color': 'data(nodeColor)'
         // The critical addition (can also be 'opacity' but that will fade the label, border, etc.):
+        // 'z-compound-depth': 'back',  // ensures parent is behind children
+      }
+    }, {
+      selector: 'node.parent[bgOpacity]',
+      css: {
         // @ts-ignore
         'background-opacity': 'data(bgOpacity)'
-        // 'z-compound-depth': 'back',  // ensures parent is behind children
       }
     }, {
       selector: 'edge',
@@ -20014,7 +20153,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       console.error('Cytoscape instance is not initialized.');
       return;
     }
-    console.log('Updating Group Node Colors...');
     cy.nodes('.parent').forEach(parentNode => {
       const groupName = parentNode.data('label'); // Assuming 'label' holds the group name
       // Determine the new color based on the groupColorMap
@@ -20543,15 +20681,12 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
           child.move({
             parent: null
           });
-          console.log(`Ungrouped child node: ${child.id()} from parent: ${parent.id()}`);
         });
         // **Step 2:** Remove the parent node without affecting child nodes
         cy.remove(parent);
-        console.log(`Removed parent node: ${parent.id()}`);
       });
       // Determine new groups based on foci
       const groupMap = new Map();
-      console.log('nodeee: ', foci);
       cy.nodes().forEach(node => {
         // if(node.data('id') === '30578_KF773488_D99cl05') {
         //     console.log('nodeee1: ', node.data());
@@ -21055,22 +21190,25 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     let nodes = this.commonService.session.data.nodes;
     let n = nodes.length;
     let vnodes = 0;
-    for (let i = 0; i < n; i++) {
-      let d = nodes[i];
-      if (!d || typeof d !== 'object') continue; // guard against null/undefined
-      if (!d.visible) continue;
-      vnodes++;
-      let dv = d[variable];
-      // Optionally, if you expect the value to be defined:
-      if (dv === undefined) {
-        console.warn(`Node at index ${i} does not have property "${variable}"`);
-        continue;
-      }
-      if (values.indexOf(dv) === -1) values.push(dv);
-      if (dv in aggregates) {
-        aggregates[dv]++;
-      } else {
-        aggregates[dv] = 1;
+    // So aggrate to get since just one symbol
+    if (variable !== 'None') {
+      for (let i = 0; i < n; i++) {
+        let d = nodes[i];
+        if (!d || typeof d !== 'object') continue; // guard against null/undefined
+        if (!d.visible) continue;
+        vnodes++;
+        let dv = d[variable];
+        // Optionally, if you expect the value to be defined:
+        if (dv === undefined) {
+          console.warn(`Node at index ${i} does not have property "${variable}"`);
+          continue;
+        }
+        if (values.indexOf(dv) === -1) values.push(dv);
+        if (dv in aggregates) {
+          aggregates[dv]++;
+        } else {
+          aggregates[dv] = 1;
+        }
       }
     }
     this.shapeAggregates = [];
@@ -21188,6 +21326,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
           links: _this.commonService.getVisibleLinks()
         };
       }
+      console.log('--- TwoD networkDataL: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
+      console.log('--- TwoD networkDataN: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.nodes));
       networkData.nodes.forEach(node => {
         node.id = node._id.toString();
       });
@@ -21205,6 +21345,8 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
           link.target = link.target._id.toString();
         }
       });
+      console.log('--- TwoD networkDataL 2: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
+      console.log('--- TwoD networkDataN 2: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.nodes));
       const nodeIds = new Set(networkData.nodes.map(n => n.id));
       networkData.links.forEach(link => {
         if (!nodeIds.has(link.source)) {
@@ -21272,10 +21414,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
           padding: 30 // Padding around the graph
         });
         layout.run();
-        if (_this.widgets['polygons-show']) {
-          _this.polygonsToggle(true);
-          _this.centerPolygons(_this.widgets['polygons-foci']);
-        }
       } else {
         _this.data = _this.commonService.convertToGraphDataArray(networkData);
         // 1) Log raw incoming data
@@ -21337,22 +21475,11 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         _this.cy.one('layoutstop', () => {
           const endTime = performance.now();
           console.log(`✅ Cytoscape layout done in ${(endTime - startTime).toFixed(2)}ms`);
-          // Check which edges made it into cy
-          el.edges.forEach(e => {
-            const ele = _this.cy.getElementById(e.data.id);
-            console.log('element with id', e.data.id, 'exists:', ele.length > 0, 'isEdge?', ele.isEdge(), 'group:', ele.group());
-            // const id = e.data.id;
-            // if (!this.cy.getElementById(id).length) {
-            //   console.warn("❌ Missing in final cy.edges():", e);
-            // } else {
-            //   console.log("✅ Present in cy.edges():", e);
-            // }
-          });
-          // Also log final edges in Cytoscape to compare
-          const finalEdges = _this.cy.edges().map(ed => ed.data());
-          console.log("🚀 finalEdges in Cytoscape:", finalEdges);
-          // Then do your link‐width updates
-          _this.updateLinkWidths();
+          // Update polygons to show if they should be
+          if (_this.widgets['polygons-show']) {
+            _this.polygonsToggle(true);
+            _this.centerPolygons(_this.widgets['polygons-foci']);
+          }
           // Mark as rendered
           _this.store.setNetworkRendered(true);
           _this.store.setNetworkUpdated(false);
