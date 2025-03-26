@@ -2972,9 +2972,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    * @returns {Object} where keys are the values to group (ie. origin A, origin B) and values are counts of the number of links for each key
    */
   createLinkColorMap() {
-    console.log('create link color map');
     // 1) Gather
     const linkColorVariable = this.session.style.widgets['link-color-variable'];
+    console.log('create link color map: ', linkColorVariable);
     if (linkColorVariable == "None") {
       this.temp.style.linkColorMap = () => this.session.style.widgets["link-color"];
       this.temp.style.linkAlphaMap = () => 1 - this.session.style.widgets["link-opacity"];
@@ -2989,6 +2989,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       this.session.style.linkColorsTableKeys = {};
       linkColors = this.session.style.linkColorsTable[linkColorVariable] = [d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10[0]].concat(d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10.slice(2));
       this.session.style.linkColors = [d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10[0]].concat(d3__WEBPACK_IMPORTED_MODULE_1__.schemeCategory10.slice(2));
+    } else if (this.session.style.linkColors) {
+      this.session.style.linkColorsTable = {};
+      this.session.style.linkColorsTableKeys = {};
+      linkColors = this.session.style.linkColors;
     } else {
       this.session.style.linkColorsTable = {};
       this.session.style.linkColorsTableKeys = {};
