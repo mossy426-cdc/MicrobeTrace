@@ -78,41 +78,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AppModule: () => (/* binding */ AppModule),
 /* harmony export */   TestedComponent: () => (/* binding */ TestedComponent)
 /* harmony export */ });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @angular/platform-browser/animations */ 43835);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @angular/core */ 37580);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! @angular/common */ 60316);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! tslib */ 24398);
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @angular/platform-browser/animations */ 43835);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @angular/core */ 37580);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! @angular/common */ 60316);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-routing.module */ 94114);
 /* harmony import */ var _primeng_themes_lara__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @primeng/themes/lara */ 88435);
-/* harmony import */ var primeng_config__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! primeng/config */ 62746);
+/* harmony import */ var primeng_config__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! primeng/config */ 62746);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app.component */ 20092);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jquery */ 93224);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! @angular/common/http */ 46443);
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @angular/forms */ 34456);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! @angular/common/http */ 46443);
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @angular/forms */ 34456);
 /* harmony import */ var _shared_utils_utils_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/utils/utils.module */ 80907);
 /* harmony import */ var _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./golden-layout-component.service */ 39107);
 /* harmony import */ var _golden_layout_host_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./golden-layout-host.component */ 64862);
-/* harmony import */ var primeng_button__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! primeng/button */ 49136);
-/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! primeng/table */ 76676);
-/* harmony import */ var primeng_fileupload__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! primeng/fileupload */ 13209);
-/* harmony import */ var primeng_listbox__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! primeng/listbox */ 69607);
-/* harmony import */ var primeng_radiobutton__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! primeng/radiobutton */ 54665);
-/* harmony import */ var primeng_calendar__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! primeng/calendar */ 41314);
-/* harmony import */ var primeng_paginator__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! primeng/paginator */ 43157);
-/* harmony import */ var primeng_progressbar__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! primeng/progressbar */ 21416);
-/* harmony import */ var primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! primeng/confirmdialog */ 68160);
-/* harmony import */ var primeng_dropdown__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! primeng/dropdown */ 26895);
-/* harmony import */ var primeng_accordion__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! primeng/accordion */ 45206);
-/* harmony import */ var primeng_sidebar__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! primeng/sidebar */ 97196);
-/* harmony import */ var primeng_multiselect__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! primeng/multiselect */ 92159);
-/* harmony import */ var primeng_slider__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! primeng/slider */ 47763);
-/* harmony import */ var primeng_tabview__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! primeng/tabview */ 634);
-/* harmony import */ var primeng_selectbutton__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! primeng/selectbutton */ 69656);
-/* harmony import */ var primeng_tree__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! primeng/tree */ 18092);
-/* harmony import */ var primeng_dialog__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! primeng/dialog */ 16280);
-/* harmony import */ var primeng_orderlist__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! primeng/orderlist */ 60676);
+/* harmony import */ var primeng_button__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! primeng/button */ 49136);
+/* harmony import */ var primeng_table__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! primeng/table */ 76676);
+/* harmony import */ var primeng_fileupload__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! primeng/fileupload */ 13209);
+/* harmony import */ var primeng_listbox__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! primeng/listbox */ 69607);
+/* harmony import */ var primeng_radiobutton__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! primeng/radiobutton */ 54665);
+/* harmony import */ var primeng_calendar__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! primeng/calendar */ 41314);
+/* harmony import */ var primeng_paginator__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! primeng/paginator */ 43157);
+/* harmony import */ var primeng_progressbar__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! primeng/progressbar */ 21416);
+/* harmony import */ var primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! primeng/confirmdialog */ 68160);
+/* harmony import */ var primeng_dropdown__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! primeng/dropdown */ 26895);
+/* harmony import */ var primeng_accordion__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! primeng/accordion */ 45206);
+/* harmony import */ var primeng_sidebar__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! primeng/sidebar */ 97196);
+/* harmony import */ var primeng_multiselect__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! primeng/multiselect */ 92159);
+/* harmony import */ var primeng_slider__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! primeng/slider */ 47763);
+/* harmony import */ var primeng_tabview__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! primeng/tabview */ 634);
+/* harmony import */ var primeng_selectbutton__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! primeng/selectbutton */ 69656);
+/* harmony import */ var primeng_tree__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! primeng/tree */ 18092);
+/* harmony import */ var primeng_dialog__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! primeng/dialog */ 16280);
+/* harmony import */ var primeng_orderlist__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! primeng/orderlist */ 60676);
 /* harmony import */ var _microbe_trace_next_plugin_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component */ 24384);
 /* harmony import */ var _shared_common_session_app_session_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/common/session/app-session.service */ 50686);
 /* harmony import */ var _shared_common_ui_app_ui_customization_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/common/ui/app-ui-customization.service */ 69720);
@@ -125,31 +125,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _visualizationComponents_TableComponent_table_plugin_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./visualizationComponents/TableComponent/table-plugin-component */ 6811);
 /* harmony import */ var _visualizationComponents_MapComponent_map_plugin_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./visualizationComponents/MapComponent/map-plugin.component */ 15936);
 /* harmony import */ var _visualizationComponents_AlignmentViewComponent_alignment_view_plugin_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./visualizationComponents/AlignmentViewComponent/alignment-view-plugin-component */ 20944);
-/* harmony import */ var _asymmetrik_ngx_leaflet__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! @asymmetrik/ngx-leaflet */ 88355);
-/* harmony import */ var _asymmetrik_ngx_leaflet_markercluster__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! @asymmetrik/ngx-leaflet-markercluster */ 88611);
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @angular/material/button */ 84175);
-/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @angular/material/input */ 95541);
-/* harmony import */ var _angular_material_menu__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @angular/material/menu */ 31034);
-/* harmony import */ var _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @angular/material/toolbar */ 39552);
-/* harmony import */ var _angular_material_slider__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @angular/material/slider */ 64992);
+/* harmony import */ var _asymmetrik_ngx_leaflet__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! @asymmetrik/ngx-leaflet */ 88355);
+/* harmony import */ var _asymmetrik_ngx_leaflet_markercluster__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! @asymmetrik/ngx-leaflet-markercluster */ 88611);
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @angular/material/button */ 84175);
+/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @angular/material/input */ 95541);
+/* harmony import */ var _angular_material_menu__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @angular/material/menu */ 31034);
+/* harmony import */ var _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! @angular/material/toolbar */ 39552);
+/* harmony import */ var _angular_material_slider__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @angular/material/slider */ 64992);
 /* harmony import */ var _shared_dnd_directive__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @shared/dnd.directive */ 70515);
-/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @angular/material/select */ 25175);
-/* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @angular/material/icon */ 93840);
-/* harmony import */ var _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! @angular/material/progress-spinner */ 41134);
+/* harmony import */ var _angular_material_select__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @angular/material/select */ 25175);
+/* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! @angular/material/icon */ 93840);
+/* harmony import */ var _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! @angular/material/progress-spinner */ 41134);
 /* harmony import */ var _visualizationComponents_CrosstabComponent_crosstab_plugin_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./visualizationComponents/CrosstabComponent/crosstab-plugin.component */ 59972);
 /* harmony import */ var _visualizationComponents_AggregateComponent_aggregate_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./visualizationComponents/AggregateComponent/aggregate.component */ 97214);
 /* harmony import */ var _visualizationComponents_BubbleComponent_bubble_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./visualizationComponents/BubbleComponent/bubble.component */ 31884);
-/* harmony import */ var ngx_bootstrap_tooltip__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ngx-bootstrap/tooltip */ 36465);
-/* harmony import */ var ngx_bootstrap_tabs__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ngx-bootstrap/tabs */ 75119);
-/* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ngx-bootstrap/modal */ 2457);
-/* harmony import */ var ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ngx-bootstrap/dropdown */ 54195);
-/* harmony import */ var ngx_bootstrap_popover__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ngx-bootstrap/popover */ 64393);
+/* harmony import */ var ngx_bootstrap_tooltip__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ngx-bootstrap/tooltip */ 36465);
+/* harmony import */ var ngx_bootstrap_tabs__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ngx-bootstrap/tabs */ 75119);
+/* harmony import */ var ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ngx-bootstrap/modal */ 2457);
+/* harmony import */ var ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ngx-bootstrap/dropdown */ 54195);
+/* harmony import */ var ngx_bootstrap_popover__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ngx-bootstrap/popover */ 64393);
 /* harmony import */ var _visualizationComponents_GanttComponent_gantt_plugin_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./visualizationComponents/GanttComponent/gantt-plugin.component */ 10688);
 /* harmony import */ var _visualizationComponents_GanttComponent_gantt_chart_gantt_chart_component__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./visualizationComponents/GanttComponent/gantt-chart/gantt-chart.component */ 57473);
 /* harmony import */ var _visualizationComponents_GanttComponent_gantt_chart_gantt_chart_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./visualizationComponents/GanttComponent/gantt-chart/gantt-chart.service */ 15013);
 /* harmony import */ var _visualizationComponents_HeatmapComponent_heatmap_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./visualizationComponents/HeatmapComponent/heatmap.component */ 28775);
 /* harmony import */ var _visualizationComponents_WaterfallComponent_waterfall_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./visualizationComponents/WaterfallComponent/waterfall.component */ 75312);
-/* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
+/* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
+/* harmony import */ var plotly_js_dist_min__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! plotly.js-dist-min */ 44616);
+/* harmony import */ var plotly_js_dist_min__WEBPACK_IMPORTED_MODULE_28___default = /*#__PURE__*/__webpack_require__.n(plotly_js_dist_min__WEBPACK_IMPORTED_MODULE_28__);
+/* harmony import */ var angular_plotly_js__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! angular-plotly.js */ 59627);
 
 
 
@@ -226,8 +229,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import * as PlotlyJS from 'plotly.js-dist-min';
-// import { PlotlyModule } from 'angular-plotly.js';
+
+
+angular_plotly_js__WEBPACK_IMPORTED_MODULE_29__.PlotlyModule.plotlyjs = plotly_js_dist_min__WEBPACK_IMPORTED_MODULE_28__;
 // It is required to have JQuery as global in the window object.
 window['$'] = jquery__WEBPACK_IMPORTED_MODULE_3__;
 const routerOptions = {
@@ -240,24 +244,24 @@ let TestedComponent = class TestedComponent {
     this.ctorParameters = () => [];
   }
 };
-TestedComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_28__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_29__.Component)({
+TestedComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_30__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_31__.Component)({
   template: `<h1>Test2</h1>`,
   selector: `app-tested`
-}), (0,tslib__WEBPACK_IMPORTED_MODULE_28__.__metadata)("design:paramtypes", [])], TestedComponent);
+}), (0,tslib__WEBPACK_IMPORTED_MODULE_30__.__metadata)("design:paramtypes", [])], TestedComponent);
 
 let AppModule = class AppModule {};
-AppModule = (0,tslib__WEBPACK_IMPORTED_MODULE_28__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_29__.NgModule)({
+AppModule = (0,tslib__WEBPACK_IMPORTED_MODULE_30__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_31__.NgModule)({
   declarations: [_app_component__WEBPACK_IMPORTED_MODULE_2__.AppComponent, _microbe_trace_next_plugin_component__WEBPACK_IMPORTED_MODULE_7__.MicrobeTraceNextHomeComponent, _filesComponent_files_plugin_component__WEBPACK_IMPORTED_MODULE_11__.FilesComponent, _visualizationComponents_TwoDComponent_twoD_plugin_component__WEBPACK_IMPORTED_MODULE_14__.TwoDComponent, _visualizationComponents_TableComponent_table_plugin_component__WEBPACK_IMPORTED_MODULE_16__.TableComponent, _golden_layout_host_component__WEBPACK_IMPORTED_MODULE_6__.GoldenLayoutHostComponent, _visualizationComponents_MapComponent_map_plugin_component__WEBPACK_IMPORTED_MODULE_17__.MapComponent, TestedComponent, _shared_dnd_directive__WEBPACK_IMPORTED_MODULE_19__.DndDirective, _visualizationComponents_PhylogeneticComponent_phylogenetic_plugin_component__WEBPACK_IMPORTED_MODULE_12__.PhylogeneticComponent, _visualizationComponents_TimelineComponent_timeline_component_component__WEBPACK_IMPORTED_MODULE_13__.TimelineComponent, _visualizationComponents_AlignmentViewComponent_alignment_view_plugin_component__WEBPACK_IMPORTED_MODULE_18__.AlignmentViewComponent, _visualizationComponents_CrosstabComponent_crosstab_plugin_component__WEBPACK_IMPORTED_MODULE_20__.CrosstabComponent, _visualizationComponents_AggregateComponent_aggregate_component__WEBPACK_IMPORTED_MODULE_21__.AggregateComponent, _visualizationComponents_GanttComponent_gantt_chart_gantt_chart_component__WEBPACK_IMPORTED_MODULE_24__.GanttChartComponent, _visualizationComponents_GanttComponent_gantt_plugin_component__WEBPACK_IMPORTED_MODULE_23__.GanttComponent, _visualizationComponents_HeatmapComponent_heatmap_component__WEBPACK_IMPORTED_MODULE_26__.HeatmapComponent, _visualizationComponents_BubbleComponent_bubble_component__WEBPACK_IMPORTED_MODULE_22__.BubbleComponent, _visualizationComponents_WaterfallComponent_waterfall_component__WEBPACK_IMPORTED_MODULE_27__.WaterfallComponent],
-  exports: [primeng_selectbutton__WEBPACK_IMPORTED_MODULE_30__.SelectButtonModule],
+  exports: [primeng_selectbutton__WEBPACK_IMPORTED_MODULE_32__.SelectButtonModule],
   bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__.AppComponent],
-  imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_31__.BrowserModule, _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_32__.BrowserAnimationsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_33__.FormsModule, _angular_material_button__WEBPACK_IMPORTED_MODULE_34__.MatButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_35__.ButtonModule, _angular_material_input__WEBPACK_IMPORTED_MODULE_36__.MatInputModule, _angular_material_menu__WEBPACK_IMPORTED_MODULE_37__.MatMenuModule, _angular_material_slider__WEBPACK_IMPORTED_MODULE_38__.MatSliderModule, _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_39__.MatToolbarModule, _angular_material_select__WEBPACK_IMPORTED_MODULE_40__.MatSelectModule, _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_41__.MatProgressSpinnerModule, _angular_material_icon__WEBPACK_IMPORTED_MODULE_42__.MatIconModule, ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_43__.ModalModule.forRoot(), ngx_bootstrap_tooltip__WEBPACK_IMPORTED_MODULE_44__.TooltipModule.forRoot(), ngx_bootstrap_tabs__WEBPACK_IMPORTED_MODULE_45__.TabsModule.forRoot(), ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_46__.BsDropdownModule.forRoot(), ngx_bootstrap_popover__WEBPACK_IMPORTED_MODULE_47__.PopoverModule.forRoot(), primeng_fileupload__WEBPACK_IMPORTED_MODULE_48__.FileUploadModule, _app_routing_module__WEBPACK_IMPORTED_MODULE_0__.AppRoutingModule, _shared_utils_utils_module__WEBPACK_IMPORTED_MODULE_4__.UtilsModule, primeng_table__WEBPACK_IMPORTED_MODULE_49__.TableModule, primeng_listbox__WEBPACK_IMPORTED_MODULE_50__.ListboxModule, primeng_radiobutton__WEBPACK_IMPORTED_MODULE_51__.RadioButtonModule, primeng_calendar__WEBPACK_IMPORTED_MODULE_52__.CalendarModule, primeng_paginator__WEBPACK_IMPORTED_MODULE_53__.PaginatorModule, primeng_progressbar__WEBPACK_IMPORTED_MODULE_54__.ProgressBarModule, _metronic_app_core_core_module__WEBPACK_IMPORTED_MODULE_15__.CoreModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_55__.ConfirmDialogModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_56__.DropdownModule, primeng_tabview__WEBPACK_IMPORTED_MODULE_57__.TabViewModule, primeng_selectbutton__WEBPACK_IMPORTED_MODULE_30__.SelectButtonModule, primeng_tree__WEBPACK_IMPORTED_MODULE_58__.TreeModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_59__.DialogModule, primeng_accordion__WEBPACK_IMPORTED_MODULE_60__.AccordionModule, primeng_sidebar__WEBPACK_IMPORTED_MODULE_61__.SidebarModule, primeng_multiselect__WEBPACK_IMPORTED_MODULE_62__.MultiSelectModule, primeng_slider__WEBPACK_IMPORTED_MODULE_63__.SliderModule, _asymmetrik_ngx_leaflet__WEBPACK_IMPORTED_MODULE_64__.LeafletModule, _asymmetrik_ngx_leaflet_markercluster__WEBPACK_IMPORTED_MODULE_65__.LeafletMarkerClusterModule, primeng_orderlist__WEBPACK_IMPORTED_MODULE_66__.OrderListModule, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_67__.GoogleTagManagerModule.forRoot({
+  imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_33__.BrowserModule, _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_34__.BrowserAnimationsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_35__.FormsModule, _angular_material_button__WEBPACK_IMPORTED_MODULE_36__.MatButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_37__.ButtonModule, _angular_material_input__WEBPACK_IMPORTED_MODULE_38__.MatInputModule, _angular_material_menu__WEBPACK_IMPORTED_MODULE_39__.MatMenuModule, _angular_material_slider__WEBPACK_IMPORTED_MODULE_40__.MatSliderModule, _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_41__.MatToolbarModule, _angular_material_select__WEBPACK_IMPORTED_MODULE_42__.MatSelectModule, _angular_material_progress_spinner__WEBPACK_IMPORTED_MODULE_43__.MatProgressSpinnerModule, _angular_material_icon__WEBPACK_IMPORTED_MODULE_44__.MatIconModule, ngx_bootstrap_modal__WEBPACK_IMPORTED_MODULE_45__.ModalModule.forRoot(), ngx_bootstrap_tooltip__WEBPACK_IMPORTED_MODULE_46__.TooltipModule.forRoot(), ngx_bootstrap_tabs__WEBPACK_IMPORTED_MODULE_47__.TabsModule.forRoot(), ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_48__.BsDropdownModule.forRoot(), ngx_bootstrap_popover__WEBPACK_IMPORTED_MODULE_49__.PopoverModule.forRoot(), primeng_fileupload__WEBPACK_IMPORTED_MODULE_50__.FileUploadModule, _app_routing_module__WEBPACK_IMPORTED_MODULE_0__.AppRoutingModule, _shared_utils_utils_module__WEBPACK_IMPORTED_MODULE_4__.UtilsModule, primeng_table__WEBPACK_IMPORTED_MODULE_51__.TableModule, primeng_listbox__WEBPACK_IMPORTED_MODULE_52__.ListboxModule, primeng_radiobutton__WEBPACK_IMPORTED_MODULE_53__.RadioButtonModule, primeng_calendar__WEBPACK_IMPORTED_MODULE_54__.CalendarModule, primeng_paginator__WEBPACK_IMPORTED_MODULE_55__.PaginatorModule, primeng_progressbar__WEBPACK_IMPORTED_MODULE_56__.ProgressBarModule, _metronic_app_core_core_module__WEBPACK_IMPORTED_MODULE_15__.CoreModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_57__.ConfirmDialogModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_58__.DropdownModule, primeng_tabview__WEBPACK_IMPORTED_MODULE_59__.TabViewModule, primeng_selectbutton__WEBPACK_IMPORTED_MODULE_32__.SelectButtonModule, primeng_tree__WEBPACK_IMPORTED_MODULE_60__.TreeModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_61__.DialogModule, primeng_accordion__WEBPACK_IMPORTED_MODULE_62__.AccordionModule, primeng_sidebar__WEBPACK_IMPORTED_MODULE_63__.SidebarModule, primeng_multiselect__WEBPACK_IMPORTED_MODULE_64__.MultiSelectModule, primeng_slider__WEBPACK_IMPORTED_MODULE_65__.SliderModule, _asymmetrik_ngx_leaflet__WEBPACK_IMPORTED_MODULE_66__.LeafletModule, _asymmetrik_ngx_leaflet_markercluster__WEBPACK_IMPORTED_MODULE_67__.LeafletMarkerClusterModule, primeng_orderlist__WEBPACK_IMPORTED_MODULE_68__.OrderListModule, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_69__.GoogleTagManagerModule.forRoot({
     id: 'G-0MWHB1NG2M'
-  }), _angular_common__WEBPACK_IMPORTED_MODULE_68__.CommonModule],
-  providers: [(0,primeng_config__WEBPACK_IMPORTED_MODULE_69__.providePrimeNG)({
+  }), _angular_common__WEBPACK_IMPORTED_MODULE_70__.CommonModule],
+  providers: [(0,primeng_config__WEBPACK_IMPORTED_MODULE_71__.providePrimeNG)({
     theme: {
       preset: _primeng_themes_lara__WEBPACK_IMPORTED_MODULE_1__["default"]
     }
-  }), _shared_common_session_app_session_service__WEBPACK_IMPORTED_MODULE_8__.AppSessionService, _shared_common_ui_app_ui_customization_service__WEBPACK_IMPORTED_MODULE_9__.AppUiCustomizationService, _shared_common_nav_app_url_service__WEBPACK_IMPORTED_MODULE_10__.AppUrlService, _visualizationComponents_GanttComponent_gantt_chart_gantt_chart_service__WEBPACK_IMPORTED_MODULE_25__.GanttChartService, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_5__.GoldenLayoutComponentService, (0,_angular_common_http__WEBPACK_IMPORTED_MODULE_70__.provideHttpClient)((0,_angular_common_http__WEBPACK_IMPORTED_MODULE_70__.withInterceptorsFromDi)(), (0,_angular_common_http__WEBPACK_IMPORTED_MODULE_70__.withJsonpSupport)())]
+  }), _shared_common_session_app_session_service__WEBPACK_IMPORTED_MODULE_8__.AppSessionService, _shared_common_ui_app_ui_customization_service__WEBPACK_IMPORTED_MODULE_9__.AppUiCustomizationService, _shared_common_nav_app_url_service__WEBPACK_IMPORTED_MODULE_10__.AppUrlService, _visualizationComponents_GanttComponent_gantt_chart_gantt_chart_service__WEBPACK_IMPORTED_MODULE_25__.GanttChartService, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_5__.GoldenLayoutComponentService, angular_plotly_js__WEBPACK_IMPORTED_MODULE_29__.PlotlyModule, (0,_angular_common_http__WEBPACK_IMPORTED_MODULE_72__.provideHttpClient)((0,_angular_common_http__WEBPACK_IMPORTED_MODULE_72__.withInterceptorsFromDi)(), (0,_angular_common_http__WEBPACK_IMPORTED_MODULE_72__.withJsonpSupport)())]
 })], AppModule);
 
 
@@ -803,7 +807,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CommonService: () => (/* binding */ CommonService)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! rxjs */ 75797);
@@ -1737,7 +1741,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   applySession(stashObject) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       //If anything here seems eccentric, assume it's to maintain compatibility with
       //session files from older versions of MicrobeTrace.
       $("#launch").prop("disabled", true);
@@ -2047,7 +2051,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       let nn = 0,
         nl = 0;
       // ✅ Create a New Worker Before Use
-      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
       this.computer.compute_parse_csv_matrixWorker.postMessage(file.contents);
       // Convert worker messages to Observable
       const workerObservable = this.fromWorker(this.computer.compute_parse_csv_matrixWorker);
@@ -2084,7 +2088,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           this.computer.compute_parse_csv_matrixWorker.terminate();
           // ✅ Reinitialize Worker for Next Dataset
           setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
             console.log("Worker reinitialized for next dataset.");
           }, 100);
           sub.unsubscribe();
@@ -2097,7 +2101,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           sub.unsubscribe();
           // ✅ Reinitialize Worker on Error
           setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
             console.log("Worker reinitialized after error.");
           }, 100);
         }
@@ -2381,9 +2385,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         let treeObj = patristic__WEBPACK_IMPORTED_MODULE_2__.parseNewick(this.session.data['newick']);
         dm = treeObj.toMatrix();
       } else {
-        console.log(this.temp.matrix);
-        console.log(this.session.data.nodes.filter(this.hasSeq).map(d => d._id).length);
-        console.log(this.session.data.nodes.map(d => d._id).length);
         let labels = this.session.data.nodes.filter(this.hasSeq).map(d => d._id);
         labels = labels.sort();
         let metric = this.session.style.widgets['link-sort-variable'];
@@ -2399,7 +2400,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
             for (let j = 0; j < i; j++) {
               const link = row[labels[j]];
               if (link && link["distanceOrigin"] === "Genetic Distance") {
-                console.log(source + " " + labels[j]);
                 dm[i][j] = dm[j][i] = link[metric];
               } else {
                 dm[i][j] = dm[j][i] = null;
@@ -2533,7 +2533,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   }
   runHamsters() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('running hamsters');
       if (!_this2.session.style.widgets['triangulate-false']) _this2.computeTriangulation();
       // this.computeNN();
@@ -2552,7 +2552,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   finishUp() {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       clearTimeout(_this3.temp.messageTimeout);
       console.log('----- finishUp called');
       console.log('----- finishUp -- node/link fields');
@@ -3563,7 +3563,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   updateThresholdHistogram(histogram) {
     var _this4 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let width = 260,
         height = 48,
         svg = null;
@@ -4416,7 +4416,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FilesComponent: () => (/* binding */ FilesComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _files_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files-plugin.component.html?ngResource */ 96303);
 /* harmony import */ var _files_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files-plugin.component.less?ngResource */ 94908);
@@ -5518,7 +5518,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   processSequence() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.commonService.session.meta.anySequences) return _this.commonService.runHamsters();
       _this.commonService.session.data.nodeFields.push('seq');
       let subset = [];
@@ -6022,7 +6022,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   readFastas() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const fastas = _this2.commonService.session.files.filter(f => _this2.commonService.includes(f.extension, 'fas'));
       const nodeFilesWithSeqs = _this2.commonService.session.files.filter(f => f.format === "node" && f.field2 != "None" && f.field2 != "");
       if (fastas.length === 0 && nodeFilesWithSeqs.length === 0) return [];
@@ -6079,7 +6079,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
   }
   updatePreview(data) {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!data) {
         data = yield _this3.readFastas();
       }
@@ -6248,8 +6248,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoldenLayoutHostComponent: () => (/* binding */ GoldenLayoutHostComponent)
 /* harmony export */ });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! golden-layout */ 81156);
 /* harmony import */ var _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./golden-layout-component.service */ 39107);
@@ -6521,7 +6521,7 @@ let GoldenLayoutHostComponent = class GoldenLayoutHostComponent {
 GoldenLayoutHostComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_15__.Component)({
   selector: 'app-golden-layout-host',
   template: '<ng-template #componentViewContainer></ng-template>',
-  styles: [(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
+  styles: [(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
 }), (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_15__.ApplicationRef, _angular_core__WEBPACK_IMPORTED_MODULE_15__.ElementRef, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__.GoldenLayoutComponentService])], GoldenLayoutHostComponent);
 
 
@@ -7210,7 +7210,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MicrobeTraceNextHomeComponent: () => (/* binding */ MicrobeTraceNextHomeComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _microbe_trace_next_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.html?ngResource */ 99768);
 /* harmony import */ var _microbe_trace_next_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.less?ngResource */ 57087);
@@ -7636,7 +7636,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
    */
   performExport(elementsForExport = [this.visualWrapperRef.nativeElement], exportNodeTable = false, exportLinkTable = false) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!elementsForExport[0] && !exportNodeTable && !exportLinkTable) {
         console.error('Visual wrapper container not found');
         return;
@@ -7769,7 +7769,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   performExportSVG(elementsForExport, mainSVGString, exportNodeTable = false, exportLinkTable = false) {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('Exporting SVG');
       if (mainSVGString == '') {
         mainSVGString = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill: transparent;"></svg>';
@@ -10062,7 +10062,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AggregateComponent: () => (/* binding */ AggregateComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _aggregate_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./aggregate.component.html?ngResource */ 23870);
 /* harmony import */ var _aggregate_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./aggregate.component.scss?ngResource */ 11954);
@@ -10324,7 +10324,7 @@ let AggregateComponent = class AggregateComponent extends _app_base_component_di
   }
   exportVisualization() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log(_this.SelectedAggregateExportFilename + '.' + _this.SelectedAggregateExportFileType);
       if (_this.SelectedAggregateExportFileType == 'csv.zip') {
         let zip = new (jszip__WEBPACK_IMPORTED_MODULE_6___default())();
@@ -14728,24 +14728,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   HeatmapComponent: () => (/* binding */ HeatmapComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _heatmap_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./heatmap.component.html?ngResource */ 2124);
-/* harmony import */ var _heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./heatmap.component.scss?ngResource */ 72188);
-/* harmony import */ var _heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/core */ 37580);
+/* harmony import */ var _heatmap_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./heatmap.component.html?ngResource */ 2124);
+/* harmony import */ var _heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./heatmap.component.scss?ngResource */ 72188);
+/* harmony import */ var _heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
-/* harmony import */ var _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/contactTraceCommonServices/common.service */ 42107);
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! file-saver */ 85841);
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var html_to_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! html-to-image */ 15135);
-/* harmony import */ var _app_base_component_directive__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/base-component.directive */ 18784);
+/* harmony import */ var _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/contactTraceCommonServices/common.service */ 42107);
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! file-saver */ 85841);
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var html_to_image__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! html-to-image */ 15135);
+/* harmony import */ var _app_base_component_directive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/base-component.directive */ 18784);
 /* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! golden-layout */ 41735);
 /* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
-/* harmony import */ var _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../helperClasses/dialogSettings */ 63412);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash */ 46227);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/contactTraceCommonServices/export.service */ 70616);
+/* harmony import */ var _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../helperClasses/dialogSettings */ 63412);
+/* harmony import */ var angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! angular-plotly.js */ 59627);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lodash */ 46227);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @app/contactTraceCommonServices/export.service */ 70616);
 
 
 
@@ -14761,8 +14761,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let HeatmapComponent = class HeatmapComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_6__.BaseComponentDirective {
-  constructor(injector, eventManager, commonService, container, elRef, cdref, gtmService, renderer, exportService) {
+//import * as plotlyjs from 'plotly.js-dist-min';
+let HeatmapComponent = class HeatmapComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_5__.BaseComponentDirective {
+  constructor(injector, eventManager, commonService, container, elRef, cdref, gtmService, renderer, exportService, plotlyModule) {
     super(elRef.nativeElement);
     this.eventManager = eventManager;
     this.commonService = commonService;
@@ -14771,9 +14772,10 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     this.gtmService = gtmService;
     this.renderer = renderer;
     this.exportService = exportService;
-    this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_10__.EventEmitter();
+    this.plotlyModule = plotlyModule;
+    this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_9__.EventEmitter();
     this.FieldList = [];
-    this.HeatmapSettingsDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_7__.DialogSettings('#heatmap-settings-pane', false);
+    this.HeatmapSettingsDialogSettings = new _helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__.DialogSettings('#heatmap-settings-pane', false);
     this.ShowHeatmapExportPane = false;
     this.invertOptions = [{
       label: "Yes",
@@ -14817,47 +14819,43 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
       'yaxis.autorange': true
     };
     console.log(reCenter);
-    // PlotlyModule.plotlyjs.relayout("heatmap", reCenter);
+    angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule.plotlyjs.relayout("heatmap", reCenter);
   }
   ngOnInit() {
-    var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
-      // Lazy load Plotly.js when the component initializes
-      _this.Plotly = yield __webpack_require__.e(/*! import() */ 616).then(__webpack_require__.t.bind(__webpack_require__, /*! plotly.js-dist-min */ 44616, 23));
-      _this.viewActive = true;
-      _this.gtmService.pushTag({
-        event: "page_view",
-        page_location: "/heatmap",
-        page_title: "Heatmap View"
+    console.log(this.heatmapContainerRef);
+    this.viewActive = true;
+    this.gtmService.pushTag({
+      event: "page_view",
+      page_location: "/heatmap",
+      page_title: "Heatmap View"
+    });
+    this.nodeIds = this.getNodeIds();
+    this.visuals.heatmap.FieldList.push({
+      label: "None",
+      value: ""
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.commonService.session.data['nodeFields'].map((d, i) => {
+      this.visuals.heatmap.FieldList.push({
+        label: this.visuals.heatmap.commonService.capitalize(d.replace('_', '')),
+        value: d
       });
-      _this.nodeIds = _this.getNodeIds();
-      _this.visuals.heatmap.FieldList.push({
-        label: "None",
-        value: ""
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      _this.commonService.session.data['nodeFields'].map((d, i) => {
-        _this.visuals.heatmap.FieldList.push({
-          label: _this.visuals.heatmap.commonService.capitalize(d.replace('_', '')),
-          value: d
-        });
-      });
-      _this.visuals.microbeTrace.GlobalSettingsNodeColorDialogSettings.setVisibility(false);
-      _this.visuals.microbeTrace.GlobalSettingsLinkColorDialogSettings.setVisibility(false);
-      _this.goldenLayoutComponentResize();
-      _this.container.on('resize', () => {
-        _this.goldenLayoutComponentResize();
-      });
-      _this.container.on('hide', () => {
-        _this.viewActive = false;
-        _this.cdref.detectChanges();
-      });
-      _this.container.on('show', () => {
-        _this.viewActive = true;
-        _this.cdref.detectChanges();
-      });
-      _this.redrawHeatmap();
-    })();
+    });
+    //this.visuals.microbeTrace.GlobalSettingsNodeColorDialogSettings.setVisibility(false);
+    //this.visuals.microbeTrace.GlobalSettingsLinkColorDialogSettings.setVisibility(false);
+    this.goldenLayoutComponentResize();
+    this.container.on('resize', () => {
+      this.goldenLayoutComponentResize();
+    });
+    this.container.on('hide', () => {
+      this.viewActive = false;
+      this.cdref.detectChanges();
+    });
+    this.container.on('show', () => {
+      this.viewActive = true;
+      this.cdref.detectChanges();
+    });
+    this.redrawHeatmap();
   }
   drawHeatmap(xLabels, yLabels, config) {
     this.commonService.getDM().then(dm => {
@@ -14877,42 +14875,51 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
         type: 'heatmap',
         colorscale: [[0, this.loColor], [0.5, this.medColor], [1, this.hiColor]]
       }];
-      const parentElement = this.heatmapContainerRef.nativeElement.parentElement;
-      const width = parentElement.clientWidth;
-      const height = parentElement.clientHeight;
+      /*      const parentElement = this.heatmapContainerRef.nativeElement.parentElement;
+          const width = parentElement.clientWidth;
+          const height = parentElement.clientHeight;
+      */
       this.heatmapLayout = {
         xaxis: config,
         yaxis: config,
-        width: width,
-        height: height
+        width: $('#heatmap').parent().width(),
+        height: $('#heatmap').parent().height()
       };
       this.heatmapConfig = {
         displaylogo: false,
         displayModeBar: false
       };
-      this.Plotly.newPlot('heatmap', this.heatmapData, this.heatmapLayout, this.heatmapConfig);
-      // this.plot = PlotlyModule.plotlyjs.newPlot('heatmap', this.heatmapData, this.heatmapLayout, this.heatmapConfig);
+      //  this.Plotly.newPlot('heatmap', this.heatmapData, this.heatmapLayout, this.heatmapConfig);
+      this.plot = angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule.plotlyjs.newPlot('heatmap', this.heatmapData, this.heatmapLayout, this.heatmapConfig);
     });
   }
   goldenLayoutComponentResize() {
-    const heatmapElement = this.heatmapContainerRef.nativeElement;
-    const parentElement = heatmapElement.parentElement;
-    const height = parentElement.clientHeight;
-    const width = parentElement.clientWidth;
-    if (height) {
-      this.renderer.setStyle(heatmapElement, 'height', `${height - 19}px`);
-    }
-    if (width) {
-      this.renderer.setStyle(heatmapElement, 'width', `${width - 1}px`);
-    }
+    console.log(this.heatmapContainerRef);
+    const height = $('heatmapcomponent').height();
+    const width = $('heatmapcomponent').width();
+    if (height) $('#heatmap').height(height - 19);
+    if (width) $('#heatmap').width(width - 1);
+    /*    const heatmapElement = this.heatmapContainerRef.nativeElement;
+        const parentElement = heatmapElement.parentElement;
+      
+        const height = parentElement.clientHeight;
+        const width = parentElement.clientWidth;
+        if (height) {
+          this.renderer.setStyle(heatmapElement, 'height', `${height - 19}px`);
+        }
+        if (width) {
+          this.renderer.setStyle(heatmapElement, 'width', `${width - 1}px`);
+        }
+    */
   }
   getNodeIds() {
     const idSet = this.visuals.heatmap.commonService.session.data.nodes.map(x => x._id);
     return idSet;
   }
   redrawHeatmap() {
-    if (!this.heatmapContainerRef.nativeElement.length) return;
-    // if (this.plot) PlotlyModule.plotlyjs.purge('heatmap');
+    //if (!this.heatmapContainerRef.nativeElement.length) return;
+    if (!$('#heatmap').length) return;
+    if (this.plot) angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule.plotlyjs.purge('heatmap');
     const labels = this.nodeIds;
     const xLabels = labels.map(d => 'N' + d);
     const yLabels = xLabels.slice();
@@ -14928,29 +14935,37 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     this.setBackground();
   }
   setBackground() {
-    const heatmapElement = this.heatmapContainerRef.nativeElement;
+    const col = this.commonService.session.style.widgets['background-color'];
+    $('#heatmap svg.main-svg').first().css('background', col);
+    $('#heatmap rect.bg').css('fill', col);
+    const contrast = this.commonService.session.style.widgets['background-color-contrast'];
+    $('#heatmap .xtitle, .ytitle').css('fill', contrast);
+    $('#heatmap .xaxislayer-above text').css('fill', contrast);
+    $('#heatmap .yaxislayer-above text').css('fill', contrast);
+    /*const heatmapElement: HTMLElement = this.heatmapContainerRef.nativeElement;
     const col = this.commonService.session.style.widgets['background-color'];
     const contrast = this.commonService.session.style.widgets['background-color-contrast'];
+      
     // Set background color of the main SVG
     const mainSvg = heatmapElement.querySelector('svg.main-svg');
     if (mainSvg) {
       this.renderer.setStyle(mainSvg, 'background', col);
     }
-    // Set fill for rect.bg
+         // Set fill for rect.bg
     const rectBg = heatmapElement.querySelector('rect.bg');
     if (rectBg) {
       this.renderer.setStyle(rectBg, 'fill', col);
     }
-    // Set fill for titles
+         // Set fill for titles
     const titles = heatmapElement.querySelectorAll('.xtitle, .ytitle');
     titles.forEach(title => {
       this.renderer.setStyle(title, 'fill', contrast);
     });
-    // Set fill for axis layer texts
+         // Set fill for axis layer texts
     const axisTexts = heatmapElement.querySelectorAll('.xaxislayer-above text, .yaxislayer-above text');
     axisTexts.forEach(text => {
       this.renderer.setStyle(text, 'fill', contrast);
-    });
+    });*/
   }
   updateLoColor(color) {
     console.log(color);
@@ -14989,21 +15004,21 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     if (content) {
       const fixedContent = this.fixGradient(content);
       if (exportImageType === 'png') {
-        html_to_image__WEBPACK_IMPORTED_MODULE_5__.toPng(content).then(dataUrl => {
-          file_saver__WEBPACK_IMPORTED_MODULE_4__(dataUrl, fileName + "." + exportImageType);
+        html_to_image__WEBPACK_IMPORTED_MODULE_4__.toPng(content).then(dataUrl => {
+          file_saver__WEBPACK_IMPORTED_MODULE_3__(dataUrl, fileName + "." + exportImageType);
         });
       } else if (exportImageType === 'jpeg') {
-        html_to_image__WEBPACK_IMPORTED_MODULE_5__.toJpeg(content, {
+        html_to_image__WEBPACK_IMPORTED_MODULE_4__.toJpeg(content, {
           quality: 0.85
         }).then(dataUrl => {
-          file_saver__WEBPACK_IMPORTED_MODULE_4__(dataUrl, fileName + "." + exportImageType);
+          file_saver__WEBPACK_IMPORTED_MODULE_3__(dataUrl, fileName + "." + exportImageType);
         });
       } else if (exportImageType === 'svg') {
         const svgContent = this.exportService.unparseSVG(fixedContent);
         const blob = new Blob([svgContent], {
           type: 'image/svg+xml;charset=utf-8'
         });
-        file_saver__WEBPACK_IMPORTED_MODULE_4__(blob, fileName + "." + exportImageType);
+        file_saver__WEBPACK_IMPORTED_MODULE_3__(blob, fileName + "." + exportImageType);
       }
     }
   }
@@ -15016,7 +15031,7 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
   }
   saveDistanceMatrix() {
     const fileName = this.SelectedDistanceMatrixFilenameVariable;
-    const labelArray = (0,lodash__WEBPACK_IMPORTED_MODULE_8__.cloneDeep)(this.heatmapLabels);
+    const labelArray = (0,lodash__WEBPACK_IMPORTED_MODULE_7__.cloneDeep)(this.heatmapLabels);
     this.commonService.getDM().then(dm => {
       let csvContent = "data:text/csv;charset=utf-8,";
       if (this.heatmapShowLabels) {
@@ -15029,53 +15044,55 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
       } else {
         csvContent += dm.map(e => e.join(",")).join("\n");
       }
-      file_saver__WEBPACK_IMPORTED_MODULE_4__(csvContent, fileName);
+      file_saver__WEBPACK_IMPORTED_MODULE_3__(csvContent, fileName);
     });
   }
   static {
     this.ctorParameters = () => [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Injector
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.Injector
     }, {
       type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__.EventManager
     }, {
-      type: _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService
+      type: _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__.CommonService
     }, {
       type: golden_layout__WEBPACK_IMPORTED_MODULE_12__.ComponentContainer,
       decorators: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Inject,
-        args: [_app_base_component_directive__WEBPACK_IMPORTED_MODULE_6__.BaseComponentDirective.GoldenLayoutContainerInjectionToken]
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.Inject,
+        args: [_app_base_component_directive__WEBPACK_IMPORTED_MODULE_5__.BaseComponentDirective.GoldenLayoutContainerInjectionToken]
       }]
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ElementRef
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.ElementRef
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ChangeDetectorRef
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.ChangeDetectorRef
     }, {
       type: angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_13__.GoogleTagManagerService
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Renderer2
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.Renderer2
     }, {
-      type: _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_9__.ExportService
+      type: _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_8__.ExportService
+    }, {
+      type: angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule
     }];
   }
   static {
     this.propDecorators = {
       heatmapContainerRef: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ViewChild,
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.ViewChild,
         args: ['heatmapContainer', {
-          read: _angular_core__WEBPACK_IMPORTED_MODULE_10__.ElementRef
+          read: _angular_core__WEBPACK_IMPORTED_MODULE_9__.ElementRef
         }]
       }],
       DisplayGlobalSettingsDialogEvent: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_10__.Output
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_9__.Output
       }]
     };
   }
 };
-HeatmapComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_14__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_10__.Component)({
+HeatmapComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_14__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_9__.Component)({
   selector: 'HeatmapComponent',
-  template: _heatmap_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__,
-  styles: [(_heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2___default())]
-}), (0,tslib__WEBPACK_IMPORTED_MODULE_14__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_10__.Injector, _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__.EventManager, _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService, golden_layout__WEBPACK_IMPORTED_MODULE_12__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_10__.ElementRef, _angular_core__WEBPACK_IMPORTED_MODULE_10__.ChangeDetectorRef, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_13__.GoogleTagManagerService, _angular_core__WEBPACK_IMPORTED_MODULE_10__.Renderer2, _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_9__.ExportService])], HeatmapComponent);
+  template: _heatmap_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__,
+  styles: [(_heatmap_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default())]
+}), (0,tslib__WEBPACK_IMPORTED_MODULE_14__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_9__.Injector, _angular_platform_browser__WEBPACK_IMPORTED_MODULE_11__.EventManager, _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__.CommonService, golden_layout__WEBPACK_IMPORTED_MODULE_12__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_9__.ElementRef, _angular_core__WEBPACK_IMPORTED_MODULE_9__.ChangeDetectorRef, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_13__.GoogleTagManagerService, _angular_core__WEBPACK_IMPORTED_MODULE_9__.Renderer2, _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_8__.ExportService, angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule])], HeatmapComponent);
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 (function (HeatmapComponent) {
@@ -18758,7 +18775,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TwoDComponent: () => (/* binding */ TwoDComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./twoD-plugin.component.html?ngResource */ 13336);
 /* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./twoD-plugin.component.scss?ngResource */ 68550);
@@ -19349,7 +19366,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     });
   }
   precomputePositionsWithD3(nodes, links) {
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD precomputePositionsWithD3 called links: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(links), 'nodes: ', nodes);
       const simulation = d3__WEBPACK_IMPORTED_MODULE_4__.forceSimulation(nodes).force('charge', d3__WEBPACK_IMPORTED_MODULE_4__.forceManyBody().strength(-30)).force('link', d3__WEBPACK_IMPORTED_MODULE_4__.forceLink(links).id(d => d.id).distance(50)).force('center', d3__WEBPACK_IMPORTED_MODULE_4__.forceCenter(0, 0)).stop(); // Stop auto-stepping so we can control the ticks manually
       const maxTicks = 300;
@@ -20866,7 +20883,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   _rerender(timelineTick = false) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD DATA network rerender');
       // If the network is in the middle of rendering, don't rerender
       if (_this.commonService.session.network.rendering) return;
