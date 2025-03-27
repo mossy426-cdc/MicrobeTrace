@@ -8247,7 +8247,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       this.commonService.session.style.widgets["link-show-nn"] = false;
       this.commonService.setLinkVisibility(true);
       this.commonService.updateNetworkVisuals(true);
-      this.store.setLinkThreshold(this.SelectedLinkThresholdVariable);
+      this.store.setLinkThreshold(this.SelectedLinkThresholdVariable - 0.000001);
       this.commonService.onStatisticsChanged("Show");
     } else {
       this.SelectedEpsilonValue = Math.pow(10, this.widgets['filtering-epsilon']).toPrecision(3);
@@ -8261,7 +8261,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
         console.log('link after computeMST: ', this.commonService.session.data.links.filter(link => link.source === "MZ798055" && link.target === "MZ375596"));
         this.commonService.setLinkVisibility(true);
         this.commonService.updateNetworkVisuals(true);
-        this.store.setLinkThreshold(this.SelectedLinkThresholdVariable);
+        this.store.setLinkThreshold(this.SelectedLinkThresholdVariable + 0.000001);
         console.log('onlink compute mst');
         this.onLinkColorTableChanged();
         // TODO:: David is this needed?
