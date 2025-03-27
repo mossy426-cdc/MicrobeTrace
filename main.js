@@ -807,7 +807,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CommonService: () => (/* binding */ CommonService)
 /* harmony export */ });
-/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! rxjs */ 75797);
@@ -1448,14 +1448,13 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   addLink(newLink, check = true) {
     if (newLink.source === "MZ745515" && newLink.target === "MZ712879") {
       console.log('new link 1: ', JSON.stringify(newLink));
-      // console.log('new link 2: ', JSON.stringify(newLink));
-    }
-    if (newLink.source === "MZ712879" && newLink.target === "MZ745515") {
-      console.log('new link 2: ', JSON.stringify(newLink));
-      // console.log('new link 2: ', JSON.stringify(newLink));
     }
     const serv = this;
     const matrix = serv.temp.matrix;
+    if (newLink.source === "MZ712879" && newLink.target === "MZ745515" || newLink.source === "MZ745515" && newLink.target === "MZ712879") {
+      console.log('new link 111: ', JSON.stringify(newLink));
+    }
+    // Trim ids to remove whitespace
     if (typeof newLink.source == 'number') {
       newLink.source = newLink.source.toString().trim();
     } else {
@@ -1472,11 +1471,16 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     if (!matrix[newLink.target]) {
       matrix[newLink.target] = {};
     }
+    // If source and target are the same, don't add the link
     if (newLink.source == newLink.target) return 0;
+    const ids = [newLink.source, newLink.target].sort();
+    const id = `${ids[0]}-${ids[1]}`;
     let linkIsNew = 1;
     const sdlinks = serv.session.data.links;
     if (matrix[newLink.source][newLink.target]) {
       const oldLink = matrix[newLink.source][newLink.target];
+      // Ensure id is consistent during merge ---
+      newLink.id = oldLink.id || id; // Prefer existing ID
       let myorigin = this.uniq(newLink.origin.concat(oldLink.origin));
       // console.log(JSON.stringify(myorigin));
       // Ensure no empty origins
@@ -1505,6 +1509,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         if (this.session.style.widgets['link-origin-array-order'].length == 0) {
           this.session.style.widgets['link-origin-array-order'] = oldLink.origin;
         }
+        if (oldLink.origin.length > 1) {
+          newLink.hasDistance = true;
+        }
         if (this.debugMode) {
           console.log('old link array order: ', this.session.style.widgets['link-origin-array-order']);
         }
@@ -1513,9 +1520,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           console.log('old link origin: ', oldLink.origin);
         }
       }
-      // TODO remove when confident this function never causes issues - used to debug easier
-      // Object.assign(oldLink, newLink);
-      // Object.assign(newLink, oldLink);
       if (newLink["bidirectional"]) {
         oldLink["bidirectional"] = true;
       }
@@ -1523,13 +1527,20 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     } else if (serv.temp.matrix[newLink.target][newLink.source]) {
       console.warn("This scope should be unreachable. If you're using this code, something's wrong.");
       const oldLink = matrix[newLink.target][newLink.source];
+      // Ensure id is consistent during merge ---
+      newLink.id = oldLink.id || id; // Prefer existing ID
       const origin = this.uniq(newLink.origin.concat(oldLink.origin));
+      if (origin.length > 1) {
+        newLink.hasDistance = true;
+      }
       Object.assign(oldLink, newLink, {
         origin: origin
       });
       linkIsNew = 0;
     } else {
-      if (newLink.hasDistance) {
+      // Assign stableId to the new link object ---
+      newLink.id = id;
+      if (newLink.hasDistance || newLink.origin.length > 1) {
         newLink = Object.assign({
           index: sdlinks.length,
           source: "",
@@ -1558,6 +1569,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     }
     if (newLink.origin.length > 1 && (!this.session.style.widgets['link-origin-array-order'] || this.session.style.widgets['link-origin-array-order'].length == 0)) {
       this.session.style.widgets['link-origin-array-order'] = newLink.origin;
+    }
+    if (newLink.source === "MZ712879" && newLink.target === "MZ745515" || newLink.source === "MZ745515" && newLink.target === "MZ712879") {
+      console.log('new link 222: ', JSON.stringify(newLink));
     }
     return linkIsNew;
     // TODO Remove when not needed
@@ -1741,7 +1755,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   applySession(stashObject) {
     var _this = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       //If anything here seems eccentric, assume it's to maintain compatibility with
       //session files from older versions of MicrobeTrace.
       $("#launch").prop("disabled", true);
@@ -2051,7 +2065,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       let nn = 0,
         nl = 0;
       // ✅ Create a New Worker Before Use
-      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
       this.computer.compute_parse_csv_matrixWorker.postMessage(file.contents);
       // Convert worker messages to Observable
       const workerObservable = this.fromWorker(this.computer.compute_parse_csv_matrixWorker);
@@ -2088,7 +2102,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           this.computer.compute_parse_csv_matrixWorker.terminate();
           // ✅ Reinitialize Worker for Next Dataset
           setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
             console.log("Worker reinitialized for next dataset.");
           }, 100);
           sub.unsubscribe();
@@ -2101,7 +2115,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           sub.unsubscribe();
           // ✅ Reinitialize Worker on Error
           setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
             console.log("Worker reinitialized after error.");
           }, 100);
         }
@@ -2533,7 +2547,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   }
   runHamsters() {
     var _this2 = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('running hamsters');
       if (!_this2.session.style.widgets['triangulate-false']) _this2.computeTriangulation();
       // this.computeNN();
@@ -2552,7 +2566,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   finishUp() {
     var _this3 = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       clearTimeout(_this3.temp.messageTimeout);
       console.log('----- finishUp called');
       console.log('----- finishUp -- node/link fields');
@@ -2980,7 +2994,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       this.temp.style.linkAlphaMap = () => 1 - this.session.style.widgets["link-opacity"];
       return [];
     }
-    const links = this.session.data.links;
+    const links = this.getVisibleLinks();
     let linkColors;
     if (this.session.style.linkColorsTable && this.session.style.linkColorsTable[linkColorVariable]) {
       linkColors = this.session.style.linkColorsTable[linkColorVariable];
@@ -3026,13 +3040,33 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     // If you store your “polygonGroups” in this.temp, do:
     if (!this.temp.polygonGroups || !this.session.style.widgets['polygons-color-show']) {
       this.temp.style.polygonColorMap = () => this.session.style.widgets['polygon-color'];
-      return [];
+      // return [];
     }
-    const polygonGroups = this.temp.polygonGroups || [];
-    const polygonColors = this.session.style.polygonColors;
+    // If this.session.style.widgets['polygons-color-show', we need 
+    let polygonGroups = this.temp.polygonGroups || [];
+    let polygonColors = this.session.style.polygonColors;
+    if (!polygonColors || polygonColors.length === 0) {
+      polygonColors = ['#bbccee', '#cceeff', '#ccddaa', '#eeeebb', '#ffcccc', '#dddddd'];
+    }
     const polygonAlphas = this.session.style.polygonAlphas;
-    console.log('--- polygonGroups: ', polygonGroups);
-    console.log('--- polygonColors: ', polygonGroups);
+    // If polygonGroups length is 0 but polygons-color-show is true, we need to create the groups via going through the visible nodes, and grouping them by cluster id in the format { key: clusterId, values: [nodeId1, nodeId2, ...] }
+    if (polygonGroups.length === 0 && this.session.style.widgets['polygons-color-show']) {
+      // Create the groups by going through visible nodes, and creating the keys of the group by the unique values of node['polygon-foci']
+      const groupMap = new Map();
+      this.getVisibleNodes().forEach(node => {
+        const polygonFoci = node['polygon-foci'];
+        if (!groupMap.has(polygonFoci)) {
+          groupMap.set(polygonFoci, []);
+        }
+        groupMap.get(polygonFoci).push(node);
+      });
+      polygonGroups = Array.from(groupMap.entries()).map(([key, values]) => ({
+        key,
+        values: values.map(node => node.id)
+      }));
+      this.temp.polygonGroups = polygonGroups;
+      this.session.style.widgets['polygon-color-table-visible'] = true;
+    }
     const result = this.colorMappingService.createPolygonColorMap(polygonGroups, polygonColors, polygonAlphas, this.debugMode);
     this.temp.style.polygonColorMap = result.colorMap;
     this.temp.style.polygonAlphaMap = result.alphaMap;
@@ -3432,18 +3466,21 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       console.log(`Setting Link Visibility with ${metric} ${threshold} ${showNN}`);
     }
     //log all links that are visible and their origin
-    console.log('--- visible links1: ', links.filter(l => l.visible));
+    console.log('--- visible links1: ', lodash__WEBPACK_IMPORTED_MODULE_4__.cloneDeep(links.filter(l => l.visible)));
     for (let i = 0; i < n; i++) {
       // console.log('---setting link vis: ', links[i]);
       const link = links[i];
-      if (link.source === "MZ745515" && link.target === "MZ712879" || link.source === "MZ712879" && link.target === "MZ745515") {
-        console.log('-----link is : ', lodash__WEBPACK_IMPORTED_MODULE_4__.cloneDeep(link));
+      if (link.source === "MZ712879" && link.target === "MZ745515" || link.source === "MZ745515" && link.target === "MZ712879") {
+        console.log('new link 111: ', JSON.stringify(link));
       }
       let visible = true;
       let overrideNN = false;
       // Add back the distance origin if it was removed and the link has distance to it
-      if (link.hasDistance && !link.origin.includes(link.distanceOrigin)) {
+      if (link.distanceOrigin && !link.origin.includes(link.distanceOrigin)) {
         link.origin.push(link.distanceOrigin);
+      }
+      if (link.nn) {
+        console.log('-----link is nn: ', lodash__WEBPACK_IMPORTED_MODULE_4__.cloneDeep(link));
       }
       // No distance value
       if (link[metric] == null) {
@@ -3515,9 +3552,12 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         link.origin = this.session.style.widgets['link-origin-array-order'];
       }
       link.visible = visible;
+      if (link.source === "MZ712879" && link.target === "MZ745515" || link.source === "MZ745515" && link.target === "MZ712879") {
+        console.log('new link 222: ', JSON.stringify(link));
+      }
     }
     //log all links that are visible and their origin
-    console.log('--- visible links: ', links.filter(l => l.visible));
+    console.log('--- visible links: ', lodash__WEBPACK_IMPORTED_MODULE_4__.cloneDeep(links.filter(l => l.visible)));
     if (!silent) {
       // console.log('---triggering link-visibility');
       // $(document).trigger("link-visibility");
@@ -3563,7 +3603,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   updateThresholdHistogram(histogram) {
     var _this4 = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let width = 260,
         height = 48,
         svg = null;
@@ -4416,7 +4456,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FilesComponent: () => (/* binding */ FilesComponent)
 /* harmony export */ });
-/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _files_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files-plugin.component.html?ngResource */ 96303);
 /* harmony import */ var _files_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files-plugin.component.less?ngResource */ 94908);
@@ -5518,7 +5558,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   processSequence() {
     var _this = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.commonService.session.meta.anySequences) return _this.commonService.runHamsters();
       _this.commonService.session.data.nodeFields.push('seq');
       let subset = [];
@@ -6022,7 +6062,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   readFastas() {
     var _this2 = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const fastas = _this2.commonService.session.files.filter(f => _this2.commonService.includes(f.extension, 'fas'));
       const nodeFilesWithSeqs = _this2.commonService.session.files.filter(f => f.format === "node" && f.field2 != "None" && f.field2 != "");
       if (fastas.length === 0 && nodeFilesWithSeqs.length === 0) return [];
@@ -6079,7 +6119,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
   }
   updatePreview(data) {
     var _this3 = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!data) {
         data = yield _this3.readFastas();
       }
@@ -6248,8 +6288,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoldenLayoutHostComponent: () => (/* binding */ GoldenLayoutHostComponent)
 /* harmony export */ });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
-/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! golden-layout */ 81156);
 /* harmony import */ var _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./golden-layout-component.service */ 39107);
@@ -6521,7 +6561,7 @@ let GoldenLayoutHostComponent = class GoldenLayoutHostComponent {
 GoldenLayoutHostComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_15__.Component)({
   selector: 'app-golden-layout-host',
   template: '<ng-template #componentViewContainer></ng-template>',
-  styles: [(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
+  styles: [(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
 }), (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_15__.ApplicationRef, _angular_core__WEBPACK_IMPORTED_MODULE_15__.ElementRef, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__.GoldenLayoutComponentService])], GoldenLayoutHostComponent);
 
 
@@ -7210,7 +7250,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MicrobeTraceNextHomeComponent: () => (/* binding */ MicrobeTraceNextHomeComponent)
 /* harmony export */ });
-/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _microbe_trace_next_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.html?ngResource */ 99768);
 /* harmony import */ var _microbe_trace_next_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.less?ngResource */ 57087);
@@ -7453,10 +7493,26 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     this.exportService.exportSVG$.subscribe(info => {
       this.performExportSVG(info.element, info.mainSVGString, info.exportNodeTable, info.exportLinkTable);
     });
-    this.store.networkUpdated$.subscribe(loaded => {
-      console.log('--- nework updated: ', loaded);
-      if (loaded && !this.store.settingsLoadedValue) {
-        this.loadUISettings();
+    this.store.networkUpdated$.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_18__.takeUntil)(this.destroy$)) // Add takeUntil for proper cleanup
+    .subscribe(isUpdated => {
+      console.log('--- networkUpdated$ subscription triggered:', isUpdated);
+      if (isUpdated) {
+        // Case 1: Initial UI settings load after first network update
+        if (!this.store.settingsLoadedValue) {
+          console.log('--- Loading UI settings as settingsLoadedValue is false ---');
+          this.loadUISettings();
+          // After loading UI settings, check if table needs immediate regeneration
+          if (this.GlobalSettingsLinkColorDialogSettings.isVisible && this.SelectedColorLinksByVariable !== 'None') {
+            console.log('--- Regenerating Link Color Table after initial UI load ---');
+            this.generateNodeLinkTable('#link-color-table');
+          }
+        }
+        // Case 2: Subsequent network updates (e.g., from threshold change)
+        // Regenerate table only if UI settings are already loaded AND table should be visible/relevant
+        else if (this.store.settingsLoadedValue && this.GlobalSettingsLinkColorDialogSettings.isVisible && this.SelectedColorLinksByVariable !== 'None') {
+          console.log('--- Regenerating Link Color Table due to network update (settings already loaded) ---');
+          this.generateNodeLinkTable('#link-color-table');
+        }
       }
     });
     // Subscribe to network rendered
@@ -7625,9 +7681,11 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       this.commonService.session.tabLoaded = true;
       this.commonService.session.network.isFullyLoaded = true;
       this.setActiveTabProperties();
+      // logpolygon color sh
       if (!this.store.settingsLoadedValue) {
         console.log('--- GOLDEN LAYOUT COMPONENT filter settings');
         this.loadFilterSettings();
+        console.log('--- polygon color show33: ', this.commonService.session.style.widgets['polygons-color-show']);
       }
     });
   }
@@ -7636,7 +7694,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
    */
   performExport(elementsForExport = [this.visualWrapperRef.nativeElement], exportNodeTable = false, exportLinkTable = false) {
     var _this = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!elementsForExport[0] && !exportNodeTable && !exportLinkTable) {
         console.error('Visual wrapper container not found');
         return;
@@ -7769,7 +7827,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   performExportSVG(elementsForExport, mainSVGString, exportNodeTable = false, exportLinkTable = false) {
     var _this2 = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('Exporting SVG');
       if (mainSVGString == '') {
         mainSVGString = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill: transparent;"></svg>';
@@ -8696,17 +8754,17 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     if (!this.GlobalSettingsNodeColorDialogSettings.isVisible) {
       console.log('on color nodes by changed - visible: ', this.SelectedColorNodesByVariable);
       // TODO::David you added  "&& this.checkActiveView('node')" below which makes it not dispaly in twoD network
-      // if (this.SelectedColorNodesByVariable != "None") {
-      //     this.SelectedNodeColorTableTypesVariable = 'Show';
-      //     this.GlobalSettingsNodeColorDialogSettings.setVisibility(true);
-      //     this.cachedGlobalSettingsNodeColorVisibility = this.GlobalSettingsNodeColorDialogSettings.isVisible;
-      //     const prevColorNodesByVariable = this.SelectedColorNodesByVariable;
-      //     // this reset to false to trigger showing the node color table
-      //     this.ShowGlobalSettingsNodeColorTable = false;
-      //     // this detect changes leads to SelectedColorNodesByVariable being set to default value when loading MT files that have both 2D and map view
-      //     this.cdref.detectChanges();
-      //     if (prevColorNodesByVariable != this.SelectedColorNodesByVariable) this.SelectedColorNodesByVariable = prevColorNodesByVariable;
-      // }
+      if (this.SelectedColorNodesByVariable != "None") {
+        this.SelectedNodeColorTableTypesVariable = 'Show';
+        this.GlobalSettingsNodeColorDialogSettings.setVisibility(true);
+        this.cachedGlobalSettingsNodeColorVisibility = this.GlobalSettingsNodeColorDialogSettings.isVisible;
+        const prevColorNodesByVariable = this.SelectedColorNodesByVariable;
+        // this reset to false to trigger showing the node color table
+        this.ShowGlobalSettingsNodeColorTable = false;
+        // this detect changes leads to SelectedColorNodesByVariable being set to default value when loading MT files that have both 2D and map view
+        this.cdref.detectChanges();
+        if (prevColorNodesByVariable != this.SelectedColorNodesByVariable) this.SelectedColorNodesByVariable = prevColorNodesByVariable;
+      }
     }
     this.commonService.session.style.widgets["node-color-variable"] = this.SelectedColorNodesByVariable;
     console.log('on color nodes by changed5 - visible: ', this.SelectedColorNodesByVariable);
@@ -9642,6 +9700,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       console.log('--- viewClick: ', viewName);
       console.log(this.commonService.session.style.widgets['link-threshold']);
       console.log('homepage tabs: ', this.homepageTabs);
+      console.log('--- polygon color show11: ', this.commonService.session.style.widgets['polygons-color-show']);
     }
     if (viewName == "2d network") {
       viewName = "2D Network";
@@ -10062,7 +10121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AggregateComponent: () => (/* binding */ AggregateComponent)
 /* harmony export */ });
-/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _aggregate_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./aggregate.component.html?ngResource */ 23870);
 /* harmony import */ var _aggregate_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./aggregate.component.scss?ngResource */ 11954);
@@ -10324,7 +10383,7 @@ let AggregateComponent = class AggregateComponent extends _app_base_component_di
   }
   exportVisualization() {
     var _this = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log(_this.SelectedAggregateExportFilename + '.' + _this.SelectedAggregateExportFileType);
       if (_this.SelectedAggregateExportFileType == 'csv.zip') {
         let zip = new (jszip__WEBPACK_IMPORTED_MODULE_6___default())();
@@ -18775,7 +18834,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TwoDComponent: () => (/* binding */ TwoDComponent)
 /* harmony export */ });
-/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./twoD-plugin.component.html?ngResource */ 13336);
 /* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./twoD-plugin.component.scss?ngResource */ 68550);
@@ -19366,7 +19425,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     });
   }
   precomputePositionsWithD3(nodes, links) {
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD precomputePositionsWithD3 called links: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(links), 'nodes: ', nodes);
       const simulation = d3__WEBPACK_IMPORTED_MODULE_4__.forceSimulation(nodes).force('charge', d3__WEBPACK_IMPORTED_MODULE_4__.forceManyBody().strength(-30)).force('link', d3__WEBPACK_IMPORTED_MODULE_4__.forceLink(links).id(d => d.id).distance(50)).force('center', d3__WEBPACK_IMPORTED_MODULE_4__.forceCenter(0, 0)).stop(); // Stop auto-stepping so we can control the ticks manually
       const maxTicks = 300;
@@ -20883,7 +20942,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   _rerender(timelineTick = false) {
     var _this = this;
-    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD DATA network rerender');
       // If the network is in the middle of rendering, don't rerender
       if (_this.commonService.session.network.rendering) return;
@@ -20920,20 +20979,12 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
           links: _this.commonService.getVisibleLinks()
         };
       }
-      console.log('--- TwoD networkDataL: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
-      console.log('--- TwoD networkDataN: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.nodes));
-      networkData.nodes.forEach(node => {
-        node.id = node._id.toString();
-      });
-      networkData.links.forEach((link, i) => {
-        // Set a unique link id if desired
-        link.id = i.toString(); // or link.index.toString()
-        // console.log('--- TwoD link: ', link.source);
+      // Need to convert source and target to string ids for cytoscape
+      networkData.links.forEach(link => {
         // If link.source is an object, grab its _id and convert to string
         if (typeof link.source === 'object') {
           link.source = link.source._id.toString();
         }
-        // console.log('--- TwoD link: ', link.source);
         // Same for link.target
         if (typeof link.target === 'object') {
           link.target = link.target._id.toString();
@@ -20942,25 +20993,6 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       console.log('--- TwoD networkDataL 2: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
       console.log('--- TwoD networkDataN 2: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.nodes));
       const nodeIds = new Set(networkData.nodes.map(n => n.id));
-      const nodeIds2 = new Set(_this.commonService.session.data.nodes.map(n => n.id));
-      // if nodeids 2 includes 30576_KF773440_B96cl58
-      if (nodeIds2.has('30576_KF773440_B96cl58')) {
-        console.log('--- TwoD nodeIds2 includes 30576_KF773440_B96cl58');
-      } else {
-        console.log('--- TwoD nodeIds2 does not include 30576_KF773440_B96cl58');
-      }
-      networkData.links.forEach(link => {
-        if (!nodeIds.has(link.source)) {
-          console.warn('Link source not found in nodes:', link.source, link);
-        }
-        if (!nodeIds.has(link.target)) {
-          console.warn('Link target not found in nodes:', link.target, link);
-        }
-      });
-      console.log('--- TwoD networkData: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
-      // 2. Precompute positions with D3 (only if nodes/links have changed)
-      //    This assumes your precomputePositionsWithD3 function returns an object with
-      //    { nodes: laidOutNodes, links: laidOutLinks } where each node has x and y computed.
       // Instead of calling synchronously, await the precomputation:
       const {
         nodes: laidOutNodes,
@@ -20971,23 +21003,24 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       networkData.nodes = laidOutNodes;
       networkData.links = laidOutLinks;
       networkData.links.forEach((link, i) => {
-        // Set a unique link id if desired
-        link.id = i.toString(); // or link.index.toString()
-        // console.log('--- TwoD link: ', link.source);
         // If link.source is an object, grab its _id and convert to string
         if (typeof link.source === 'object') {
           link.source = link.source._id.toString();
         }
-        // console.log('--- TwoD link: ', link.source);
         // Same for link.target
         if (typeof link.target === 'object') {
           link.target = link.target._id.toString();
         }
       });
+      networkData.links.forEach(link => {
+        if (!nodeIds.has(link.source)) {
+          console.warn('Link source not found in nodes:', link.source, link);
+        }
+        if (!nodeIds.has(link.target)) {
+          console.warn('Link target not found in nodes:', link.target, link);
+        }
+      });
       console.log('--- TwoD networkData after precompute1: ', lodash__WEBPACK_IMPORTED_MODULE_6__.cloneDeep(networkData.links));
-      console.log('--- TwoD laidOutLinks: ', laidOutLinks);
-      console.log('--- TwoD laidOutNodes: ', laidOutNodes);
-      console.log('link threshold network links: ', networkData.links.length);
       console.log('link threhold network links: ', networkData.links.length);
       // Determine autoFit based on node-timeline-variable
       if (networkData.nodes.length !== 0) {
@@ -21076,10 +21109,20 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
         _this.cy.one('layoutstop', () => {
           const endTime = performance.now();
           console.log(`✅ Cytoscape layout done in ${(endTime - startTime).toFixed(2)}ms`);
+          console.log('twod 1 polygons show: ', _this.widgets['polygons-show']);
           // Update polygons to show if they should be
-          if (_this.widgets['polygons-show']) {
+          if (_this.commonService.session.style.widgets['polygons-show']) {
+            console.log('twod 2323 polygons color show: ', _this.commonService.session.style.widgets['polygons-color-show']);
             _this.polygonsToggle(true);
-            _this.centerPolygons(_this.widgets['polygons-foci']);
+            _this.centerPolygons(_this.commonService.session.style.widgets['polygons-foci']);
+            console.log('twod 11 polygons color show: ', _this.commonService.session.style.widgets['polygons-color-show']);
+            if (_this.commonService.session.style.widgets['polygons-color-show']) {
+              _this.commonService.session.style.widgets['polygon-color-table-visible'] = true;
+              _this.onPolygonColorTableChange(true);
+              // this.polygonColorsToggle(this.widgets['polygon-color-table-visible'])
+              // this.updateGroupNodeColors();
+              console.log('twod 2polygons show: ', _this.commonService.session.style.widgets['polygon-color-table-visible']);
+            }
           }
           // Mark as rendered
           _this.store.setNetworkRendered(true);
@@ -21812,9 +21855,9 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     this.SelectedPolygonLabelOrientationVariable = this.widgets['polygon-label-orientation'];
     this.onPolygonLabelOrientationChange(this.SelectedPolygonLabelOrientationVariable);
     this.polygonsToggle(this.widgets['polygons-show']);
-    if (this.widgets['polygons-show']) {
+    if (this.commonService.session.style.widgets['polygons-show']) {
       this.updatePolygonColors();
-      this.polygonColorsToggle(this.widgets['polygon-color-table-visible']);
+      this.polygonColorsToggle(this.commonService.session.style.widgets['polygon-color-table-visible']);
       this.updateGroupNodeColors();
     }
     //Nodes|Label
