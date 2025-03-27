@@ -1034,7 +1034,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         "link-width-max": 27,
         "link-width-min": 3,
         'link-width-variable': 'None',
-        'link-width-reciprocal': true,
+        'link-width-reciprocal': false,
         'link-origin-array-order': [],
         'map-basemap-show': true,
         'map-collapsing-on': true,
@@ -21346,10 +21346,10 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   onLinkWidthReciprocalNonReciprocalChange(e) {
     if (e == "Reciprocal") {
       this.widgets['link-width-reciprocal'] = true;
-      // this.scaleLinkWidth();
+      this.scaleLinkWidth();
     } else {
       this.widgets['link-width-reciprocal'] = false;
-      // this.scaleLinkWidth();
+      this.scaleLinkWidth();
     }
   }
   /**
