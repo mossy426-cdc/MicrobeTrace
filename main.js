@@ -807,7 +807,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CommonService: () => (/* binding */ CommonService)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! rxjs */ 75797);
@@ -1238,8 +1238,8 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     this.temp = this.tempSkeleton();
     this.session = this.sessionSkeleton();
     this.hasSeq = x => {
-      if (!x.seq) return false;
-      if (x.seq.includes("a") || x.seq.includes("c") || x.seq.includes("g") || x.seq.includes("t")) {
+      console.log(x);
+      if (x.seq && (x.seq.includes("a") || x.seq.includes("c") || x.seq.includes("g") || x.seq.includes("t") || x.seq.includes("A") || x.seq.includes("C") || x.seq.includes("G") || x.seq.includes("T"))) {
         return true;
       }
       return false;
@@ -1775,7 +1775,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   applySession(stashObject) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       //If anything here seems eccentric, assume it's to maintain compatibility with
       //session files from older versions of MicrobeTrace.
       $("#launch").prop("disabled", true);
@@ -2085,7 +2085,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       let nn = 0,
         nl = 0;
       // ✅ Create a New Worker Before Use
-      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
       this.computer.compute_parse_csv_matrixWorker.postMessage(file.contents);
       // Convert worker messages to Observable
       const workerObservable = this.fromWorker(this.computer.compute_parse_csv_matrixWorker);
@@ -2122,7 +2122,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           this.computer.compute_parse_csv_matrixWorker.terminate();
           // ✅ Reinitialize Worker for Next Dataset
           setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
             console.log("Worker reinitialized for next dataset.");
           }, 100);
           sub.unsubscribe();
@@ -2135,7 +2135,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           sub.unsubscribe();
           // ✅ Reinitialize Worker on Error
           setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
+            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///home/ylb9/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
             console.log("Worker reinitialized after error.");
           }, 100);
         }
@@ -2419,7 +2419,8 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
         let treeObj = patristic__WEBPACK_IMPORTED_MODULE_2__.parseNewick(this.session.data['newick']);
         dm = treeObj.toMatrix();
       } else {
-        let labels = this.session.data.nodes.filter(this.hasSeq).map(d => d._id);
+        let labels = this.session.data.nodes.filter(this.hasSeq).map(d => d.id);
+        if (labels.length === 0) labels = this.session.data.nodes.filter(this.hasSeq).map(d => d._id);
         labels = labels.sort();
         let metric = this.session.style.widgets['link-sort-variable'];
         const n = labels.length;
@@ -2433,7 +2434,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
           if (row) {
             for (let j = 0; j < i; j++) {
               const link = row[labels[j]];
-              if (link && link["distanceOrigin"] === "Genetic Distance") {
+              if (link) {
                 dm[i][j] = dm[j][i] = link[metric];
               } else {
                 dm[i][j] = dm[j][i] = null;
@@ -2475,10 +2476,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
             if (this.debugMode) {
               console.log('Tree Transit time: ', (Date.now() - response.data.start).toLocaleString(), 'ms');
             }
-            resolve(treeString);
             // Clean up: terminate the worker and unsubscribe.
             treeWorker.terminate();
             sub.unsubscribe();
+            return resolve(treeString);
           });
         });
       }
@@ -2567,7 +2568,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   }
   runHamsters() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('running hamsters');
       if (!_this2.session.style.widgets['triangulate-false']) _this2.computeTriangulation();
       // this.computeNN();
@@ -2586,7 +2587,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   finishUp() {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       clearTimeout(_this3.temp.messageTimeout);
       console.log('----- finishUp called');
       console.log('----- finishUp -- node/link fields');
@@ -3638,7 +3639,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   updateThresholdHistogram(histogram) {
     var _this4 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let width = 260,
         height = 48,
         svg = null;
@@ -4491,7 +4492,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FilesComponent: () => (/* binding */ FilesComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _files_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files-plugin.component.html?ngResource */ 96303);
 /* harmony import */ var _files_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files-plugin.component.less?ngResource */ 94908);
@@ -5594,7 +5595,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   processSequence() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.commonService.session.meta.anySequences) return _this.commonService.runHamsters();
       _this.commonService.session.data.nodeFields.push('seq');
       let subset = [];
@@ -6103,7 +6104,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   readFastas() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const fastas = _this2.commonService.session.files.filter(f => _this2.commonService.includes(f.extension, 'fas'));
       const nodeFilesWithSeqs = _this2.commonService.session.files.filter(f => f.format === "node" && f.field2 != "None" && f.field2 != "");
       if (fastas.length === 0 && nodeFilesWithSeqs.length === 0) return [];
@@ -6160,7 +6161,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
   }
   updatePreview(data) {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!data) {
         data = yield _this3.readFastas();
       }
@@ -6329,8 +6330,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoldenLayoutHostComponent: () => (/* binding */ GoldenLayoutHostComponent)
 /* harmony export */ });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! golden-layout */ 81156);
 /* harmony import */ var _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./golden-layout-component.service */ 39107);
@@ -6602,7 +6603,7 @@ let GoldenLayoutHostComponent = class GoldenLayoutHostComponent {
 GoldenLayoutHostComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_15__.Component)({
   selector: 'app-golden-layout-host',
   template: '<ng-template #componentViewContainer></ng-template>',
-  styles: [(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
+  styles: [(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
 }), (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_15__.ApplicationRef, _angular_core__WEBPACK_IMPORTED_MODULE_15__.ElementRef, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__.GoldenLayoutComponentService])], GoldenLayoutHostComponent);
 
 
@@ -7291,7 +7292,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MicrobeTraceNextHomeComponent: () => (/* binding */ MicrobeTraceNextHomeComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _microbe_trace_next_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.html?ngResource */ 99768);
 /* harmony import */ var _microbe_trace_next_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.less?ngResource */ 57087);
@@ -7752,7 +7753,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
    */
   performExport(elementsForExport = [this.visualWrapperRef.nativeElement], exportNodeTable = false, exportLinkTable = false) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!elementsForExport[0] && !exportNodeTable && !exportLinkTable) {
         console.error('Visual wrapper container not found');
         return;
@@ -7885,7 +7886,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   performExportSVG(elementsForExport, mainSVGString, exportNodeTable = false, exportLinkTable = false) {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('Exporting SVG');
       if (mainSVGString == '') {
         mainSVGString = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill: transparent;"></svg>';
@@ -10159,7 +10160,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AggregateComponent: () => (/* binding */ AggregateComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _aggregate_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./aggregate.component.html?ngResource */ 23870);
 /* harmony import */ var _aggregate_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./aggregate.component.scss?ngResource */ 11954);
@@ -10421,7 +10422,7 @@ let AggregateComponent = class AggregateComponent extends _app_base_component_di
   }
   exportVisualization() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log(_this.SelectedAggregateExportFilename + '.' + _this.SelectedAggregateExportFileType);
       if (_this.SelectedAggregateExportFileType == 'csv.zip') {
         let zip = new (jszip__WEBPACK_IMPORTED_MODULE_6___default())();
@@ -13520,7 +13521,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CrosstabComponent: () => (/* binding */ CrosstabComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _crosstab_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./crosstab-plugin.component.html?ngResource */ 99800);
 /* harmony import */ var _crosstab_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./crosstab-plugin.component.scss?ngResource */ 70926);
@@ -13887,7 +13888,7 @@ let CrosstabComponent = class CrosstabComponent extends _app_base_component_dire
    */
   exportVisualization() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.SelectedCrossTabExportFileType == 'xlsx') {
         _this.saveAsExcelFile();
       } else if (_this.SelectedCrossTabExportFileType == 'csv') {
@@ -14927,11 +14928,9 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
       'xaxis.autorange': true,
       'yaxis.autorange': true
     };
-    console.log(reCenter);
     angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule.plotlyjs.relayout("heatmap", reCenter);
   }
   ngOnInit() {
-    console.log(this.heatmapContainerRef);
     this.viewActive = true;
     this.gtmService.pushTag({
       event: "page_view",
@@ -15003,7 +15002,6 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     });
   }
   goldenLayoutComponentResize() {
-    console.log(this.heatmapContainerRef);
     const height = $('heatmapcomponent').height();
     const width = $('heatmapcomponent').width();
     if (height) $('#heatmap').height(height - 19);
@@ -15077,19 +15075,16 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     });*/
   }
   updateLoColor(color) {
-    console.log(color);
     this.commonService.session.style.widgets["heatmap-color-low"] = color;
     this.loColor = color;
     this.redrawHeatmap();
   }
   updateMedColor(color) {
-    console.log(color);
     this.commonService.session.style.widgets["heatmap-color-medium"] = color;
     this.medColor = color;
     this.redrawHeatmap();
   }
   updateHiColor(color) {
-    console.log(color);
     this.commonService.session.style.widgets["heatmap-color-high"] = color;
     this.hiColor = color;
     this.redrawHeatmap();
@@ -15108,7 +15103,6 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     const fileName = this.SelectedImageFilenameVariable;
     const domId = 'heatmap';
     const exportImageType = this.SelectedNetworkExportFileTypeVariable;
-    console.log(exportImageType);
     const content = document.getElementById(domId);
     if (content) {
       const fixedContent = this.fixGradient(content);
@@ -16661,24 +16655,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PhylogeneticComponent: () => (/* binding */ PhylogeneticComponent)
 /* harmony export */ });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _phylogenetic_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./phylogenetic-plugin.component.html?ngResource */ 93824);
-/* harmony import */ var _phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./phylogenetic-plugin.component.scss?ngResource */ 81398);
-/* harmony import */ var _phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/core */ 37580);
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
-/* harmony import */ var _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @app/contactTraceCommonServices/common.service */ 42107);
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! file-saver */ 85841);
-/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var html_to_image__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! html-to-image */ 15135);
-/* harmony import */ var _app_helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @app/helperClasses/dialogSettings */ 63412);
-/* harmony import */ var _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/helperClasses/customShapes */ 13564);
-/* harmony import */ var _tidytree__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./tidytree */ 14758);
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! d3 */ 86164);
-/* harmony import */ var _app_base_component_directive__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @app/base-component.directive */ 18784);
-/* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! golden-layout */ 41735);
-/* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
-/* harmony import */ var _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/contactTraceCommonServices/export.service */ 70616);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! tslib */ 24398);
+/* harmony import */ var _phylogenetic_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./phylogenetic-plugin.component.html?ngResource */ 93824);
+/* harmony import */ var _phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./phylogenetic-plugin.component.scss?ngResource */ 81398);
+/* harmony import */ var _phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/core */ 37580);
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/platform-browser */ 80436);
+/* harmony import */ var _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @app/contactTraceCommonServices/common.service */ 42107);
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! file-saver */ 85841);
+/* harmony import */ var file_saver__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(file_saver__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var html_to_image__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! html-to-image */ 15135);
+/* harmony import */ var _app_helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @app/helperClasses/dialogSettings */ 63412);
+/* harmony import */ var _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @app/helperClasses/customShapes */ 13564);
+/* harmony import */ var _tidytree__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./tidytree */ 14758);
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! d3 */ 86164);
+/* harmony import */ var _app_base_component_directive__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @app/base-component.directive */ 18784);
+/* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! golden-layout */ 41735);
+/* harmony import */ var angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! angular-google-tag-manager */ 10409);
+/* harmony import */ var _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @app/contactTraceCommonServices/export.service */ 70616);
+
 
 
 
@@ -16698,22 +16694,24 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * @title PhylogeneticComponent
  */
-let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_9__.BaseComponentDirective {
+let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_component_directive__WEBPACK_IMPORTED_MODULE_10__.BaseComponentDirective {
   constructor(injector, eventManager, commonService, container, elRef, cdref, gtmService, exportService) {
+    var _this;
     super(elRef.nativeElement);
+    _this = this;
     this.eventManager = eventManager;
     this.commonService = commonService;
     this.container = container;
     this.cdref = cdref;
     this.gtmService = gtmService;
     this.exportService = exportService;
-    this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_11__.EventEmitter();
+    this.DisplayGlobalSettingsDialogEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_12__.EventEmitter();
     this.viewActive = true;
     this.svgStyle = {
       height: '0px',
       width: '1000px'
     };
-    this.customShapes = new _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_6__.CustomShapes();
+    this.customShapes = new _app_helperClasses_customShapes__WEBPACK_IMPORTED_MODULE_7__.CustomShapes();
     this.ShowNetworkAttributes = false;
     this.ShowStatistics = false;
     this.ShowPhylogeneticExportPane = false;
@@ -16729,7 +16727,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     this.ToolTipFieldList = [];
     this.nodeMin = 3;
     this.nodeMax = 27;
-    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_8__.scaleLinear().domain([0, 1]).range([0, 1]);
+    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_9__.scaleLinear().domain([0, 1]).range([0, 1]);
     this.nodeMid = 1;
     this.debugMode = false;
     // Tree Tab
@@ -16821,10 +16819,10 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     this.CalculatedResolutionHeight = 909;
     this.CalculatedResolution = this.CalculatedResolutionWidth * this.SelectedNetworkExportScaleVariable + ' x ' + this.CalculatedResolutionHeight * this.SelectedNetworkExportScaleVariable + 'px';
     this.ShowAdvancedExport = true;
-    this.PhylogeneticTreeExportDialogSettings = new _app_helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_5__.DialogSettings('#phylotree-settings-pane', false);
+    this.PhylogeneticTreeExportDialogSettings = new _app_helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__.DialogSettings('#phylotree-settings-pane', false);
     this.ContextSelectedNodeAttributes = [];
     this.tree = null;
-    this.openTree = () => {
+    this.openTree = /*#__PURE__*/(0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       /*
       if (this.visuals.phylogenetic.commonService.session.data.newickString) {
         this.tree = new TidyTree(this.visuals.phylogenetic.commonService.session.data.tree,
@@ -16837,49 +16835,50 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       } else {
       */
       //@ts-ignore
-      if (this.visuals.phylogenetic.commonService.session.data.hasOwnProperty("newickString") && this.visuals.phylogenetic.commonService.session.data.newickString) {
+      if (_this.visuals.phylogenetic.commonService.session.data.hasOwnProperty("newickString") && _this.visuals.phylogenetic.commonService.session.data.newickString) {
         //@ts-ignore
-        const newickString = this.visuals.phylogenetic.commonService.session.data.newickString;
-        const tree = this.buildTree(newickString);
-        this.tree = tree;
-        this.commonService.visuals.phylogenetic.tree = tree;
-        this.mergeNodeData();
-        this.hideTooltip();
-        this.styleTree();
+        const newickString = _this.visuals.phylogenetic.commonService.session.data.newickString;
+        const tree = _this.buildTree(newickString);
+        _this.tree = tree;
+        _this.commonService.visuals.phylogenetic.tree = tree;
+        _this.mergeNodeData();
+        _this.hideTooltip();
+        _this.styleTree();
       } else {
-        const newickString = this.commonService.computeTree();
-        newickString.then(x => {
-          const tree = this.buildTree(x);
-          this.tree = tree;
-          this.commonService.visuals.phylogenetic.tree = tree;
-          this.mergeNodeData();
-          this.hideTooltip();
-          this.styleTree();
-        });
+        const newickString = yield _this.commonService.computeTree();
+        console.log(newickString);
+        //newickString.then((x) => {
+        const tree = _this.buildTree(newickString);
+        _this.tree = tree;
+        _this.commonService.visuals.phylogenetic.tree = tree;
+        _this.mergeNodeData();
+        _this.hideTooltip();
+        _this.styleTree();
+        //});
       }
       // d3.select('svg#network').exit().remove();
       // this.visuals.phylogenetic.svg = d3.select('svg#network').append('g');
-      this.LeafLabelFieldList.push({
+      _this.LeafLabelFieldList.push({
         label: 'None',
         value: 'None'
       });
       console.log("getting node fields");
-      this.commonService.session.data['nodeFields'].map((d, i) => {
-        this.visuals.phylogenetic.LeafLabelFieldList.push({
-          label: this.visuals.phylogenetic.commonService.capitalize(d.replace('_', '')),
+      _this.commonService.session.data['nodeFields'].map((d, i) => {
+        _this.visuals.phylogenetic.LeafLabelFieldList.push({
+          label: _this.visuals.phylogenetic.commonService.capitalize(d.replace('_', '')),
           value: d
         });
       });
-      console.log(this.visuals.phylogenetic.LeafLabelFieldList);
+      console.log(_this.visuals.phylogenetic.LeafLabelFieldList);
       // }
-    };
+    });
     this.styleTree = () => {
-      this.svg = d3__WEBPACK_IMPORTED_MODULE_8__.select('#tidytree');
+      this.svg = d3__WEBPACK_IMPORTED_MODULE_9__.select('#tidytree');
       let nodes = this.visuals.phylogenetic.commonService.session.data;
       nodes = this.svg.select('g.nodes').selectAll('g').data(nodes, d => d.id).join(enter => {
         const g = enter.append('g').attr('tabindex', '0').on('mouseenter focusin', x => this.showTooltip(x)).on('mouseout focusout', x => this.hideTooltip()).on('contextmenu', x => this.showContextMenu(x)).on('click', x => this.clickHandler(x)).on('keydown', n => {
-          if (d3__WEBPACK_IMPORTED_MODULE_8__.event.code === 'Space') this.clickHandler(n);
-          if (d3__WEBPACK_IMPORTED_MODULE_8__.event.shiftKey && d3__WEBPACK_IMPORTED_MODULE_8__.event.key === 'F10') this.showContextMenu(n);
+          if (d3__WEBPACK_IMPORTED_MODULE_9__.event.code === 'Space') this.clickHandler(n);
+          if (d3__WEBPACK_IMPORTED_MODULE_9__.event.shiftKey && d3__WEBPACK_IMPORTED_MODULE_9__.event.key === 'F10') this.showContextMenu(n);
         });
         g.append('path').style('stroke', 'black').style('stroke-width', '2px');
         g.append('text').attr('dy', 5).attr('dx', 8);
@@ -16905,21 +16904,21 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       this.svg.style('background-color', '#ffffff');
     };
     this.styleBranch = el => {
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(el).style('stroke', this.SelectedLinkColorVariable);
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(el).style('stroke-width', `${this.SelectedBranchSizeVariable}px`);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(el).style('stroke', this.SelectedLinkColorVariable);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(el).style('stroke-width', `${this.SelectedBranchSizeVariable}px`);
     };
     this.styleBranchLabel = (label, data) => {
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(label).style('font-size', `${this.SelectedBranchLabelSizeVariable}px`);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(label).style('font-size', `${this.SelectedBranchLabelSizeVariable}px`);
     };
     this.styleBranchNode = (node, data) => {
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(node).attr('r', this.SelectedBranchNodeSizeVariable);
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(node).style('fill', this.SelectedBranchNodeColorVariable);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(node).attr('r', this.SelectedBranchNodeSizeVariable);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(node).style('fill', this.SelectedBranchNodeColorVariable);
     };
     this.styleBranchDistance = (label, data) => {
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(label).style('font-size', `${this.SelectedBranchDistanceSizeVariable}px`);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(label).style('font-size', `${this.SelectedBranchDistanceSizeVariable}px`);
     };
     this.styleLeafLabel = (label, data) => {
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(label).style('font-size', `${this.SelectedLeafLabelSizeVariable}px`);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(label).style('font-size', `${this.SelectedLeafLabelSizeVariable}px`);
     };
     this.getLeafSize = (node_id, variable) => {
       let defaultSize = this.SelectedLeafNodeSize;
@@ -16964,11 +16963,11 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       const variable = this.visuals.phylogenetic.commonService.session.style.widgets['node-color-variable'];
       leafSize = this.getLeafSize(data.data.id, this.SelectedLeafNodeSizeVariable);
       console.log(leafSize + " " + variable);
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(node).attr('r', leafSize);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(node).attr('r', leafSize);
       if (variable === 'None') {
-        d3__WEBPACK_IMPORTED_MODULE_8__.select(node).style('fill', this.SelectedLeafNodeColorVariable);
+        d3__WEBPACK_IMPORTED_MODULE_9__.select(node).style('fill', this.SelectedLeafNodeColorVariable);
       } else {
-        d3__WEBPACK_IMPORTED_MODULE_8__.select(node).style('fill', d => {
+        d3__WEBPACK_IMPORTED_MODULE_9__.select(node).style('fill', d => {
           const node_values = nodes.filter(m => {
             if (m._id === d.data.id) {
               return true;
@@ -16984,7 +16983,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       }
     };
     this.buildTree = newick => {
-      const tree = new _tidytree__WEBPACK_IMPORTED_MODULE_7__["default"](newick ? newick : this.tree.data.clone(), this.getTreeOptions(), this.getTreeHandlers());
+      const tree = new _tidytree__WEBPACK_IMPORTED_MODULE_8__["default"](newick ? newick : this.tree.data.clone(), this.getTreeOptions(), this.getTreeHandlers());
       return tree;
     };
     this.getTreeOptions = () => {
@@ -17031,25 +17030,25 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       // d3.event.preventDefault();
       this.hideTooltip();
       const tree = this.tree;
-      const leftVal = this.getContextLeftVal(d3__WEBPACK_IMPORTED_MODULE_8__.event.pageX);
-      const topVal = this.getContextTopVal(d3__WEBPACK_IMPORTED_MODULE_8__.event.pageY);
-      d3__WEBPACK_IMPORTED_MODULE_8__.select('#phylo-context-menu').style('z-index', 1000).style('display', 'block').style('opacity', 1).style('left', `${leftVal}px`).style('top', `${topVal}px`);
-      d3__WEBPACK_IMPORTED_MODULE_8__.select('#reroot').on('click', c => {
+      const leftVal = this.getContextLeftVal(d3__WEBPACK_IMPORTED_MODULE_9__.event.pageX);
+      const topVal = this.getContextTopVal(d3__WEBPACK_IMPORTED_MODULE_9__.event.pageY);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select('#phylo-context-menu').style('z-index', 1000).style('display', 'block').style('opacity', 1).style('left', `${leftVal}px`).style('top', `${topVal}px`);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select('#reroot').on('click', c => {
         tree.setData(d[0].data.reroot());
         this.styleTree();
         this.hideContextMenu();
       });
-      d3__WEBPACK_IMPORTED_MODULE_8__.select('#rotate').on('click', c => {
+      d3__WEBPACK_IMPORTED_MODULE_9__.select('#rotate').on('click', c => {
         tree.setData(d[0].data.rotate().getRoot());
         this.styleTree();
         this.hideContextMenu();
       });
-      d3__WEBPACK_IMPORTED_MODULE_8__.select('#flip').on('click', c => {
+      d3__WEBPACK_IMPORTED_MODULE_9__.select('#flip').on('click', c => {
         tree.setData(d[0].data.flip().getRoot());
         this.styleTree();
         this.hideContextMenu();
       });
-      d3__WEBPACK_IMPORTED_MODULE_8__.select('#tidytree').on('click', c => {
+      d3__WEBPACK_IMPORTED_MODULE_9__.select('#tidytree').on('click', c => {
         this.hideContextMenu();
       });
     };
@@ -17061,7 +17060,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       });
     };
     this.clickHandler = n => {
-      if (d3__WEBPACK_IMPORTED_MODULE_8__.event.ctrlKey) {
+      if (d3__WEBPACK_IMPORTED_MODULE_9__.event.ctrlKey) {
         this.visuals.phylogenetic.commonService.session.data.nodes.find(node => node._id === n._id).selected = !n.selected;
       } else {
         this.visuals.phylogenetic.commonService.session.data.nodes.forEach(node => {
@@ -17087,14 +17086,14 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
         }
         console.log(node);
         // Pre D3
-        const leftVal = d3__WEBPACK_IMPORTED_MODULE_8__.event.pageX + 8;
-        const topVal = d3__WEBPACK_IMPORTED_MODULE_8__.event.pageY - 8;
+        const leftVal = d3__WEBPACK_IMPORTED_MODULE_9__.event.pageX + 8;
+        const topVal = d3__WEBPACK_IMPORTED_MODULE_9__.event.pageY - 8;
         console.log(topVal + " " + leftVal);
-        d3__WEBPACK_IMPORTED_MODULE_8__.select('#phyloTooltip').html(node[htmlValue]).style('position', 'absolute').style('display', 'block').style('left', `${leftVal}px`).style('top', `${topVal}px`).style('z-index', 1000).transition().duration(100).style('opacity', 1).style('color', '#333333').style('background', '#f5f5f5').style('border', '1px solid #cccccc').style('border-radius', '.25rem').style('padding', '.25rem');
+        d3__WEBPACK_IMPORTED_MODULE_9__.select('#phyloTooltip').html(node[htmlValue]).style('position', 'absolute').style('display', 'block').style('left', `${leftVal}px`).style('top', `${topVal}px`).style('z-index', 1000).transition().duration(100).style('opacity', 1).style('color', '#333333').style('background', '#f5f5f5').style('border', '1px solid #cccccc').style('border-radius', '.25rem').style('padding', '.25rem');
       }
     };
     this.hideTooltip = () => {
-      const tooltip = d3__WEBPACK_IMPORTED_MODULE_8__.select('#phyloTooltip');
+      const tooltip = d3__WEBPACK_IMPORTED_MODULE_9__.select('#phyloTooltip');
       tooltip.transition().duration(100).style('opacity', 0).on('end', () => tooltip.style('z-index', -1));
     };
     this.visuals = commonService.visuals;
@@ -17122,7 +17121,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       if (size > this.nodeMax) this.nodeMax = size;
     }
     this.nodeMid = (this.nodeMax - this.nodeMin) / 2;
-    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_8__.scaleLinear().domain([this.nodeMin, this.nodeMax]).range([minWidth, maxWidth]);
+    this.nodeScale = d3__WEBPACK_IMPORTED_MODULE_9__.scaleLinear().domain([this.nodeMin, this.nodeMax]).range([minWidth, maxWidth]);
   }
   ngOnInit() {
     let that = this;
@@ -17191,16 +17190,20 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   openRefreshScreen() {}
   openSelectDataSetScreen() {}
   onTreeLayoutChange(event) {
-    this.SelectedTreeLayoutVariable = event;
-    this.tree.setLayout(event);
-    this.openCenter();
-    this.styleTree();
+    if (this.tree) {
+      this.SelectedTreeLayoutVariable = event;
+      this.tree.setLayout(event);
+      this.openCenter();
+      this.styleTree();
+    }
   }
   onTreeModeChange(event) {
-    this.SelectedTreeModeVariable = event;
-    this.tree.setMode(event);
-    this.openCenter();
-    this.styleTree();
+    if (this.tree) {
+      this.SelectedTreeModeVariable = event;
+      this.tree.setMode(event);
+      this.openCenter();
+      this.styleTree();
+    }
   }
   onTreeTypeChange(event) {
     this.SelectedTreeTypeVariable = event;
@@ -17212,9 +17215,10 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     this.SelectedLeafLabelVariable = event;
     let labelVar = event;
     this.tree.eachLeafLabel(label => {
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(label).text(data => {
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(label).text(data => {
         let id = data.data.id;
-        let node = this.commonService.session.data.nodes.find(node => node._id == id);
+        let node = this.commonService.session.data.nodes.find(node => node.id == id);
+        if (node === undefined) node = this.commonService.session.data.nodes.find(d => d._id === data.data.id);
         return node[labelVar];
       }).attr('dx', 8);
     });
@@ -17225,7 +17229,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     this.tree.eachLeafNode((circle, data) => {
       let node = this.commonService.session.data.nodes.find(d => d.id === data.data.id);
       if (node === undefined) node = this.commonService.session.data.nodes.find(d => d._id === data.data.id);
-      d3__WEBPACK_IMPORTED_MODULE_8__.select(circle).attr('title', node[labelVar]);
+      d3__WEBPACK_IMPORTED_MODULE_9__.select(circle).attr('title', node[labelVar]);
     });
     this.styleTree();
   }
@@ -17324,21 +17328,21 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     const exportImageType = this.SelectedNetworkExportFileTypeListVariable;
     const content = document.getElementById(treeId);
     if (exportImageType === 'png') {
-      html_to_image__WEBPACK_IMPORTED_MODULE_4__.toPng(content).then(dataUrl => {
-        file_saver__WEBPACK_IMPORTED_MODULE_3__(dataUrl, fileName);
+      html_to_image__WEBPACK_IMPORTED_MODULE_5__.toPng(content).then(dataUrl => {
+        file_saver__WEBPACK_IMPORTED_MODULE_4__(dataUrl, fileName);
       });
     } else if (exportImageType === 'jpeg') {
-      html_to_image__WEBPACK_IMPORTED_MODULE_4__.toJpeg(content, {
+      html_to_image__WEBPACK_IMPORTED_MODULE_5__.toJpeg(content, {
         quality: 0.85
       }).then(dataUrl => {
-        file_saver__WEBPACK_IMPORTED_MODULE_3__(dataUrl, fileName);
+        file_saver__WEBPACK_IMPORTED_MODULE_4__(dataUrl, fileName);
       });
     } else if (exportImageType === 'svg') {
       const svgContent = this.exportService.unparseSVG(content);
       const blob = new Blob([svgContent], {
         type: 'image/svg+xml;charset=utf-8'
       });
-      file_saver__WEBPACK_IMPORTED_MODULE_3__(blob, fileName);
+      file_saver__WEBPACK_IMPORTED_MODULE_4__(blob, fileName);
     }
   }
   saveNewickString(event) {
@@ -17346,7 +17350,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     const newickBlob = new Blob([thisTree.data.toNewick(false)], {
       type: 'text/plain;charset=utf-8'
     });
-    file_saver__WEBPACK_IMPORTED_MODULE_3__(newickBlob, this.SelectedNewickStringFilenameVariable);
+    file_saver__WEBPACK_IMPORTED_MODULE_4__(newickBlob, this.SelectedNewickStringFilenameVariable);
   }
   /**
    * @returns an array [X, Y] of the position of mouse relative to twodcomponent. Global position (i.e. d3.event.pageX) doesn't work for a dashboard
@@ -17359,40 +17363,40 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   }
   static {
     this.ctorParameters = () => [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_11__.Injector
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.Injector
     }, {
-      type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_12__.EventManager
+      type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_13__.EventManager
     }, {
-      type: _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__.CommonService
+      type: _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService
     }, {
-      type: golden_layout__WEBPACK_IMPORTED_MODULE_13__.ComponentContainer,
+      type: golden_layout__WEBPACK_IMPORTED_MODULE_14__.ComponentContainer,
       decorators: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_11__.Inject,
-        args: [_app_base_component_directive__WEBPACK_IMPORTED_MODULE_9__.BaseComponentDirective.GoldenLayoutContainerInjectionToken]
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.Inject,
+        args: [_app_base_component_directive__WEBPACK_IMPORTED_MODULE_10__.BaseComponentDirective.GoldenLayoutContainerInjectionToken]
       }]
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_11__.ElementRef
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.ElementRef
     }, {
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_11__.ChangeDetectorRef
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.ChangeDetectorRef
     }, {
-      type: angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_14__.GoogleTagManagerService
+      type: angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_15__.GoogleTagManagerService
     }, {
-      type: _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_10__.ExportService
+      type: _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_11__.ExportService
     }];
   }
   static {
     this.propDecorators = {
       DisplayGlobalSettingsDialogEvent: [{
-        type: _angular_core__WEBPACK_IMPORTED_MODULE_11__.Output
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_12__.Output
       }]
     };
   }
 };
-PhylogeneticComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_15__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_11__.Component)({
+PhylogeneticComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_12__.Component)({
   selector: 'PhylogeneticComponent',
-  template: _phylogenetic_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__,
-  styles: [(_phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default())]
-}), (0,tslib__WEBPACK_IMPORTED_MODULE_15__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_11__.Injector, _angular_platform_browser__WEBPACK_IMPORTED_MODULE_12__.EventManager, _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_2__.CommonService, golden_layout__WEBPACK_IMPORTED_MODULE_13__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_11__.ElementRef, _angular_core__WEBPACK_IMPORTED_MODULE_11__.ChangeDetectorRef, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_14__.GoogleTagManagerService, _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_10__.ExportService])], PhylogeneticComponent);
+  template: _phylogenetic_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__,
+  styles: [(_phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2___default())]
+}), (0,tslib__WEBPACK_IMPORTED_MODULE_16__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_12__.Injector, _angular_platform_browser__WEBPACK_IMPORTED_MODULE_13__.EventManager, _app_contactTraceCommonServices_common_service__WEBPACK_IMPORTED_MODULE_3__.CommonService, golden_layout__WEBPACK_IMPORTED_MODULE_14__.ComponentContainer, _angular_core__WEBPACK_IMPORTED_MODULE_12__.ElementRef, _angular_core__WEBPACK_IMPORTED_MODULE_12__.ChangeDetectorRef, angular_google_tag_manager__WEBPACK_IMPORTED_MODULE_15__.GoogleTagManagerService, _app_contactTraceCommonServices_export_service__WEBPACK_IMPORTED_MODULE_11__.ExportService])], PhylogeneticComponent);
 
 (function (PhylogeneticComponent) {
   PhylogeneticComponent.componentTypeName = 'Phylogenetic Tree';
@@ -18884,7 +18888,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TwoDComponent: () => (/* binding */ TwoDComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./twoD-plugin.component.html?ngResource */ 13336);
 /* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./twoD-plugin.component.scss?ngResource */ 68550);
@@ -19473,7 +19477,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     });
   }
   precomputePositionsWithD3(nodes, links, ticks = 300, initial = true) {
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let simulation;
       if (initial) {
         simulation = d3__WEBPACK_IMPORTED_MODULE_4__.forceSimulation(nodes).force('charge', d3__WEBPACK_IMPORTED_MODULE_4__.forceManyBody().strength(-30)).force('link', d3__WEBPACK_IMPORTED_MODULE_4__.forceLink(links).id(d => d.id).distance(50)).force('center', d3__WEBPACK_IMPORTED_MODULE_4__.forceCenter(0, 0)).stop(); // Stop auto-stepping so we can control the ticks manually
@@ -20983,7 +20987,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   _rerender(timelineTick = false) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD DATA network rerender');
       if (!timelineTick) {
         // If the network is in the middle of rendering, don't rerender
@@ -21720,7 +21724,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   */
   _partialUpdate() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD _partialUpdate called');
       if (!_this2.cy) {
         console.error('Cytoscape instance not initialized; cannot update partially.');
@@ -24608,6 +24612,8 @@ TidyTree.prototype.redraw = function () {
   links.join(enter => {
     let newLinks = enter.append("g").attr("class", "tidytree-link");
     let linkTransformer = linkTransformers[this.type][this.mode][this.layout];
+    console.log(linkTransformer);
+    console.log(newLinks);
     newLinks.append("path").attr("fill", "none").attr("stroke", d => findBranchColor(d, this.colorOptions)).attr("d", linkTransformer).transition().duration(this.animation).attr("opacity", 1);
     let labelTransformer = labelTransformers[this.type][this.mode][this.layout];
     newLinks.append("text").attr("y", 2).attr("text-anchor", "middle").style("font-size", "12px").text(labeler).attr("transform", labelTransformer).transition().duration(this.animation).style("opacity", this.branchDistances ? 1 : 0);
