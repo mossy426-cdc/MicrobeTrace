@@ -1236,7 +1236,6 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
     this.temp = this.tempSkeleton();
     this.session = this.sessionSkeleton();
     this.hasSeq = x => {
-      console.log(x);
       if (x.seq && (x.seq.includes("a") || x.seq.includes("c") || x.seq.includes("g") || x.seq.includes("t") || x.seq.includes("A") || x.seq.includes("C") || x.seq.includes("G") || x.seq.includes("T"))) {
         return true;
       }
@@ -2003,6 +2002,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       if (!this.session.data.linkFields.includes(key)) this.session.data.linkFields.push(key);
     });
     this.runHamsters();
+  }
+  getURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('url');
   }
   applyAuspice(auspice) {
     return new Promise(resolve => {
@@ -4920,6 +4923,9 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
     }
     // $.getJSON("../assets/outbreak.microbetrace", (window as any).context.commonService.applySession);
     // Use this when building production (.ie gh-pages branch)
+    if (!this.auspiceUrlVal) {
+      this.auspiceUrlVal = this.commonService.getURL();
+    }
     if (!this.commonService.session.network.initialLoad && !this.auspiceUrlVal) {
       console.log('launching outbreak');
       $.getJSON("COVID_DummySession.microbetrace", this.commonService.applySession.bind(this.commonService)).then(() => {
@@ -7524,8 +7530,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
     return element;
   }
   ngOnInit() {
-    const params = new URLSearchParams(window.location.search);
-    this.auspiceUrlVal = params.get('url');
+    this.auspiceUrlVal = this.commonService.getURL();
     if (this.commonService.debugMode) {
       console.log(this.auspiceUrlVal);
     }
