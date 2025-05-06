@@ -805,7 +805,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CommonService: () => (/* binding */ CommonService)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! rxjs */ 75797);
@@ -1772,7 +1772,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   applySession(stashObject) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       //If anything here seems eccentric, assume it's to maintain compatibility with
       //session files from older versions of MicrobeTrace.
       $("#launch").prop("disabled", true);
@@ -2079,71 +2079,93 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    * Asynchronously parses csv matrix file content and adds nodes and links to session.data
    * @param {string} file content from csv matrix file
    * @returns {Promise} A Promise that resolves to an object with {numberOfNodesAdded, numberOfLinksAdded, totalNumberofNodes, totalNumberofLinks}
-   */
   parseCSVMatrix(file) {
-    return new Promise((resolve, reject) => {
-      let check = this.session.files.length > 1;
-      const origin = [file.name];
-      let nn = 0,
-        nl = 0;
-      // ✅ Create a New Worker Before Use
-      this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
-      this.computer.compute_parse_csv_matrixWorker.postMessage(file.contents);
-      // Convert worker messages to Observable
-      const workerObservable = this.fromWorker(this.computer.compute_parse_csv_matrixWorker);
-      const sub = workerObservable.subscribe({
-        next: response => {
-          const data = JSON.parse(this.decode(new Uint8Array(response.data.data)));
-          console.log('CSV Matrix Transit time:', (Date.now() - response.data.start).toLocaleString(), 'ms');
-          const start = Date.now();
-          const nodes = data.nodes;
-          const tn = nodes.length;
-          for (let i = 0; i < tn; i++) {
-            nn += this.addNode({
-              _id: this.filterXSS(nodes[i]),
-              origin: origin
-            }, check);
-          }
-          const links = data.links;
-          const tl = links.length;
-          for (let j = 0; j < tl; j++) {
-            nl += this.addLink(Object.assign(links[j], {
-              origin: origin,
-              hasDistance: true,
-              distanceOrigin: origin
-            }), check);
-          }
-          console.log('CSV Matrix Merge time:', (Date.now() - start).toLocaleString(), 'ms');
-          resolve({
-            nn,
-            nl,
-            tn,
-            tl
+      return new Promise((resolve, reject) => {
+          let check = this.session.files.length > 1;
+          const origin = [file.name];
+          let nn = 0, nl = 0;
+  
+          // ✅ Create a New Worker Before Use
+          let compute_parse_csv_matrixWorker = this.computer.getParseCsvMatrixWorker(); //new Worker(new URL('../workers/parse-csv-matrix.worker.js', import.meta.url));
+  
+          compute_parse_csv_matrixWorker.postMessage(file.contents);
+  
+          // Convert worker messages to Observable
+          const workerObservable = this.fromWorker(this.computer.compute_parse_csv_matrixWorker);
+  
+          const sub = workerObservable.subscribe({
+              next: (response: MessageEvent<any>) => {
+                  const data = JSON.parse(
+                      this.decode(new Uint8Array(response.data.data))
+                  );
+                  console.log(
+                      'CSV Matrix Transit time:',
+                      (Date.now() - response.data.start).toLocaleString(),
+                      'ms'
+                  );
+  
+                  const start = Date.now();
+                  const nodes = data.nodes;
+                  const tn = nodes.length;
+                  for (let i = 0; i < tn; i++) {
+                      nn += this.addNode(
+                          {
+                              _id: this.filterXSS(nodes[i]),
+                              origin: origin,
+                          },
+                          check
+                      );
+                  }
+                  const links = data.links;
+                  const tl = links.length;
+                  for (let j = 0; j < tl; j++) {
+                      nl += this.addLink(
+                          Object.assign(links[j], {
+                              origin: origin,
+                              hasDistance: true,
+                              distanceOrigin: origin,
+                          }),
+                          check
+                      );
+                  }
+  
+                  console.log(
+                      'CSV Matrix Merge time:',
+                      (Date.now() - start).toLocaleString(),
+                      'ms'
+                  );
+  
+                  resolve({ nn, nl, tn, tl });
+  
+                  // ✅ Terminate Worker After Processing
+                  this.computer.compute_parse_csv_matrixWorker.terminate();
+  
+                  // ✅ Reinitialize Worker for Next Dataset
+                  setTimeout(() => {
+                      compute_parse_csv_matrixWorker = this.computer.getParseCsvMatrixWorker();
+                      console.log("Worker reinitialized for next dataset.");
+                  }, 100);
+  
+                  sub.unsubscribe();
+              },
+              error: (err: ErrorEvent) => {
+                  console.error('Worker error:', err);
+                  reject(err);
+  
+                  // ✅ Ensure Worker Terminates on Error
+                  this.computer.compute_parse_csv_matrixWorker.terminate();
+                  sub.unsubscribe();
+  
+                  // ✅ Reinitialize Worker on Error
+                  setTimeout(() => {
+                      compute_parse_csv_matrixWorker = this.computer.getParseCsvMatrixWorker();
+                      console.log("Worker reinitialized after error.");
+                  }, 100);
+              }
           });
-          // ✅ Terminate Worker After Processing
-          this.computer.compute_parse_csv_matrixWorker.terminate();
-          // ✅ Reinitialize Worker for Next Dataset
-          setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
-            console.log("Worker reinitialized for next dataset.");
-          }, 100);
-          sub.unsubscribe();
-        },
-        error: err => {
-          console.error('Worker error:', err);
-          reject(err);
-          // ✅ Ensure Worker Terminates on Error
-          this.computer.compute_parse_csv_matrixWorker.terminate();
-          sub.unsubscribe();
-          // ✅ Reinitialize Worker on Error
-          setTimeout(() => {
-            this.computer.compute_parse_csv_matrixWorker = new Worker(new URL('../workers/parse-csv-matrix.worker.ts', "file:///Users/evanmoscoso/Desktop/EvanGit/MicrobeTrace/src/app/contactTraceCommonServices/common.service.ts"));
-            console.log("Worker reinitialized after error.");
-          }, 100);
-        }
       });
-    });
-  }
+  };
+   */
   /**
    * XXXXX function not currently called XXXXX
    * @param auspiceData
@@ -2423,7 +2445,9 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       } else {
         let labels = this.session.data.nodes.filter(this.hasSeq).map(d => d.id);
         if (labels.length === 0) labels = this.session.data.nodes.filter(this.hasSeq).map(d => d._id);
-        labels = labels.sort();
+        //console.log("Before sorting: " + labels);
+        //labels = labels.sort();
+        //console.log("After sorting: " + labels);
         let metric = this.session.style.widgets['link-sort-variable'];
         const n = labels.length;
         dm = new Array(n);
@@ -2570,7 +2594,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   }
   runHamsters() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('running hamsters');
       if (!_this2.session.style.widgets['triangulate-false']) _this2.computeTriangulation();
       // this.computeNN();
@@ -2589,7 +2613,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   finishUp() {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       clearTimeout(_this3.temp.messageTimeout);
       console.log('----- finishUp called');
       console.log('----- finishUp -- node/link fields');
@@ -3632,7 +3656,7 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
    */
   updateThresholdHistogram(histogram) {
     var _this4 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let width = 260,
         height = 48,
         svg = null;
@@ -4485,7 +4509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FilesComponent: () => (/* binding */ FilesComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _files_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./files-plugin.component.html?ngResource */ 96303);
 /* harmony import */ var _files_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./files-plugin.component.less?ngResource */ 94908);
@@ -5519,11 +5543,95 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
           this.showMessage(` - Parsed ${nl} New, ${((data.length - 1) ** 2 - (data.length - 1)) / 2} Total Links from Excel Distance Matrix.`);
           if (fileNum === nFiles) this.processData();
         } else {
-          this.commonService.parseCSVMatrix(file).then(o => {
-            this.showMessage(` - Parsed ${o.nn} New, ${o.tn} Total Nodes from Distance Matrix.`);
-            this.showMessage(` - Parsed ${o.nl} New, ${o.tl} Total Links from Distance Matrix.`);
-            if (fileNum === nFiles) this.processData();
+          // file.format === "matrix" && file.extension === "csv"
+          let start = Date.now();
+          let nodeIDs, n;
+          let links = [];
+          let output;
+          papaparse__WEBPACK_IMPORTED_MODULE_4__.parse(file.contents, {
+            skipEmptyLines: "greedy",
+            chunk: result => {
+              const rowsInChunk = result.data.length;
+              for (let rowInChunk = 0; rowInChunk < rowsInChunk; rowInChunk++) {
+                const row = result.data[rowInChunk];
+                if (nodeIDs) {
+                  const source = "" + row[0];
+                  for (let j = 1; j < rowsInChunk + 1; j++) {
+                    const target = "" + nodeIDs[j];
+                    if (source == target) continue;
+                    links.push({
+                      source: source,
+                      target: target,
+                      distance: parseFloat(row[j])
+                    });
+                  }
+                } else {
+                  nodeIDs = row;
+                  n = nodeIDs.length;
+                }
+              }
+            },
+            complete: function () {
+              console.log("CSV Matrix Parse time: ", (Date.now() - start).toLocaleString(), "ms");
+              start = Date.now();
+              output = {
+                links: links,
+                nodes: nodeIDs.slice(1)
+              };
+              console.log(output);
+              close();
+            }
           });
+          let nn = 0,
+            nl = 0;
+          const results = {
+            data: output,
+            start: start
+          };
+          const f_nodes = output.nodes;
+          const tn = f_nodes.length;
+          for (let i = 0; i < tn; i++) {
+            console.log(f_nodes[i]);
+            if (f_nodes[i]) {
+              nn += this.commonService.addNode({
+                _id: this.commonService.filterXSS(f_nodes[i]),
+                origin: origin
+              }, check);
+            }
+          }
+          const f_links = output.links;
+          const tl = f_links.length;
+          let skip = 0;
+          console.log(tl + " links");
+          for (let j = 0; j < tl; j++) {
+            console.log(this.commonService.session.data.links.length);
+            console.log(f_links[j]);
+            const reversed = this.commonService.session.data.links.filter(x => x["source"] === f_links[j]["target"] && x["target"] === f_links[j]["source"]);
+            const existing = this.commonService.session.data.links.filter(x => x["source"] === f_links[j]["source"] && x["target"] === f_links[j]["target"]);
+            if (existing.length > 0 || reversed.length > 0) {
+              skip++;
+              console.log(`${skip}th skip - ${f_links[j]["source"]} and ${f_links[j]["target"]}`);
+              continue;
+            }
+            if (f_links[j]["source"] == "undefined" || f_links[j]["target"] == "undefined") {
+              console.log("skipping undefined source or target");
+              continue;
+            }
+            nl += this.commonService.addLink({
+              source: f_links[j]["source"],
+              target: f_links[j]["target"],
+              distance: f_links[j]["distance"],
+              origin: origin,
+              hasDistance: true,
+              distanceOrigin: origin
+            }, check);
+          }
+          console.log('CSV Matrix Merge time:', (Date.now() - start).toLocaleString(), 'ms');
+          this.showMessage(` - Parsed ${nn} New, ${tn} Total Nodes from Distance Matrix.`);
+          this.showMessage(` - Parsed ${nl} New, ${tl} Total Links from Distance Matrix.`);
+          if (fileNum === nFiles) this.processData();
+          //this.commonService.parseCSVMatrix(file).then((o: any) => {
+          //});
         }
       } else {
         // if(file.format === 'newick'){
@@ -5591,7 +5699,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   processSequence() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!_this.commonService.session.meta.anySequences) return _this.commonService.runHamsters();
       _this.commonService.session.data.nodeFields.push('seq');
       let subset = [];
@@ -6100,7 +6208,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
    */
   readFastas() {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const fastas = _this2.commonService.session.files.filter(f => _this2.commonService.includes(f.extension, 'fas'));
       const nodeFilesWithSeqs = _this2.commonService.session.files.filter(f => f.format === "node" && f.field2 != "None" && f.field2 != "");
       if (fastas.length === 0 && nodeFilesWithSeqs.length === 0) return [];
@@ -6157,7 +6265,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
   }
   updatePreview(data) {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!data) {
         data = yield _this3.readFastas();
       }
@@ -6326,8 +6434,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoldenLayoutHostComponent: () => (/* binding */ GoldenLayoutHostComponent)
 /* harmony export */ });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! tslib */ 24398);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/app/golden-layout-host.component.ts.css?ngResource!=!./node_modules/@ngtools/webpack/src/loaders/inline-resource.js?data=CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA%3D!./src/app/golden-layout-host.component.ts */ 34213);
+/* harmony import */ var _home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 37580);
 /* harmony import */ var golden_layout__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! golden-layout */ 81156);
 /* harmony import */ var _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./golden-layout-component.service */ 39107);
@@ -6599,7 +6707,7 @@ let GoldenLayoutHostComponent = class GoldenLayoutHostComponent {
 GoldenLayoutHostComponent = (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_15__.Component)({
   selector: 'app-golden-layout-host',
   template: '<ng-template #componentViewContainer></ng-template>',
-  styles: [(_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
+  styles: [(_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts_css_ngResource_home_ylb9_MicrobeTrace_node_modules_ngtools_webpack_src_loaders_inline_resource_js_data_CiAgICA6aG9zdCB7CiAgICAgIGhlaWdodDogMTAwJTsKICAgICAgd2lkdGg6IDEwMCU7CiAgICAgIHBhZGRpbmc6IDA7CiAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICBwb3NpdGlvbjogcmVsYXRpdmU7CiAgICB9CiAgICA_3D_home_ylb9_MicrobeTrace_src_app_golden_layout_host_component_ts__WEBPACK_IMPORTED_MODULE_0___default())]
 }), (0,tslib__WEBPACK_IMPORTED_MODULE_17__.__metadata)("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_15__.ApplicationRef, _angular_core__WEBPACK_IMPORTED_MODULE_15__.ElementRef, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_1__.GoldenLayoutComponentService])], GoldenLayoutHostComponent);
 
 
@@ -7288,7 +7396,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MicrobeTraceNextHomeComponent: () => (/* binding */ MicrobeTraceNextHomeComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _microbe_trace_next_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.html?ngResource */ 99768);
 /* harmony import */ var _microbe_trace_next_plugin_component_less_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./microbe-trace-next-plugin.component.less?ngResource */ 57087);
@@ -7748,7 +7856,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
    */
   performExport(elementsForExport = [this.visualWrapperRef.nativeElement], exportNodeTable = false, exportLinkTable = false) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (!elementsForExport[0] && !exportNodeTable && !exportLinkTable) {
         console.error('Visual wrapper container not found');
         return;
@@ -7881,7 +7989,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   }
   performExportSVG(elementsForExport, mainSVGString, exportNodeTable = false, exportLinkTable = false) {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('Exporting SVG');
       if (mainSVGString == '') {
         mainSVGString = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="fill: transparent;"></svg>';
@@ -10166,7 +10274,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AggregateComponent: () => (/* binding */ AggregateComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _aggregate_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./aggregate.component.html?ngResource */ 23870);
 /* harmony import */ var _aggregate_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./aggregate.component.scss?ngResource */ 11954);
@@ -10428,7 +10536,7 @@ let AggregateComponent = class AggregateComponent extends _app_base_component_di
   }
   exportVisualization() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log(_this.SelectedAggregateExportFilename + '.' + _this.SelectedAggregateExportFileType);
       if (_this.SelectedAggregateExportFileType == 'csv.zip') {
         let zip = new (jszip__WEBPACK_IMPORTED_MODULE_6___default())();
@@ -13527,7 +13635,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CrosstabComponent: () => (/* binding */ CrosstabComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _crosstab_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./crosstab-plugin.component.html?ngResource */ 99800);
 /* harmony import */ var _crosstab_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./crosstab-plugin.component.scss?ngResource */ 70926);
@@ -13894,7 +14002,7 @@ let CrosstabComponent = class CrosstabComponent extends _app_base_component_dire
    */
   exportVisualization() {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       if (_this.SelectedCrossTabExportFileType == 'xlsx') {
         _this.saveAsExcelFile();
       } else if (_this.SelectedCrossTabExportFileType == 'csv') {
@@ -16661,7 +16769,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PhylogeneticComponent: () => (/* binding */ PhylogeneticComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _phylogenetic_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./phylogenetic-plugin.component.html?ngResource */ 93824);
 /* harmony import */ var _phylogenetic_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./phylogenetic-plugin.component.scss?ngResource */ 81398);
@@ -16828,7 +16936,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
     this.PhylogeneticTreeExportDialogSettings = new _app_helperClasses_dialogSettings__WEBPACK_IMPORTED_MODULE_6__.DialogSettings('#phylotree-settings-pane', false);
     this.ContextSelectedNodeAttributes = [];
     this.tree = null;
-    this.openTree = /*#__PURE__*/(0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    this.openTree = /*#__PURE__*/(0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       /*
       if (this.visuals.phylogenetic.commonService.session.data.newickString) {
         this.tree = new TidyTree(this.visuals.phylogenetic.commonService.session.data.tree,
@@ -16968,7 +17076,6 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
       let leafSize;
       const variable = this.visuals.phylogenetic.commonService.session.style.widgets['node-color-variable'];
       leafSize = this.getLeafSize(data.data.id, this.SelectedLeafNodeSizeVariable);
-      console.log(leafSize + " " + variable);
       d3__WEBPACK_IMPORTED_MODULE_9__.select(node).attr('r', leafSize);
       if (variable === 'None') {
         d3__WEBPACK_IMPORTED_MODULE_9__.select(node).style('fill', this.SelectedLeafNodeColorVariable);
@@ -17190,6 +17297,7 @@ let PhylogeneticComponent = class PhylogeneticComponent extends _app_base_compon
   openCenter() {
     const thisTree = this.commonService.visuals.phylogenetic.tree;
     thisTree.recenter().redraw();
+    this.styleTree();
   }
   //openPinAllNodes() {
   //}
@@ -18894,7 +19002,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TwoDComponent: () => (/* binding */ TwoDComponent)
 /* harmony export */ });
-/* harmony import */ var _Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
+/* harmony import */ var _home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 89204);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! tslib */ 24398);
 /* harmony import */ var _twoD_plugin_component_html_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./twoD-plugin.component.html?ngResource */ 13336);
 /* harmony import */ var _twoD_plugin_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./twoD-plugin.component.scss?ngResource */ 68550);
@@ -19499,7 +19607,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   gatherGroups(initial = true) {
     var _this = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let visNodes = _this.commonService.getVisibleNodes();
       if (initial) {
         const {
@@ -19580,7 +19688,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   applyGatherForce(ticks = 10) {
     var _this2 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       //let nodes = this.commonService.getVisibleNodes()
       let links = _this2.commonService.getVisibleLinks().map(link => {
         return {
@@ -19636,7 +19744,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   applySeparationForce() {
     var _this3 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let links = _this3.commonService.getVisibleLinks().map(link => {
         return {
           'source': link.source,
@@ -19707,7 +19815,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     })();
   }
   precomputePositionsWithD3(nodes, links, ticks = 300, initial = true) {
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       let simulation;
       if (initial) {
         simulation = d3__WEBPACK_IMPORTED_MODULE_4__.forceSimulation(nodes).force('charge', d3__WEBPACK_IMPORTED_MODULE_4__.forceManyBody().strength(-30)).force('link', d3__WEBPACK_IMPORTED_MODULE_4__.forceLink(links).id(d => d.id).distance(50)).force('center', d3__WEBPACK_IMPORTED_MODULE_4__.forceCenter(0, 0)).stop(); // Stop auto-stepping so we can control the ticks manually
@@ -20588,7 +20696,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   centerPolygons(e, updateLayout = true) {
     var _this4 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       _this4.widgets['polygons-foci'] = e;
       if (_this4.widgets['polygons-color-show'] == true) {
         console.log('centerPolygons: show ');
@@ -21208,7 +21316,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
    */
   _rerender(timelineTick = false) {
     var _this5 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD DATA network rerender');
       if (!timelineTick) {
         // If the network is in the middle of rendering, don't rerender
@@ -21975,7 +22083,7 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
   */
   _partialUpdate() {
     var _this6 = this;
-    return (0,_Users_evanmoscoso_Desktop_EvanGit_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,_home_ylb9_MicrobeTrace_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       console.log('--- TwoD _partialUpdate called');
       if (!_this6.cy) {
         console.error('Cytoscape instance not initialized; cannot update partially.');
