@@ -259,7 +259,10 @@ AppModule = (0,tslib__WEBPACK_IMPORTED_MODULE_30__.__decorate)([(0,_angular_core
   }), _angular_common__WEBPACK_IMPORTED_MODULE_70__.CommonModule],
   providers: [(0,primeng_config__WEBPACK_IMPORTED_MODULE_71__.providePrimeNG)({
     theme: {
-      preset: _primeng_themes_lara__WEBPACK_IMPORTED_MODULE_1__["default"]
+      preset: _primeng_themes_lara__WEBPACK_IMPORTED_MODULE_1__["default"],
+      options: {
+        darkModeSelector:  false || 'none'
+      }
     }
   }), _shared_common_session_app_session_service__WEBPACK_IMPORTED_MODULE_8__.AppSessionService, _shared_common_ui_app_ui_customization_service__WEBPACK_IMPORTED_MODULE_9__.AppUiCustomizationService, _shared_common_nav_app_url_service__WEBPACK_IMPORTED_MODULE_10__.AppUrlService, _visualizationComponents_GanttComponent_gantt_chart_gantt_chart_service__WEBPACK_IMPORTED_MODULE_25__.GanttChartService, _golden_layout_component_service__WEBPACK_IMPORTED_MODULE_5__.GoldenLayoutComponentService, angular_plotly_js__WEBPACK_IMPORTED_MODULE_29__.PlotlyModule, (0,_angular_common_http__WEBPACK_IMPORTED_MODULE_72__.provideHttpClient)((0,_angular_common_http__WEBPACK_IMPORTED_MODULE_72__.withInterceptorsFromDi)(), (0,_angular_common_http__WEBPACK_IMPORTED_MODULE_72__.withJsonpSupport)())]
 })], AppModule);
