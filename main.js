@@ -4670,11 +4670,11 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
         if (this.commonService.debugMode) {
           console.log("saw snps");
         }
-        $('#default-distance-threshold').attr('step', 1).val(7).trigger('change');
+        $('#default-distance-threshold').attr('step', 1).val(16).trigger('change');
         $("#ambiguities-row").slideUp();
         this.commonService.session.style.widgets['default-distance-metric'] = 'snps';
         this.store.setMetricChanged('snps');
-        this.onLinkThresholdChange('7');
+        this.onLinkThresholdChange('16');
       } else {
         $('#default-distance-threshold').attr('step', 0.001).val(0.015).trigger('change');
         $("#ambiguities-row").slideDown();
@@ -4855,10 +4855,10 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
       if (lsv.toLowerCase() === 'snps') {
         $('#ambiguities-row').slideUp();
         $('#default-distance-threshold') //, #link-threshold')
-        .attr('step', 1).val(7);
-        this.commonService.GlobalSettingsModel.SelectedLinkThresholdVariable = 7;
+        .attr('step', 1).val(16);
+        this.commonService.GlobalSettingsModel.SelectedLinkThresholdVariable = 16;
         console.log('default-distance-metric change file-plugin.component.ts snps');
-        this.store.setLinkThreshold(7);
+        this.store.setLinkThreshold(16);
       } else {
         $('#ambiguities-row').slideDown();
         $('#default-distance-threshold') //, #link-threshold')
