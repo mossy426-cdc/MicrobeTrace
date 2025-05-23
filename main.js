@@ -24055,8 +24055,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   version: () => (/* binding */ version)
 /* harmony export */ });
 const version = '0.0.0';
-const buildDate = '2025-05-22T16:29:32.532Z';
-const commitHash = '5301070';
+const buildDate = '2025-05-23T16:58:22.923Z';
+const commitHash = 'f52aa19';
 
 /***/ }),
 
