@@ -2452,13 +2452,16 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
   getDM() {
     const start = Date.now();
     return new Promise(resolve => {
+      let labels = [];
       let dm = '';
       if (this.session.data['newick']) {
         let treeObj = patristic__WEBPACK_IMPORTED_MODULE_2__.parseNewick(this.session.data['newick']);
         dm = treeObj.toMatrix();
       } else {
-        let labels = this.session.data.nodes.filter(this.hasSeq).map(d => d.id);
+        labels = this.session.data.nodes.filter(this.hasSeq).map(d => d.id);
         if (labels.length === 0) labels = this.session.data.nodes.filter(this.hasSeq).map(d => d._id);
+        if (labels.length === 0) labels = this.session.data.nodes.map(d => d.id);
+        if (labels.length === 0) labels = this.session.data.nodes.map(d => d._id);
         //console.log("Before sorting: " + labels);
         //labels = labels.sort();
         //console.log("After sorting: " + labels);
@@ -2487,7 +2490,10 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       if (this.debugMode) {
         console.log("DM Compute time: ", (Date.now() - start).toLocaleString(), "ms");
       }
-      resolve(dm);
+      resolve({
+        dm,
+        labels
+      });
     });
   }
   computeTree() {
@@ -2501,11 +2507,14 @@ let CommonService = class CommonService extends _shared_common_app_component_bas
       } else if (this.session.data['newick']) {
         return resolve(this.session.data['newick']);
       } else {
-        this.getDM().then(dm => {
+        this.getDM().then(({
+          dm,
+          labels
+        }) => {
           // Get a fresh tree worker from the factory.
           const treeWorker = this.computer.getTreeWorker();
           treeWorker.postMessage({
-            labels: this.session.data.nodes.filter(this.hasSeq).map(a => a._id),
+            labels: labels.length > 0 ? labels : this.session.data.nodes.filter(this.hasSeq).map(a => a._id),
             matrix: dm,
             round: this.session.style.widgets["tree-round"]
           });
@@ -5643,7 +5652,7 @@ let FilesComponent = class FilesComponent extends _app_base_component_directive_
               distance: f_links[j]["distance"],
               origin: origin,
               hasDistance: true,
-              distanceOrigin: origin
+              distanceOrigin: file.name
             }, check);
           }
           console.log('CSV Matrix Merge time:', (Date.now() - start).toLocaleString(), 'ms');
@@ -7948,11 +7957,6 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
         };
         // if pos == 0, exporting just tables and not a view
         let pos = elementsForExport[0] instanceof HTMLDivElement ? 1 : 0;
-        let statTablePos = -1;
-        if (elementsForExport[1] && elementsForExport[1] instanceof HTMLTableElement && elementsForExport[1].id == 'network-statistics-table') {
-          statTablePos = pos;
-          pos += 1;
-        }
         if (exportLinkTable && _this.commonService.session.style.widgets['link-color-variable'] !== 'None') {
           elementsForExport.splice(pos, 0, _this.linkColorTable.nativeElement);
         }
@@ -7970,18 +7974,8 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
           let offsets = pos == 0 ? [[5, 5]] : [[0, 0]];
           let previousColWidth,
             currentColWidth = 0;
-          let i = 1,
-            first = true;
-          ;
-          // add stat table first
-          if (statTablePos == 1) {
-            i += 1;
-            height = height + canvasArray[1].height + 5;
-            offsets.push([canvasArray[0].width - canvasArray[1].width, canvasArray[0].height + offsets[0][1]]);
-          }
-          for (; i < canvasArray.length; i++) {
-            if (first) {
-              first = false;
+          for (let i = 1; i < canvasArray.length; i++) {
+            if (i == 1) {
               width += canvasArray[i].width + 5;
               height = Math.max(height, canvasArray[i].height + 5);
               offsets.push([canvasArray[0].width + offsets[0][0], 5]);
@@ -8649,7 +8643,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
   generateNodeLinkTable(tableId, isEditable = true) {
     console.log('DEBUG: generateNodeLinkTable called. tableId=', tableId);
     console.log('DEBUG: table before .empty(): child rowcount=', $(tableId).find('tr').length);
-    const linkColorTable = $(tableId).empty().append('<tr>' + "<th class='p-1 table-header-row'><div class='header-content'><span>Link " + this.commonService.titleize(this.SelectedColorLinksByVariable) + "</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>" + `<th class='table-header-row tableCount' ${this.widgets['link-color-table-counts'] ? '' : 'style="display: none"'}><div class='header-content'><span>Count</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + `<th class='table-header-row tableFrequency' ${this.widgets['link-color-table-frequencies'] ? '' : 'style="display: none"'}><div class='header-content'><span>Frequency</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + '<th>Color</th>' + '</tr>');
+    const linkColorTable = $(tableId).empty().append('<tr>' + "<th class='p-1 table-header-row'><div class='header-content'><span contenteditable>Link " + this.commonService.titleize(this.SelectedColorLinksByVariable) + "</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>" + `<th class='table-header-row tableCount' ${this.widgets['link-color-table-counts'] ? '' : 'style="display: none"'}><div class='header-content'><span contenteditable>Count</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + `<th class='table-header-row tableFrequency' ${this.widgets['link-color-table-frequencies'] ? '' : 'style="display: none"'}><div class='header-content'><span contenteditable>Frequency</span><a class='sort-button' style='cursor: pointer'>⇅</a></div></th>` + '<th>Color</th>' + '</tr>');
     // Debug checks
     console.log('DEBUG: after appending header, table rowcount=', $(tableId).find('tr').length);
     // If you suspect linkColorMap may be empty or never updated, log it:
@@ -9076,7 +9070,7 @@ let MicrobeTraceNextHomeComponent = class MicrobeTraceNextHomeComponent extends 
       nodeColorTable.append(row);
     });
     if (isEditable) {
-      nodeColorTable.find("td.rowName").on("dblclick", function () {
+      nodeColorTable.find("td").on("dblclick", function () {
         $(this).attr("contenteditable", "true").focus();
       }).on("focusout", () => {
         const $this = $(this);
@@ -15180,7 +15174,7 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
       page_location: "/heatmap",
       page_title: "Heatmap View"
     });
-    this.nodeIds = this.getNodeIds();
+    //this.nodeIds = this.getNodeIds();
     this.visuals.heatmap.FieldList.push({
       label: "None",
       value: ""
@@ -15208,8 +15202,14 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     });
     this.redrawHeatmap();
   }
-  drawHeatmap(xLabels, yLabels, config) {
-    this.commonService.getDM().then(dm => {
+  drawHeatmap(config) {
+    this.commonService.getDM().then(({
+      dm,
+      labels
+    }) => {
+      this.nodeIds = labels;
+      const xLabels = labels.map(d => 'N' + d);
+      const yLabels = xLabels.slice();
       if (this.invertX) {
         dm.forEach(l => l.reverse());
         xLabels.reverse();
@@ -15262,17 +15262,18 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
         }
     */
   }
-  getNodeIds() {
-    const idSet = this.visuals.heatmap.commonService.session.data.nodes.map(x => x._id);
-    return idSet;
-  }
+  // getNodeIds(): string[] {
+  //   const idSet: string[] = this.visuals.heatmap.commonService.session.data.nodes.map(x=>x._id);
+  //   return idSet;
+  // }
   redrawHeatmap() {
     //if (!this.heatmapContainerRef.nativeElement.length) return;
     if (!$('#heatmap').length) return;
     if (this.plot) angular_plotly_js__WEBPACK_IMPORTED_MODULE_10__.PlotlyModule.plotlyjs.purge('heatmap');
-    const labels = this.nodeIds;
-    const xLabels = labels.map(d => 'N' + d);
-    const yLabels = xLabels.slice();
+    // const labels = this.nodeIds;
+    // const xLabels = labels.map(d => 'N' + d);
+    // const yLabels = xLabels.slice();
+    // console.log(this.heatmapShowLabels, xLabels.length, xLabels);
     this.heatmapMetric = this.commonService.session.style.widgets['default-distance-metric'].toUpperCase();
     const config = {
       autotick: false,
@@ -15281,7 +15282,7 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
     if (!config.showticklabels) {
       config["ticks"] = '';
     }
-    this.drawHeatmap(xLabels, yLabels, config);
+    this.drawHeatmap(config);
     this.setBackground();
   }
   setBackground() {
@@ -15378,7 +15379,10 @@ let HeatmapComponent = class HeatmapComponent extends _app_base_component_direct
   saveDistanceMatrix() {
     const fileName = this.SelectedDistanceMatrixFilenameVariable;
     const labelArray = (0,lodash__WEBPACK_IMPORTED_MODULE_7__.cloneDeep)(this.heatmapLabels);
-    this.commonService.getDM().then(dm => {
+    this.commonService.getDM().then(({
+      dm,
+      _
+    }) => {
       let csvContent = "data:text/csv;charset=utf-8,";
       if (this.heatmapShowLabels) {
         labelArray.unshift("");
@@ -20212,13 +20216,14 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       const doc = parser.parseFromString(content, 'image/svg+xml');
       const svg1 = doc.documentElement;
       let width = parseFloat(svg1.getAttribute('width'));
-      let height = parseFloat(svg1.getAttribute('height')) + statTable.height;
+      let height = parseFloat(svg1.getAttribute('height'));
       svg1.setAttribute('height', height.toString());
       // Convert svg1 (an SVGElement) to a string
       let svgString = new XMLSerializer().serializeToString(svg1);
       // Add the network statistics table to the svg
-      statTable.svg = statTable.svg.replace('<g>', `<g transform="translate(${width - statTable.width - 2}, ${height - statTable.height})" fill="#f8f9fa">`);
-      content = svgString.replace('</svg>', statTable.svg + '</svg>');
+      //let statTable = this.exportService.exportTableAsSVG(this.networkStatisticsTable.nativeElement)
+      //statTable.svg = statTable.svg.replace('<g>', `<g transform="translate(${width-statTable.width-2}, ${height-statTable.height})" fill="#f8f9fa">`);
+      //content = svgString.replace('</svg>', statTable.svg + '</svg>');
       let elementsToExport = [];
       if (this.widgets['node-symbol-table-visible'] != 'Hide') {
         elementsToExport.push(this.nodeSymbolTable.nativeElement);
@@ -20226,16 +20231,18 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
       if (this.widgets["polygon-color-table-visible"]) {
         elementsToExport.push(this.polygonColorTable.nativeElement);
       }
+      elementsToExport.push(this.networkStatisticsTable.nativeElement);
       this.exportService.requestSVGExport(elementsToExport, content, true, true);
     } else {
       // Request export
-      let elementsToExport = [this.exportContainer.nativeElement, this.networkStatisticsTable.nativeElement];
+      let elementsToExport = [this.exportContainer.nativeElement];
       if (this.widgets['node-symbol-table-visible'] != 'Hide') {
         elementsToExport.push(this.nodeSymbolTable.nativeElement);
       }
       if (this.widgets["polygon-color-table-visible"]) {
         elementsToExport.push(this.polygonColorTable.nativeElement);
       }
+      elementsToExport.push(this.networkStatisticsTable.nativeElement);
       this.exportService.requestExport(elementsToExport, true, true);
     }
     // Optionally, close the export modal after initiating the export
@@ -20354,10 +20361,10 @@ let TwoDComponent = class TwoDComponent extends _app_base_component_directive__W
     //   .scaleOrdinal(this.commonService.session.style['polygonAlphas'])
     //   .domain(values);
     polygonColorTable.find("td").on("dblclick", function () {
-      // $(this).attr("contenteditable", true).focus();
+      $(this).attr("contenteditable", "true").focus(); // test3
     }).on("focusout", function () {
       let $this = $(this);
-      // $this.attr("contenteditable", false);
+      $this.attr("contenteditable", "false");
       that.commonService.session.style['polygonValueNames'][$this.data("value")] = $this.text();
     });
     polygonColorTable.find(".p-1").on("focusout", function () {
@@ -24110,8 +24117,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   version: () => (/* binding */ version)
 /* harmony export */ });
 const version = '0.0.0';
-const buildDate = '2025-05-30T14:45:31.633Z';
-const commitHash = '9e3bebc';
+const buildDate = '2025-06-03T15:39:04.677Z';
+const commitHash = '813038f';
 
 /***/ }),
 
